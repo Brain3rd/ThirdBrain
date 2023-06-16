@@ -15,10 +15,6 @@ if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
-    if st.secrets.OPENAI_API_KEY not in st.secrets:
-        raise ValueError(
-            "Error: Missing OPENAI_API_KEY from environment. Please check your env file."
-        )
     openai.api_key = st.secrets.OPENAI_API_KEY
 
     BOOK_FOLDER = "books"
