@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os
 import openai
 from typing import List
@@ -9,29 +8,23 @@ import dropbox
 import streamlit as st
 
 
-load_dotenv()
-
 # Openai Keys
-if "OPENAI_API_KEY" not in os.environ:
-    raise ValueError(
-        "Error: Missing OPENAI_API_KEY from environment. Please check your env file."
-    )
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = st.secrets.OPENAI_API_KEY
 
 
 # Stable.ai Keys
 api_host = os.getenv("API_HOST", "https://api.stability.ai")
 url = f"{api_host}/v1/user/account"
 engine_id = "stable-diffusion-v1-5"
-api_key = os.environ["STABILITY_API_KEY"]
+api_key = st.secrets.STABILITY_API_KEY
 if api_key is None:
     raise Exception("Missing Stability API key.")
 
 
 # Dropbox Keys
-APP_KEY = os.environ["APP_KEY"]
-APP_SECRET = os.environ["APP_SECRET"]
-DROPBOX_REFRESH_TOKEN = os.environ["DROPBOX_REFRESH_TOKEN"]
+APP_KEY = st.secrets.APP_KEY
+APP_SECRET = st.secrets.APP_SECRET
+DROPBOX_REFRESH_TOKEN = st.secrets.DROPBOX_REFRESH_TOKEN
 
 
 dbx = dropbox.Dropbox(

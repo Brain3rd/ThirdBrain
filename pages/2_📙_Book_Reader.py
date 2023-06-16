@@ -6,9 +6,6 @@ from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
 
 
-# Load environment variables
-load_dotenv()
-
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 

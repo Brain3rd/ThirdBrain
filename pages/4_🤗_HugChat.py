@@ -8,15 +8,13 @@ from dotenv import load_dotenv
 import os
 
 
-load_dotenv()
-
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
     # login
-    HUGGING_EMAIL = os.environ["HUGGING_EMAIL"]
-    HUGGING_PASSWORD = os.environ["HUGGING_PASSWORD"]
+    HUGGING_EMAIL = st.secrets.HUGGING_EMAIL
+    HUGGING_PASSWORD = st.secrets.HUGGING_PASSWORD
 
     sign = Login(HUGGING_EMAIL, HUGGING_PASSWORD)
     cookies = sign.login()

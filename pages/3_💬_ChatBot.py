@@ -11,18 +11,15 @@ from langchain.schema import HumanMessage, SystemMessage
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 
 
-# Load environment variables
-load_dotenv()
-
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
-    if "OPENAI_API_KEY" not in os.environ:
+    if st.secrets.OPENAI_API_KEY not in st.secrets:
         raise ValueError(
             "Error: Missing OPENAI_API_KEY from environment. Please check your env file."
         )
-    openai.api_key = os.environ["OPENAI_API_KEY"]
+    openai.api_key = st.secrets.OPENAI_API_KEY
 
     BOOK_FOLDER = "books"
 

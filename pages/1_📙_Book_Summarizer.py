@@ -7,16 +7,14 @@ import dropbox
 from dropbox.exceptions import AuthError
 
 
-import random as random
-
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
     # Dropbox keys
-    APP_KEY = os.environ["APP_KEY"]
-    APP_SECRET = os.environ["APP_SECRET"]
-    DROPBOX_REFRESH_TOKEN = os.environ["DROPBOX_REFRESH_TOKEN"]
+    APP_KEY = st.secrets.APP_KEY
+    APP_SECRET = st.secrets.APP_SECRET
+    DROPBOX_REFRESH_TOKEN = st.secrets.DROPBOX_REFRESH_TOKEN
     dbx = dropbox.Dropbox(
         app_key=APP_KEY,
         app_secret=APP_SECRET,

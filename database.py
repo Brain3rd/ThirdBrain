@@ -1,10 +1,9 @@
 from deta import Deta
 import os
-from dotenv import load_dotenv
+import streamlit as st
 
-load_dotenv()
 
-deta = Deta(os.environ["DETA_KEY"])
+deta = Deta(st.secrets.DETA_KEY)
 
 db = deta.Base("users_db")
 
