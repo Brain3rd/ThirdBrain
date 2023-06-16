@@ -61,6 +61,7 @@ if st.session_state.authentication_status:
             # Clear the cache
             # st.cache_data.clear()
             display_book_summaries(num_summaries=0)
+            st.cache_data.clear()
 
     @st.cache_data
     def display_book_summaries(num_summaries=None):
