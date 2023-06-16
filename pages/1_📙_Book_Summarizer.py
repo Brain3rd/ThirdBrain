@@ -6,6 +6,27 @@ from _summarizer import summarizer
 import dropbox
 from dropbox.exceptions import AuthError
 
+BOOK_FOLDER = "books"
+
+TITLE = "Book Summarizer - Third Brain"
+ABOUT = """
+    Experience the power of AI-generated book summaries with our Book Summarizer tool. Harnessing the capabilities of ChatGPT, our tool provides concise and insightful summaries of books. Whether you're a busy reader seeking quick overviews or a researcher looking to gather key points, our Book Summarizer has got you covered.
+
+    But that's not all. We go beyond text and incorporate the visual realm with the help of DALL-E and Stability AI. Our tool generates captivating image prompts related to the book content, adding an immersive and visually stimulating element to your reading experience.
+
+    Unlock the potential of AI-driven book summarization and visual enhancement with our Book Summarizer tool. Start exploring the world of knowledge in a whole new way.
+    """
+about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
+
+
+st.set_page_config(
+    page_icon="📙",
+    page_title=TITLE,
+    layout="wide",
+    initial_sidebar_state="auto",
+    menu_items={"About": f"{TITLE}{about_content}"},
+)
+
 
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
@@ -21,29 +42,8 @@ if st.session_state.authentication_status:
         oauth2_refresh_token=DROPBOX_REFRESH_TOKEN,
     )
 
-    BOOK_FOLDER = "books"
-
-    TITLE = "Book Summarizer - Third Brain"
-    ABOUT = """
-        Experience the power of AI-generated book summaries with our Book Summarizer tool. Harnessing the capabilities of ChatGPT, our tool provides concise and insightful summaries of books. Whether you're a busy reader seeking quick overviews or a researcher looking to gather key points, our Book Summarizer has got you covered.
-
-        But that's not all. We go beyond text and incorporate the visual realm with the help of DALL-E and Stability AI. Our tool generates captivating image prompts related to the book content, adding an immersive and visually stimulating element to your reading experience.
-
-        Unlock the potential of AI-driven book summarization and visual enhancement with our Book Summarizer tool. Start exploring the world of knowledge in a whole new way.
-        """
-
-    about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
-
-    st.set_page_config(
-        page_icon="📙",
-        page_title=TITLE,
-        layout="wide",
-        initial_sidebar_state="auto",
-        menu_items={"About": f"{TITLE}{about_content}"},
-    )
-
     with st.sidebar:
-        st.title("Book Summarizer")
+        st.title(TITLE)
         st.markdown(ABOUT)
         add_vertical_space(5)
         st.write("💡 Note: API key required!")

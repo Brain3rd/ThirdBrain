@@ -10,33 +10,32 @@ from langchain.chains import ConversationChain
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 
+BOOK_FOLDER = "books"
+
+TITLE = "ChatBot - Third Brain"
+ABOUT = """
+    Engage in dynamic conversations with our advanced Conversational ChatBot, powered by ChatGPT. Our ChatBot utilizes cutting-edge language technology, including Langchain and ChatGPT, to deliver interactive and natural interactions.
+
+    With Langchain, our ChatBot understands and responds to a wide range of languages, breaking down communication barriers and fostering global connections. Whether you're looking for casual chat, information, or even language practice, our ChatBot is here to provide an immersive and engaging experience.
+
+    Experience the future of conversational AI with ChatGPT and Langchain. Interact with our intelligent ChatBot and explore the limitless possibilities of natural language understanding and communication. Start a conversation today and see how our ChatBot can enrich your online experience.
+    """
+
+about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
+
+st.set_page_config(
+    page_icon="💬",
+    page_title=TITLE,
+    layout="wide",
+    initial_sidebar_state="auto",
+    menu_items={"About": f"{TITLE}{about_content}"},
+)
 
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
     openai.api_key = st.secrets.OPENAI_API_KEY
-
-    BOOK_FOLDER = "books"
-
-    TITLE = "ChatBot - Third Brain"
-    ABOUT = """
-        Engage in dynamic conversations with our advanced Conversational ChatBot, powered by ChatGPT. Our ChatBot utilizes cutting-edge language technology, including Langchain and ChatGPT, to deliver interactive and natural interactions.
-
-        With Langchain, our ChatBot understands and responds to a wide range of languages, breaking down communication barriers and fostering global connections. Whether you're looking for casual chat, information, or even language practice, our ChatBot is here to provide an immersive and engaging experience.
-
-        Experience the future of conversational AI with ChatGPT and Langchain. Interact with our intelligent ChatBot and explore the limitless possibilities of natural language understanding and communication. Start a conversation today and see how our ChatBot can enrich your online experience.
-        """
-
-    about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
-
-    st.set_page_config(
-        page_icon="💬",
-        page_title=TITLE,
-        layout="wide",
-        initial_sidebar_state="auto",
-        menu_items={"About": f"{TITLE}{about_content}"},
-    )
 
     if "responses" not in st.session_state:
         st.session_state["responses"] = []

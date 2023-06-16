@@ -5,29 +5,34 @@ from streamlit_chat import message
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
 
+TITLE = "Text Reader - Third Brain"
+ABOUT = """
+Welcome to the Text Reader App, a powerful tool designed for text reading and accessibility. Our app utilizes advanced AI text-to-speech features to bring written content to life.
+
+With our Text Reader App, you can easily convert text into natural and expressive speech. Whether you have articles, documents, or even eBooks, our app empowers you to listen to your text-based content effortlessly. Enhance your reading experience, save time, and cater to diverse needs with our AI-powered text-to-speech capabilities.
+
+Immerse yourself in the world of accessible information with the Text Reader App. Unlock the potential of AI to transform written content into engaging audio experiences. Start using our app today and embark on a new way of consuming text-based information.
+    """
+
+about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
+
+st.set_page_config(
+    page_icon="📙",
+    page_title=TITLE,
+    layout="wide",
+    initial_sidebar_state="auto",
+    menu_items={"About": f"{TITLE}{about_content}"},
+)
 
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
-    TITLE = "ChatBot - Third Brain"
-    ABOUT = """
-        Engage in dynamic conversations with our advanced Conversational ChatBot, powered by ChatGPT. Our ChatBot utilizes cutting-edge language technology, including Langchain and ChatGPT, to deliver interactive and natural interactions.
-
-        With Langchain, our ChatBot understands and responds to a wide range of languages, breaking down communication barriers and fostering global connections. Whether you're looking for casual chat, information, or even language practice, our ChatBot is here to provide an immersive and engaging experience.
-
-        Experience the future of conversational AI with ChatGPT and Langchain. Interact with our intelligent ChatBot and explore the limitless possibilities of natural language understanding and communication. Start a conversation today and see how our ChatBot can enrich your online experience.
-        """
-
-    about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
-
-    st.set_page_config(
-        page_icon="💬",
-        page_title=TITLE,
-        layout="wide",
-        initial_sidebar_state="auto",
-        menu_items={"About": f"{TITLE}{about_content}"},
-    )
+    with st.sidebar:
+        st.title(TITLE)
+        st.markdown(ABOUT)
+        add_vertical_space(5)
+        st.write("💡 Note: API key required!")
 
     if "audio" not in st.session_state:
         st.session_state.audio = {}
