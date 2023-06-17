@@ -275,14 +275,14 @@ def get_cover_prompt(summary):
                     },
                     {
                         "role": "user",
-                        "content": f"Generate 1 short textual representation of an image using keywords from the book summary: {summary}",
+                        "content": f"Generate a short textual representation of an image using keywords from the book summary: {summary}",
                     },
                     {
                         "role": "assistant",
                         "content": """
-                    Generate a short written depiction of the book's essence by incorporating key terms extracted from the provided summary. Emphasize the visual mood, theme, and genre of the book. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the book. Image should not contain any text.
+                    Generate a short written depiction of the book's essence by incorporating key terms extracted from the provided summary. Emphasize the visual mood, theme, and genre of the book. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the book. Image should not contain any text. Return only textual representation of an image. Nothing else. No apologies. No examples.
 
-Here are 10 example templates of an desired output:
+Here are 10 great examples you can learn from, but remember to capture meaning of the book:
 
 1. Capture a vibrant street photograph of a bustling cityscape at night. Emphasize the colorful neon lights and the energy of the urban environment. Use long exposure techniques to create light trails and convey a sense of movement. Experiment with different angles and perspectives to capture a unique composition.
 
@@ -298,34 +298,20 @@ Here are 10 example templates of an desired output:
 
 7. Capture a powerful black and white portrait of an elderly person with wrinkles and weathered features. Aim to convey their life story and wisdom through their expression and character. Utilize dramatic lighting techniques and strong contrasts to add depth and intensity to the image. Focus on capturing the essence of their unique personality.
 
-8. Take a conceptual photograph that symbolizes freedom and exploration. Use props or elements that represent adventure and discovery. Experiment with composition and lighting to create a visually compelling image that inspires a sense of wanderlust and possibility. --AR 16:9 --Beta --Upbeta
+8. Take a conceptual photograph that symbolizes freedom and exploration. Use props or elements that represent adventure and discovery. Experiment with composition and lighting to create a visually compelling image that inspires a sense of wanderlust and possibility.
 
 9. Create an ethereal, dreamlike photograph featuring a dancer in motion. Utilize flowing fabrics, soft lighting, and long exposure techniques to capture the grace and fluidity of the dance. Aim to convey a sense of beauty, movement, and emotion in the image.
 
 10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture.
+
+And here are some examples of an undesired output:
+1. Sorry, I cannot perform the given task as generating images using text is beyond my current capabilities as an AI language model.
+2. However, I can provide an example of a textual representation of an image using keywords from the book summary:
+3. Example:
+4. Image description
+5. I apologize for the confusion earlier. As an AI language model, I'm only capable of generating text outputs.
+6. Here's an example of a textual representation of an image using keywords from the book summary:
                 """,
-                    },
-                    {
-                        "role": "system",
-                        "content": """
-                As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals.
-                """,
-                    },
-                    {
-                        "role": "user",
-                        "content": "Generate a short textual representation of an image using keywords from the book summary. Return only textual representation of an image. Nothing else. No apologies. No examples.",
-                    },
-                    {
-                        "role": "assistant",
-                        "content": """
-                        Here are some examples of an undesired output:
-                        1. Sorry, I cannot perform the given task as generating images using text is beyond my current capabilities as an AI language model.
-                        2. However, I can provide an example of a textual representation of an image using keywords from the book summary:
-                        3. Example:
-                        4. Image description
-                        5. I apologize for the confusion earlier. As an AI language model, I'm only capable of generating text outputs.
-                        6. Here's an example of a textual representation of an image using keywords from the book summary:
-                        """,
                     },
                 ],
                 model="gpt-3.5-turbo",
