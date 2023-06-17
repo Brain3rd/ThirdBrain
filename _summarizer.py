@@ -483,6 +483,7 @@ def summarizer(book_input=None) -> str:
         st.session_state.book_summary,
         dalle_image,
         stable_image,
+        dalle_prompt,
     )
 
     st.session_state.new_expander = st.expander(st.session_state.new_book)
