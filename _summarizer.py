@@ -275,7 +275,7 @@ def get_cover_prompt(summary):
                     },
                     {
                         "role": "user",
-                        "content": f"Generate a short written textual representation of an art piece using keywords from the book summary: {summary}",
+                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece using keywords from the book summary: {summary}",
                     },
                     {
                         "role": "assistant",
