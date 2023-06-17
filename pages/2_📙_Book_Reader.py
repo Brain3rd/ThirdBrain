@@ -73,11 +73,11 @@ if st.session_state.authentication_status:
                 column = col2
 
             # Get the caption name from the image URL
-            caption = os.path.splitext(url.split("/")[-1])[0]
+            # caption = os.path.splitext(url.split("/")[-1])[0]
 
             # Display the image in the respective column with the caption name
             with column:
-                st.image(url, caption=caption)
+                st.image(url)
 
         # Display the text content
         st.write(selected_file_content)

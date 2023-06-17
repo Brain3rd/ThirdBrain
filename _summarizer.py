@@ -98,6 +98,12 @@ def book_picker():
             "role": "assistant",
             "content": """
         Just 1 book, no more. Give me just text in form of derired format, notthing else. No = or . or : either. 
+
+        Example template:
+        Unlimited Power by Tony Robbins
+
+        Another example:
+        Brain Rules 12 Principles for Surviving and Thriving at Work Home and School by John Medina
         """,
         },
     ]
@@ -148,7 +154,7 @@ def get_book(books):
                     {
                         "role": "user",
                         "content": f"""
-                    I have read this book already, please give me 1 different book. DIFFERENT THAN ANY OF THESE BOOKS: {all_books}
+                    I have read this book already, please give me 1 different book. Different than these books: {all_books}
                     """,
                     },
                     {
@@ -166,6 +172,13 @@ def get_book(books):
                         "role": "assistant",
                         "content": """
                     Just 1 book, no more. Give me just text in form of derired format, notthing else. No = or . or : either. 
+
+                    Example template:
+                    Unlimited Power by Tony Robbins
+
+                    Another example:
+                    Brain Rules 12 Principles for Surviving and Thriving at Work Home and School by John Medina
+
                     """,
                     },
                 ],
