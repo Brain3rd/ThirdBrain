@@ -322,6 +322,9 @@ Here are 10 examples of an desired output:
 
                         Undesired output:
                         However, I can provide an example of a textual representation of an image using keywords from the book summary:
+                        
+
+                        Undersired output: Example: 
                         """,
                     },
                 ],
