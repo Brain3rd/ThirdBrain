@@ -78,7 +78,7 @@ def book_picker():
         {
             "role": "user",
             "content": f"""
-        Give me a random book from all time best selling self help books.
+        Give me a 1 random book from all time best selling self help books.
         Different than these books:
         {all_books}
         """,
@@ -97,7 +97,7 @@ def book_picker():
         {
             "role": "assistant",
             "content": """
-        Give me just text in form of derired format, notthing else. No = or . or : either. 
+        Just 1 book, no more. Give me just text in form of derired format, notthing else. No = or . or : either. 
         """,
         },
     ]
@@ -148,7 +148,7 @@ def get_book(books):
                     {
                         "role": "user",
                         "content": f"""
-                    I have read this book already, please give me a different book. NOT THESE BOOKS, PLEASE: {all_books}
+                    I have read this book already, please give me 1 different book. DIFFERENT THAN ANY OF THESE BOOKS: {all_books}
                     """,
                     },
                     {
@@ -165,7 +165,7 @@ def get_book(books):
                     {
                         "role": "assistant",
                         "content": """
-                    Give me just text in form of derired format, notthing else. No = or . or : either. 
+                    Just 1 book, no more. Give me just text in form of derired format, notthing else. No = or . or : either. 
                     """,
                     },
                 ],
