@@ -59,7 +59,7 @@ def read_file_contents():
         if folder_name != "books":
             all_folders.add(folder_name)  # Add the folder name to the set
 
-    return all_folders
+    return list(all_folders)
 
 
 all_books = read_file_contents()
@@ -311,6 +311,7 @@ And here are some examples of an undesired output:
 4. Image description
 5. I apologize for the confusion earlier. As an AI language model, I'm only capable of generating text outputs.
 6. Here's an example of a textual representation of an image using keywords from the book summary:
+7. Description
                 """,
                     },
                 ],
