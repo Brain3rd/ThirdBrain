@@ -38,12 +38,19 @@ DELAY_SECONDS = 10
 
 
 def read_file_contents(file_name: str, encoding="utf-8") -> List[str]:
-    with open(file_name, "r", encoding=encoding) as f:
-        contents = f.read()
+    response = dbx.files_download(f"/all_books/{file_name}")
+    contents = response.content.decode(encoding)
     return contents.splitlines()
 
 
 all_books = set(read_file_contents("book_titles.txt"))
+
+
+def write_file_contents(file_name: str, contents: str, encoding="utf-8"):
+    data = contents.encode(encoding)
+    dbx.files_upload(
+        data, f"/all_books/{file_name}", mode=dropbox.files.WriteMode("overwrite")
+    )
 
 
 # Get random book
@@ -171,9 +178,7 @@ def get_book(books: List[dict], file_name: str, encoding="utf-8") -> str:
         # Wait for the specified delay before the next attempt
         time.sleep(DELAY_SECONDS)
 
-    all_books.add(book)
-    with open(file_name, "a", encoding=encoding) as f:
-        f.write(f"{book}\n")
+    write_file_contents("book_titles.txt", f"{book}\n")
 
     st.sidebar.success(f"{book}")
 
@@ -411,8 +416,8 @@ def summarizer(book_input=None) -> str:
     if book_input:
         st.session_state.new_book = book_input
         all_books.add(st.session_state.new_book)
-        with open("book_titles.txt", "a", encoding="utf-8") as f:
-            f.write(f"{st.session_state.new_book}\n")
+        write_file_contents("book_titles.txt", f"{st.session_state.new_book}\n")
+
     else:
         books = book_picker()
         st.session_state.new_book = get_book(books, "book_titles.txt")

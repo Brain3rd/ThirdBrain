@@ -42,25 +42,21 @@ if st.session_state.authentication_status:
         list(st.session_state.audio.keys()),
     )
 
-    # Create a column layout.
-    col1, col2 = st.columns(2)
+    # Create a button to play audiobook.
+    if st.button(
+        label="Read Book",  # name on the button
+        help="Click to Read Book",  # hint text (on hover)
+        key="read_audiobook",  # key to be used for the button
+        type="primary",  # red default streamlit button
+    ):
+        selected_book = audiobook
+        selected_file_content = st.session_state.audio[selected_book]
 
-    with col1:
-        # Create a button to play audiobook.
-        if st.button(
-            label="Read Book",  # name on the button
-            help="Click to Read Book",  # hint text (on hover)
-            key="read_audiobook",  # key to be used for the button
-            type="primary",  # red default streamlit button
-        ):
-            selected_book = audiobook
-            selected_file_content = st.session_state.audio[selected_book]
+        # Perform the desired action with the selected book and its file content
+        # For example, you can use text-to-speech to read the audiobook
+        # or display the file content in another component
+        # Display the image URLs
+        for url in st.session_state.url[selected_book]:
+            st.image(url, caption="Image")
 
-            # Perform the desired action with the selected book and its file content
-            # For example, you can use text-to-speech to read the audiobook
-            # or display the file content in another component
-            # Display the image URLs
-            for url in st.session_state.url[selected_book]:
-                st.image(url, caption="Image")
-
-            st.write(selected_file_content)
+        st.write(selected_file_content)
