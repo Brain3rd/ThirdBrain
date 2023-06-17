@@ -218,10 +218,10 @@ def summarize_book(book: str) -> str:
                     {
                         "role": "system",
                         "content": """
-                    You are a professional writer and book summarizer. To write effective content, both "perplexity" and "burstiness" are important. Perplexity assesses text complexity and burstiness evaluates sentence variation. People often write with a mix of long and short sentences, while machine-generated sentences tend to be uniform. You need to ensure a suitable balance of both perplexity and burstiness.
+                        You are a professional writer and book summarizer. To write effective content, both "perplexity" and "burstiness" are important. Perplexity assesses text complexity and burstiness evaluates sentence variation. People often write with a mix of long and short sentences, while machine-generated sentences tend to be uniform. You need to ensure a suitable balance of both perplexity and burstiness.
 
-                    Remember that while summarizing, it's crucial to maintain the integrity of the author's ideas and voice. Use your own words to explain the concepts, but ensure that you capture the essence of the original content accurately.
-                    """,
+                        Remember that while summarizing, it's crucial to maintain the integrity of the author's ideas and voice. Use your own words to explain the concepts, but ensure that you capture the essence of the original content accurately.
+                        """,
                     },
                     {
                         "role": "user",
@@ -230,18 +230,19 @@ def summarize_book(book: str) -> str:
                     {
                         "role": "assistant",
                         "content": """
-                    Desired format:
-                    Introduction: Provide a brief overview of the book's purpose, author's background, and any relevant context.
-                    Key points: Identify the main concepts or ideas presented in the book. Summarize each key point concisely and clearly. Use bullet points or numbered lists to organize the information.
-                    Insights and Examples: Highlight the most insightful and impactful moments from the book. Explain how these insights can be applied in real-life situations. Provide relevant examples or anecdotes to illustrate the author's ideas.
-                    Practical Application: Offer practical steps or strategies derived from the book's teachings. Describe how readers can implement the ideas in their own lives. Include actionable tips or exercises to reinforce the concepts.
-                    Quotes: Select notable quotes from the author that encapsulate important concepts or provide inspiration. Use quotation marks and attribute the quotes to the author, "Quote" Author Name
-                    Conclusion: Summarize the overall message of the book. Express your own thoughts and reflections on the book's content and potential impact.
-                    """,
+                        Desired format:
+                        Introduction: Provide a brief overview of the book's purpose, author's background, and any relevant context.
+                        Key points: Summarize the main concepts or ideas presented in the book using concise paragraphs.
+                        Insights and Examples: Expand on the most insightful and impactful moments from the book. Explain how these insights can be applied in real-life situations and provide relevant examples or anecdotes.
+                        Practical Application: Offer practical steps or strategies derived from the book's teachings. Describe how readers can implement the ideas in their own lives and include actionable tips or exercises.
+                        Quotes: Select notable quotes from the author that encapsulate important concepts or provide inspiration. Use quotation marks and attribute the quotes to the author: "Quote" - Author Name.
+                        Conclusion: Summarize the overall message of the book and express your own thoughts and reflections on its content and potential impact.
+                        """,
                     },
                 ],
                 model="gpt-3.5-turbo",
             )
+
             # If the code execution is successful, break out of the loop
             break
         except Exception as e:
@@ -386,7 +387,7 @@ def create_stable_image(prompt):
         except Exception as e:
             # Handle the specific exception (if known) or catch all exceptions
             st.sidebar.error(
-                f"Attempt {attempt} failed. Error message: {str(e)}\nWaiting a bit and trying again..."
+                f"Attempt {attempt} failed. Waiting a bit and trying again..."
             )
 
         # Wait for the specified delay before the next attempt
@@ -397,7 +398,7 @@ def create_stable_image(prompt):
     return data
 
 
-def save_all(new_book, book_content, dalle_data, stability_data):
+def save_all(new_book, book_content, dalle_data, stability_data, image_prompt):
     dalle_images = []
     stability_images = []
 
@@ -423,7 +424,9 @@ def save_all(new_book, book_content, dalle_data, stability_data):
         # Save summary to txt file
         summary_path = f"{folder_path}/{new_book}.txt"
         summary_data = book_content.encode("utf-8")
-        dbx.files_upload(summary_data, summary_path)
+        prompt_data = image_prompt.encode("utf-8")
+        data_to_txt = f"{summary_data}\nImage prompt:\n{prompt_data}"
+        dbx.files_upload(data_to_txt.encode("utf-8"), summary_path)
 
         # Save DALL-E images to png
         for i, image in enumerate(dalle_data["data"]):
