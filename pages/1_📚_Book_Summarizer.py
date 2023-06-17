@@ -5,6 +5,8 @@ from streamlit_extras.add_vertical_space import add_vertical_space
 from _summarizer import summarizer
 import dropbox
 from dropbox.exceptions import AuthError
+import math
+
 
 BOOK_FOLDER = "books"
 
@@ -116,20 +118,34 @@ if st.session_state.authentication_status:
                 file for file in folder_files if file.path_display.endswith(".txt")
             ]
 
-            # Display the images in the expander
+            # Calculate the number of columns needed for the images
+            num_images = len(image_files)
+            num_columns = 2  # Number of columns for the images
+            num_rows = math.ceil(num_images / num_columns)
+
+            # Display the images in two columns
             with expander:
                 image_urls = []  # List to store the temporary links of all images
 
-                for image_file in image_files:
+                col1, col2 = st.columns(2)  # Create two columns
+
+                for i, image_file in enumerate(image_files):
                     # Get temporary link for the image file
                     res = dbx.files_get_temporary_link(image_file.path_display).link
                     image_urls.append(res)  # Add the temporary link to the list
 
-                    # Display the image
-                    st.image(
-                        res,
-                        caption=os.path.splitext(image_file.name)[0],
-                    )
+                    # Determine the column to display the image based on the index
+                    if i % num_columns == 0:
+                        column = col1
+                    else:
+                        column = col2
+
+                    # Display the image in the respective column
+                    with column:
+                        st.image(
+                            res,
+                            caption=os.path.splitext(image_file.name)[0],
+                        )
 
                 if st.session_state.title not in st.session_state.url:
                     st.session_state.url[st.session_state.title] = []
@@ -137,7 +153,7 @@ if st.session_state.authentication_status:
                         image_urls
                     )  # Add all temporary links to the session state
 
-            # Display the text file in the expander
+            # Display the text files without columns
             with expander:
                 for txt_file in text_file:
                     # Download the file content

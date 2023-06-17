@@ -227,7 +227,7 @@ def summarize_book(book: str) -> str:
                     """,
                     },
                 ],
-                model="gpt-3.5-turbo-16k",
+                model="gpt-3.5-turbo",
             )
             # If the code execution is successful, break out of the loop
             break
@@ -267,27 +267,27 @@ def get_cover_prompt(summary):
                         "content": """
                     Generate a short written depiction of the book's essence by incorporating key terms extracted from the provided summary. Emphasize the visual mood, theme, and genre of the book. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the book. Image should not contain any written text.
 
-Creating Breathtaking Visuals example prompts: 
+These are great example prompts:
 
-1. Portrait photo of an elderly Asia old warrior chief with tribal panther makeup. Use blue on red colors, capture a side profile with the chief looking away. Focus on the serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. (Beta, AR 2:3, Upbeta)
+1. Capture a vibrant street photograph of a bustling cityscape at night. Emphasize the colorful neon lights and the energy of the urban environment. Use long exposure techniques to create light trails and convey a sense of movement. Experiment with different angles and perspectives to capture a unique composition. (Beta, AR 16:9, Upbeta)
 
-2. Take a portrait photo of Keanu Reeves as an Asia old warrior chief with tribal panther makeup. Use blue on red colors, capture a side profile with Keanu looking away. Focus on his serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. (Beta, AR 2:3, Upbeta)
+2. Take a breathtaking landscape photo of a serene mountain range at sunrise. Highlight the majestic peaks and the soft, warm glow of the rising sun. Incorporate elements of nature, such as trees or a flowing river, to add depth and interest to the composition. Use a wide-angle lens to capture the expansive beauty of the scene. (S 800, Q 3, IW 2)
 
-3. Portrait photo of an African old warrior chief with tribal panther makeup. Use gold on white colors, capture a side profile with the chief looking away. Focus on the serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. (Beta, AR 2:3)
+3. Create an artistic still life photograph featuring a bouquet of colorful flowers in a vintage vase. Experiment with lighting techniques to create dramatic shadows and highlights. Play with composition and depth of field to draw attention to specific flowers or details. Aim for a visually striking image that evokes emotions. (Testp, AR 4:3, Upbeta)
 
-4. Take a portrait photo of a 68-year-old man in blue robes, emphasizing his role as a priest. Capture the essence of National Geographic with a portrait that showcases his age and wisdom. Utilize natural light and a 50mm lens for a detailed and impactful photo. (S 625, Q 2, IW 3)
+4. Capture a candid moment of joy and laughter between friends in a natural outdoor setting. Aim to convey the warmth and connection shared among them. Use natural light and a shallow depth of field to create a soft, dreamy atmosphere. Look for genuine expressions and interactions to capture the essence of friendship. (AR 3:2, Beta, Upbeta)
 
-5. Capture an ultrarealistic portrait of a native American old woman with cinematic lighting. Aim for an award-winning photo with no color, emphasizing black and white tones. Utilize an 80mm lens to capture the intricate details and create a powerful image. (Beta, Upbeta)
+5. Take a captivating wildlife photograph showcasing the beauty and grace of a wild animal in its natural habitat. Pay attention to details such as the animal's fur, feathers, or scales. Capture the animal in action or at rest, conveying its unique characteristics and behavior. Use a telephoto lens for close-up shots and a fast shutter speed to freeze motion. (Beta, Upbeta)
 
-6. Take a headshot portrait photo in the style of Mucha. Focus on rendering a sharp and elegant image using the Octane render technique. Aim for detailed and award-winning photography that stands out as a masterpiece. Experiment with rim lighting to add drama. (Rim lit, perfect focus)
+6. Create a striking abstract photograph using unconventional objects and textures. Look for interesting patterns, shapes, or colors in your surroundings. Experiment with different angles, lighting, and compositions to create a visually intriguing image that sparks curiosity and imagination. (AR 1:1, S 3000, Q 5)
 
-7. Create a vibrant professional studio portrait of a young goth woman with piercing green eyes. Aim for an attractive, casual, and friendly look while adding dramatic lighting effects. Capture the essence of a femme fatale with a gold ankh necklace. Strive for an award-winning image that impresses with its groundbreaking aesthetic. (Testp, AR 3:4, Upbeta)
+7. Capture a powerful black and white portrait of an elderly person with wrinkles and weathered features. Aim to convey their life story and wisdom through their expression and character. Utilize dramatic lighting techniques and strong contrasts to add depth and intensity to the image. Focus on capturing the essence of their unique personality. (Testp, AR 2:3, Upbeta)
 
-8. Capture a medium shot side profile portrait photo of Takeshi Kaneshiro as a warrior chief. Use blue on red colors with tribal panther makeup. Make sure he is looking away with serious eyes. Utilize a 50mm lens and incorporate hard rim lighting techniques for an impactful image. (AR 2:3, Beta, Upbeta)
+8. Take a conceptual photograph that symbolizes freedom and exploration. Use props or elements that represent adventure and discovery. Experiment with composition and lighting to create a visually compelling image that inspires a sense of wanderlust and possibility. (AR 16:9, Beta, Upbeta)
 
-9. Take a stunning photo of a gorgeous young Swiss girl sitting by a window with headphones on. She should be wearing a white bra with a translucent shirt over it. Focus on her soft lips and beach blonde hair. Use octane render or Unreal Engine to create a photorealistic and highly detailed image. (AR 9:16, S 5000, Testp, Upbeta)
+9. Create an ethereal, dreamlike photograph featuring a dancer in motion. Utilize flowing fabrics, soft lighting, and long exposure techniques to capture the grace and fluidity of the dance. Aim to convey a sense of beauty, movement, and emotion in the image. (S 1000, Q 4, IW 3)
 
-10. Capture a portrait photo of an old man named Tattles as he cries while sitting on a bed with gauges in his ears. Capture him looking away with serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. Capture the raw emotions in the image. (AR 2:3, Beta, Upbeta)
+10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture. (Beta, Upbeta)
 
 These prompts will guide you in creating stunning and breathtaking visuals that showcase your unique style and expertise. Have fun experimenting with these ideas and further honing your skills as an artist and photographer.
                 """,
