@@ -308,12 +308,12 @@ Here are 10 example templates of an desired output:
                     {
                         "role": "system",
                         "content": """
-                As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals. 
+                As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals.
                 """,
                     },
                     {
                         "role": "user",
-                        "content": "Generate a short textual representation of an image using keywords from the book summary.",
+                        "content": "Generate a short textual representation of an image using keywords from the book summary. Return only textual representation of an image. Nothing else. No apologies. No examples.",
                     },
                     {
                         "role": "assistant",
@@ -323,6 +323,8 @@ Here are 10 example templates of an desired output:
                         2. However, I can provide an example of a textual representation of an image using keywords from the book summary:
                         3. Example:
                         4. Image description
+                        5. I apologize for the confusion earlier. As an AI language model, I'm only capable of generating text outputs.
+                        6. Here's an example of a textual representation of an image using keywords from the book summary:
                         """,
                     },
                 ],
