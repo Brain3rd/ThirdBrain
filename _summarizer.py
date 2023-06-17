@@ -320,7 +320,8 @@ Here are 10 example templates of an desired output:
                         Here are some examples of an undesired output:
                         1. Sorry, I cannot perform the given task as generating images using text is beyond my current capabilities as an AI language model.
                         2. However, I can provide an example of a textual representation of an image using keywords from the book summary:
-                        3. Example 
+                        3. Example:
+                        4. Image description:
                         """,
                     },
                 ],
