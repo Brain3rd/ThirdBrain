@@ -39,7 +39,7 @@ if st.session_state.authentication_status:
 
     audiobook = st.selectbox(
         "Choose your book",
-        list(st.session_state.audio.keys()),
+        list(st.session_state.audio.keys())[::-1],
     )
 
     # Create a button to play audiobook.

@@ -255,24 +255,47 @@ def get_cover_prompt(summary):
                     {
                         "role": "system",
                         "content": """
-                        You are a professional artist and book cover generator.
-                        """,
+                As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals.
+                """,
                     },
                     {
                         "role": "user",
-                        "content": f"""
-                        Provide a short textual description of an cover image for the book. User will use it as a prompt to create DALL-E image. Here is summary of the book: {summary}
-                        """,
+                        "content": f"Generate a short textual representation of an image using keywords from the book summary: {summary}",
                     },
                     {
                         "role": "assistant",
                         "content": """
-                        Prompt should not exceed 300 characters. Image should not contain any written text or words. Reflect the mood, theme, and genre of the book. Select a color scheme that reflects the mood and theme of the book. Use visuals that relate to the book's plot, themes, or key elements.
-                        """,
+                    Generate a short written depiction of the book's essence by incorporating key terms extracted from the provided summary. Emphasize the visual mood, theme, and genre of the book. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the book. Image should not contain any written text.
+
+Creating Breathtaking Visuals example prompts: 
+
+1. Portrait photo of an elderly Asia old warrior chief with tribal panther makeup. Use blue on red colors, capture a side profile with the chief looking away. Focus on the serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. (Beta, AR 2:3, Upbeta)
+
+2. Take a portrait photo of Keanu Reeves as an Asia old warrior chief with tribal panther makeup. Use blue on red colors, capture a side profile with Keanu looking away. Focus on his serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. (Beta, AR 2:3, Upbeta)
+
+3. Portrait photo of an African old warrior chief with tribal panther makeup. Use gold on white colors, capture a side profile with the chief looking away. Focus on the serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. (Beta, AR 2:3)
+
+4. Take a portrait photo of a 68-year-old man in blue robes, emphasizing his role as a priest. Capture the essence of National Geographic with a portrait that showcases his age and wisdom. Utilize natural light and a 50mm lens for a detailed and impactful photo. (S 625, Q 2, IW 3)
+
+5. Capture an ultrarealistic portrait of a native American old woman with cinematic lighting. Aim for an award-winning photo with no color, emphasizing black and white tones. Utilize an 80mm lens to capture the intricate details and create a powerful image. (Beta, Upbeta)
+
+6. Take a headshot portrait photo in the style of Mucha. Focus on rendering a sharp and elegant image using the Octane render technique. Aim for detailed and award-winning photography that stands out as a masterpiece. Experiment with rim lighting to add drama. (Rim lit, perfect focus)
+
+7. Create a vibrant professional studio portrait of a young goth woman with piercing green eyes. Aim for an attractive, casual, and friendly look while adding dramatic lighting effects. Capture the essence of a femme fatale with a gold ankh necklace. Strive for an award-winning image that impresses with its groundbreaking aesthetic. (Testp, AR 3:4, Upbeta)
+
+8. Capture a medium shot side profile portrait photo of Takeshi Kaneshiro as a warrior chief. Use blue on red colors with tribal panther makeup. Make sure he is looking away with serious eyes. Utilize a 50mm lens and incorporate hard rim lighting techniques for an impactful image. (AR 2:3, Beta, Upbeta)
+
+9. Take a stunning photo of a gorgeous young Swiss girl sitting by a window with headphones on. She should be wearing a white bra with a translucent shirt over it. Focus on her soft lips and beach blonde hair. Use octane render or Unreal Engine to create a photorealistic and highly detailed image. (AR 9:16, S 5000, Testp, Upbeta)
+
+10. Capture a portrait photo of an old man named Tattles as he cries while sitting on a bed with gauges in his ears. Capture him looking away with serious eyes. Utilize a 50mm lens for portrait photography and incorporate hard rim lighting techniques. Capture the raw emotions in the image. (AR 2:3, Beta, Upbeta)
+
+These prompts will guide you in creating stunning and breathtaking visuals that showcase your unique style and expertise. Have fun experimenting with these ideas and further honing your skills as an artist and photographer.
+                """,
                     },
                 ],
                 model="gpt-3.5-turbo",
             )
+
             # If the code execution is successful, break out of the loop
             break
         except Exception as e:

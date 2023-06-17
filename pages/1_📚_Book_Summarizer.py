@@ -59,7 +59,6 @@ if st.session_state.authentication_status:
         if submit_button:
             summarizer(text_input)
             # Clear the cache
-            # st.cache_data.clear()
             st.cache_data.clear()
 
     @st.cache_data
