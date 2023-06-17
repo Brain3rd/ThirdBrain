@@ -284,25 +284,25 @@ def get_cover_prompt(summary):
 
             Here are 10 great examples of textual representation of art pieces that you can learn from:
 
-            1. A dynamic and energetic abstract painting that combines bold strokes of vibrant colors to depict the chaos and intensity of the book's narrative. The interplay of red, yellow, and blue creates a sense of movement and emotional depth.
+            1. Capture a vibrant street photograph of a bustling cityscape at night. Emphasize the colorful neon lights and the energy of the urban environment. Use long exposure techniques to create light trails and convey a sense of movement. Experiment with different angles and perspectives to capture a unique composition.
 
-            2. A serene and contemplative sculpture crafted from smooth marble, symbolizing the book's exploration of themes such as beauty, fragility, and the passage of time. The delicate curves and subtle details evoke a sense of tranquility and introspection.
+            2. Take a breathtaking landscape photo of a serene mountain range at sunrise. Highlight the majestic peaks and the soft, warm glow of the rising sun. Incorporate elements of nature, such as trees or a flowing river, to add depth and interest to the composition. Use a wiSde-angle lens to capture the expansive beauty of the scene.
 
-            3. A mixed media installation that incorporates found objects and recycled materials, representing the book's themes of sustainability and the interconnectedness of nature and humanity. The juxtaposition of organic and synthetic elements creates a thought-provoking visual commentary.
+            3. Create an artistic still life photograph featuring a bouquet of colorful flowers in a vintage vase. Experiment with lighting techniques to create dramatic shadows and highlights. Play with composition and depth of field to draw attention to specific flowers or details. Aim for a visually striking image that evokes emotions.
 
-            4. A hauntingly beautiful photograph captured during twilight, featuring a solitary figure in silhouette against a dramatic sky. The contrast between light and shadow conveys the book's exploration of solitude, longing, and the mysteries of the human experience.
+            4. Capture a candid moment of joy and laughter between friends in a natural outdoor setting. Aim to convey the warmth and connection shared among them. Use natural light and a shallow depth of field to create a soft, dreamy atmosphere. Look for genuine expressions and interactions to capture the essence of friendship.
 
-            5. A whimsical and imaginative illustration rendered in intricate detail, depicting fantastical creatures and landscapes inspired by the book's rich mythology. The vibrant colors and intricate linework invite viewers into a world of magic and wonder.
+            5. Take a captivating wildlife photograph showcasing the beauty and grace of a wild animal in its natural habitat. Pay attention to details such as the animal's fur, feathers, or scales. Capture the animal in action or at rest, conveying its unique characteristics and behavior. Use a telephoto lens for close-up shots and a fast shutter speed to freeze motion. 
 
-            6. A minimalist and thought-provoking conceptual art piece that utilizes negative space and subtle symbolism to explore themes of identity and self-discovery. The simplicity of form and the use of contrasting textures invite viewers to contemplate their own journey.
+            6. Create a striking abstract photograph using unconventional objects and textures. Look for interesting patterns, shapes, or colors in your surroundings. Experiment with different angles, lighting, and compositions to create a visually intriguing image that sparks curiosity and imagination.
 
-            7. A multimedia performance piece that combines dance, music, and visual projections to evoke the book's themes of passion, love, and the power of human connection. The synchronized movements and ethereal soundscape create a mesmerizing and immersive experience.
+            7. Capture a powerful black and white portrait of an elderly person with wrinkles and weathered features. Aim to convey their life story and wisdom through their expression and character. Utilize dramatic lighting techniques and strong contrasts to add depth and intensity to the image. Focus on capturing the essence of their unique personality.
 
-            8. A bold and expressive mural that adorns the walls of a city street, depicting a diverse and inclusive community coming together in solidarity. The vibrant colors and dynamic composition reflect the book's message of unity and social change.
+            8. Take a conceptual photograph that symbolizes freedom and exploration. Use props or elements that represent adventure and discovery. Experiment with composition and lighting to create a visually compelling image that inspires a sense of wanderlust and possibility.
 
-            9. An intricately woven tapestry that tells a visual story inspired by the book's characters and their intertwining destinies. The rich textures and intricate patterns invite viewers to unravel the layers of meaning embedded within the artwork.
+            9. Create an ethereal, dreamlike photograph featuring a dancer in motion. Utilize flowing fabrics, soft lighting, and long exposure techniques to capture the grace and fluidity of the dance. Aim to convey a sense of beauty, movement, and emotion in the image.
 
-            10. A thought-provoking and immersive virtual reality experience that transports viewers into a digital realm inspired by the book's themes of technology, consciousness, and the blurred boundaries between reality and imagination. The interactive elements and immersive visuals offer a unique and engaging exploration of the book's concepts.
+            10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture.
 
             Please note that the above examples are for reference and inspiration. Your own written textual representation should be unique and tailored specifically to the book's summary and themes.
 
