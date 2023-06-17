@@ -59,7 +59,6 @@ if st.session_state.authentication_status:
             submit_button = st.form_submit_button("Submit")
 
         if submit_button:
-            st.cache_data.clear()
             summarizer(text_input)
             # Clear the cache
             st.cache_data.clear()
@@ -100,7 +99,7 @@ if st.session_state.authentication_status:
             # Extract the title from the folder name
             if folder_name not in st.session_state["title"]:
                 if folder_name != "books":
-                    st.session_state.title = folder_name
+                    st.session_state.title = str(folder_name)
 
             expander = st.expander(st.session_state.title)
 

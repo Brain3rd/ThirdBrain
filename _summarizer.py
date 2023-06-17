@@ -219,10 +219,10 @@ def summarize_book(book: str) -> str:
                     {
                         "role": "system",
                         "content": """
-                        You are a professional writer and book summarizer. To write effective content, both "perplexity" and "burstiness" are important. Perplexity assesses text complexity and burstiness evaluates sentence variation. People often write with a mix of long and short sentences, while machine-generated sentences tend to be uniform. You need to ensure a suitable balance of both perplexity and burstiness.
+                    You are a professional writer and book summarizer. To write effective content, both "perplexity" and "burstiness" are important. Perplexity assesses text complexity and burstiness evaluates sentence variation. People often write with a mix of long and short sentences, while machine-generated sentences tend to be uniform. You need to ensure a suitable balance of both perplexity and burstiness.
 
-                        Remember that while summarizing, it's crucial to maintain the integrity of the author's ideas and voice. Use your own words to explain the concepts, but ensure that you capture the essence of the original content accurately.
-                        """,
+                    Remember that while summarizing, it's crucial to maintain the integrity of the author's ideas and voice. Use your own words to explain the concepts, but ensure that you capture the essence of the original content accurately.
+                    """,
                     },
                     {
                         "role": "user",
@@ -231,14 +231,14 @@ def summarize_book(book: str) -> str:
                     {
                         "role": "assistant",
                         "content": """
-                        Desired format:
-                        Introduction: Provide a brief overview of the book's purpose, author's background, and any relevant context.
-                        Key points: Summarize the main concepts or ideas presented in the book using concise paragraphs.
-                        Insights and Examples: Expand on the most insightful and impactful moments from the book. Explain how these insights can be applied in real-life situations and provide relevant examples or anecdotes.
-                        Practical Application: Offer practical steps or strategies derived from the book's teachings. Describe how readers can implement the ideas in their own lives and include actionable tips or exercises.
-                        Quotes: Select notable quotes from the author that encapsulate important concepts or provide inspiration. Use quotation marks and attribute the quotes to the author: "Quote" - Author Name.
-                        Conclusion: Summarize the overall message of the book and express your own thoughts and reflections on its content and potential impact.
-                        """,
+                    Desired format:
+                    Introduction: Provide a brief overview of the book's purpose, author's background, and any relevant context.
+                    Key points: Identify the main concepts or ideas presented in the book. Summarize each key point concisely and clearly. Use bullet points or numbered lists to organize the information.
+                    Insights and Examples: Highlight the most insightful and impactful moments from the book. Explain how these insights can be applied in real-life situations. Provide relevant examples or anecdotes to illustrate the author's ideas.
+                    Practical Application: Offer practical steps or strategies derived from the book's teachings. Describe how readers can implement the ideas in their own lives. Include actionable tips or exercises to reinforce the concepts.
+                    Quotes: Select notable quotes from the author that encapsulate important concepts or provide inspiration. Use quotation marks and attribute the quotes to the author, "Quote" Author Name
+                    Conclusion: Summarize the overall message of the book. Express your own thoughts and reflections on the book's content and potential impact.
+                    """,
                     },
                 ],
                 model="gpt-3.5-turbo",
@@ -284,25 +284,25 @@ def get_cover_prompt(summary):
 
             Here are 10 great examples of textual representation of art pieces that you can learn from:
 
-            1. Capture a vibrant street photograph of a bustling cityscape at night. Emphasize the colorful neon lights and the energy of the urban environment. Use long exposure techniques to create light trails and convey a sense of movement. Experiment with different angles and perspectives to capture a unique composition.
+            1. Capture a vibrant street photograph of a bustling cityscape at night. Emphasize the colorful neon lights and the energy of the urban environment. Use long exposure techniques to create light trails and convey a sense of movement. Experiment with different angles and perspectives to capture a unique composition. Urban cityscape, Futuristic architecture, Dynamic motion blur, Vibrant street art.
 
-            2. Take a breathtaking landscape photo of a serene mountain range at sunrise. Highlight the majestic peaks and the soft, warm glow of the rising sun. Incorporate elements of nature, such as trees or a flowing river, to add depth and interest to the composition. Use a wiSde-angle lens to capture the expansive beauty of the scene.
+            2. Take a breathtaking landscape photo of a serene mountain range at sunrise. Highlight the majestic peaks and the soft, warm glow of the rising sun. Incorporate elements of nature, such as trees or a flowing river, to add depth and interest to the composition. Use a wiSde-angle lens to capture the expansive beauty of the scene. Atmospheric landscape, Tranquil seascape, Serene mountainscapes, Subtle morning mist.
 
-            3. Create an artistic still life photograph featuring a bouquet of colorful flowers in a vintage vase. Experiment with lighting techniques to create dramatic shadows and highlights. Play with composition and depth of field to draw attention to specific flowers or details. Aim for a visually striking image that evokes emotions.
+            3. Create an artistic still life photograph featuring a bouquet of colorful flowers in a vintage vase. Experiment with lighting techniques to create dramatic shadows and highlights. Play with composition and depth of field to draw attention to specific flowers or details. Aim for a visually striking image that evokes emotions. Detailed botanicals, Bold pop art, Subtle pastel tones, Whimsical illustrations.
 
-            4. Capture a candid moment of joy and laughter between friends in a natural outdoor setting. Aim to convey the warmth and connection shared among them. Use natural light and a shallow depth of field to create a soft, dreamy atmosphere. Look for genuine expressions and interactions to capture the essence of friendship.
+            4. Capture a candid moment of joy and laughter between friends in a natural outdoor setting. Aim to convey the warmth and connection shared among them. Use natural light and a shallow depth of field to create a soft, dreamy atmosphere. Look for genuine expressions and interactions to capture the essence of friendship. Captivating wildlife, Emotional storytelling, Playful patterns, Nostalgic memories.
 
-            5. Take a captivating wildlife photograph showcasing the beauty and grace of a wild animal in its natural habitat. Pay attention to details such as the animal's fur, feathers, or scales. Capture the animal in action or at rest, conveying its unique characteristics and behavior. Use a telephoto lens for close-up shots and a fast shutter speed to freeze motion. 
+            5. Take a captivating wildlife photograph showcasing the beauty and grace of a wild animal in its natural habitat. Pay attention to details such as the animal's fur, feathers, or scales. Capture the animal in action or at rest, conveying its unique characteristics and behavior. Use a telephoto lens for close-up shots and a fast shutter speed to freeze motion.  Captivating wildlife, Expressive emotions, Dynamic action, Whimsical creatures.
 
-            6. Create a striking abstract photograph using unconventional objects and textures. Look for interesting patterns, shapes, or colors in your surroundings. Experiment with different angles, lighting, and compositions to create a visually intriguing image that sparks curiosity and imagination.
+            6. Create a striking abstract photograph using unconventional objects and textures. Look for interesting patterns, shapes, or colors in your surroundings. Experiment with different angles, lighting, and compositions to create a visually intriguing image that sparks curiosity and imagination. Abstract geometric, Subtle monochrome, Whimsical illustrations, Organic textures.
 
-            7. Capture a powerful black and white portrait of an elderly person with wrinkles and weathered features. Aim to convey their life story and wisdom through their expression and character. Utilize dramatic lighting techniques and strong contrasts to add depth and intensity to the image. Focus on capturing the essence of their unique personality.
+            7. Capture a powerful black and white portrait of an elderly person with wrinkles and weathered features. Aim to convey their life story and wisdom through their expression and character. Utilize dramatic lighting techniques and strong contrasts to add depth and intensity to the image. Focus on capturing the essence of their unique personality. Dramatic portrait, Haunting beauty, Expressive emotions, Mysterious shadows.
 
-            8. Take a conceptual photograph that symbolizes freedom and exploration. Use props or elements that represent adventure and discovery. Experiment with composition and lighting to create a visually compelling image that inspires a sense of wanderlust and possibility.
+            8. Take a conceptual photograph that symbolizes freedom and exploration. Use props or elements that represent adventure and discovery. Experiment with composition and lighting to create a visually compelling image that inspires a sense of wanderlust and possibility. Conceptual symbolism, Ethereal fantasy, Dynamic action, Mystical forests.
 
-            9. Create an ethereal, dreamlike photograph featuring a dancer in motion. Utilize flowing fabrics, soft lighting, and long exposure techniques to capture the grace and fluidity of the dance. Aim to convey a sense of beauty, movement, and emotion in the image.
+            9. Create an ethereal, dreamlike photograph featuring a dancer in motion. Utilize flowing fabrics, soft lighting, and long exposure techniques to capture the grace and fluidity of the dance. Aim to convey a sense of beauty, movement, and emotion in the image. Whimsical creatures, Surreal dreamscape, Expressive emotions, Dynamic motion blur.
 
-            10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture.
+            10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture. Futuristic architecture, Industrial urban, Architectural symmetry, Dramatic city skylines.
 
             Please note that the above examples are for reference and inspiration. Your own written textual representation should be unique and tailored specifically to the book's summary and themes.
 
