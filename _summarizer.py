@@ -38,9 +38,15 @@ DELAY_SECONDS = 10
 
 
 def read_file_contents(file_name: str, encoding="utf-8") -> List[str]:
-    response, _ = dbx.files_download(f"/all_books/{file_name}")
-    contents = response.content.decode(encoding)
-    return contents.splitlines()
+    download_path = os.path.join(
+        os.getcwd(), file_name
+    )  # Specify the local directory path
+    dbx.files_download_to_file(download_path, f"/all_books/{file_name}")
+
+    with open(download_path, "r", encoding=encoding) as file:
+        contents = file.readlines()
+
+    return [line.strip() for line in contents]
 
 
 all_books = set(read_file_contents("book_titles.txt"))
