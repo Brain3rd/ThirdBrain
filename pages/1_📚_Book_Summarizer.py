@@ -159,16 +159,23 @@ if st.session_state.authentication_status:
                 for txt_file in text_file:
                     # Download the file content
                     _, res = dbx.files_download(txt_file.path_display)
-                    st.session_state.file_content = res.content.decode("utf-8")
+                    file_content = res.content.decode("utf-8")
 
-                    # Store title and file content in st.session_state.audio
-                    st.session_state.audio[
-                        st.session_state.title
-                    ] = st.session_state.file_content
+                    # Split the file content into the prompt data and summary data
+                    prompt_start = file_content.index("Image prompt:") + len(
+                        "Image prompt:"
+                    )
+                    prompt_end = file_content.index("\n", prompt_start)
+                    prompt_data = file_content[prompt_start:prompt_end]
+                    summary_data = file_content[prompt_end:]
 
-                    # Display the text
+                    # Store title and summary data in st.session_state.audio
+                    st.session_state.audio[st.session_state.title] = summary_data
+
+                    # Display the title and summary data
                     st.title(st.session_state.title)
-                    st.write(st.session_state.file_content)
+                    st.write(f"Image prompt:\n\n{prompt_data}")
+                    st.write(summary_data)
 
             # Break the loop if the specified number of summaries is reached
             if (
