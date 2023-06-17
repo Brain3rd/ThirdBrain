@@ -59,9 +59,9 @@ if st.session_state.authentication_status:
             submit_button = st.form_submit_button("Submit")
 
         if submit_button:
+            summarizer(text_input)
             # Clear the cache
             st.cache_data.clear()
-            summarizer(text_input)
 
     @st.cache_data()
     def display_book_summaries(num_summaries=None):
