@@ -318,8 +318,8 @@ def create_dalle_image(prompt):
         try:
             image_response = openai.Image.create(
                 prompt=prompt,
-                n=1,
-                size="1024x1024",
+                n=2,
+                size="512x512",
                 response_format="b64_json",  # Get image data instead of url
             )
             # If the code execution is successful, break out of the loop
@@ -354,10 +354,10 @@ def create_stable_image(prompt):
                     "text_prompts": [{"text": f"{prompt}"}],
                     "cfg_scale": 7,
                     "clip_guidance_preset": "FAST_BLUE",
-                    "height": 1024,
-                    "width": 1024,
-                    "samples": 1,
-                    "steps": 30,
+                    "height": 512,
+                    "width": 512,
+                    "samples": 2,
+                    "steps": 50,
                 },
             )
 
