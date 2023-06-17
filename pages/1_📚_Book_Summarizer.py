@@ -156,20 +156,30 @@ if st.session_state.authentication_status:
                     )  # Add all temporary links to the session state
 
                 # Add delete option for the expander
-                delete_expander = st.button("Delete Expander")
-                if delete_expander:
-                    # Delete files and folder from Dropbox
+                delete_expander_key = f"delete_expander_{folder_name}"
+                delete_expander_button = st.expander(
+                    "Delete Expander", expanded=False, key=delete_expander_key
+                )
+                delete_expander_button.button(
+                    "Delete", key=f"delete_button_{folder_name}"
+                )
+
+                if delete_expander_button.button_clicked(
+                    f"delete_button_{folder_name}"
+                ):
                     try:
-                        dbx.files_delete(folder.path_display)
-                        st.success("Expander deleted successfully")
+                        # Delete files and folder from Dropbox
+                        dbx.files_delete_v2(folder.path_display)
+
+                        # Delete local files
+                        shutil.rmtree(folder_name, ignore_errors=True)
+                        del st.session_state.url[st.session_state.title]
+                        del st.session_state.audio[st.session_state.title]
+                        break
+
                     except dropbox.exceptions.ApiError as e:
                         st.error(f"Failed to delete expander: {e}")
-
-                    # Delete local files
-                    shutil.rmtree(folder_name, ignore_errors=True)
-                    del st.session_state.url[st.session_state.title]
-                    del st.session_state.audio[st.session_state.title]
-                    break
+                        break
 
             # Display the text files without columns
             with expander:
