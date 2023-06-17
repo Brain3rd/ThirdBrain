@@ -4,6 +4,7 @@ import streamlit as st
 from streamlit_chat import message
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
+import math
 
 TITLE = "Text Reader"
 ABOUT = """
@@ -39,7 +40,7 @@ if st.session_state.authentication_status:
 
     audiobook = st.selectbox(
         "Choose your book",
-        list(st.session_state.audio.keys())[::-1],
+        list(st.session_state.audio.keys()),
     )
 
     # Create a button to play audiobook.
@@ -55,8 +56,28 @@ if st.session_state.authentication_status:
         # Perform the desired action with the selected book and its file content
         # For example, you can use text-to-speech to read the audiobook
         # or display the file content in another component
-        # Display the image URLs
-        for url in st.session_state.url[selected_book]:
-            st.image(url, caption="Image")
 
+        # Display the images in columns with caption names
+        image_urls = st.session_state.url[selected_book]
+        num_images = len(image_urls)
+        num_columns = 2  # Number of columns for the images
+        num_rows = math.ceil(num_images / num_columns)
+
+        col1, col2 = st.columns(2)  # Create two columns
+
+        for i, url in enumerate(image_urls):
+            # Determine the column to display the image based on the index
+            if i % num_columns == 0:
+                column = col1
+            else:
+                column = col2
+
+            # Get the caption name from the image URL
+            caption = os.path.splitext(url.split("/")[-1])[0]
+
+            # Display the image in the respective column with the caption name
+            with column:
+                st.image(url, caption=caption)
+
+        # Display the text content
         st.write(selected_file_content)
