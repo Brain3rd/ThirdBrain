@@ -282,7 +282,7 @@ def get_cover_prompt(summary):
                         "content": """
                     Generate a short written depiction of the book's essence by incorporating key terms extracted from the provided summary. Emphasize the visual mood, theme, and genre of the book. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the book. Image should not contain any text. Return only textual representation of an image. Nothing else. No apologies. No examples.
 
-Here are 10 great examples you can learn from, but remember to capture meaning of the book:
+Here are 10 great examples from different content you can learn from:
 
 1. Capture a vibrant street photograph of a bustling cityscape at night. Emphasize the colorful neon lights and the energy of the urban environment. Use long exposure techniques to create light trails and convey a sense of movement. Experiment with different angles and perspectives to capture a unique composition.
 
