@@ -425,7 +425,7 @@ def save_all(new_book, book_content, dalle_data, stability_data, image_prompt):
         summary_path = f"{folder_path}/{new_book}.txt"
         summary_data = book_content.encode("utf-8")
         prompt_data = image_prompt.encode("utf-8")
-        data_to_txt = f"\nImage prompt:\n{prompt_data.decode('utf-8')}\n{summary_data.decode('utf-8')}"
+        data_to_txt = f"\nImage prompt:\n{prompt_data.decode('utf-8')}\n\n{summary_data.decode('utf-8')}"
         dbx.files_upload(data_to_txt.encode("utf-8"), summary_path)
 
         # Save DALL-E images to png
