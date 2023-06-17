@@ -52,13 +52,12 @@ def read_file_contents():
         entry for entry in entries if isinstance(entry, dropbox.files.FolderMetadata)
     ]
 
-    all_folders = []
+    all_folders = set()  # Use a set to store unique folder names
+
     for folder in folders:
         folder_name = os.path.basename(folder.path_display).replace("_", " ")
-        if folder_name == "books":
-            pass
-        else:
-            all_folders.append(folder_name)
+        if folder_name != "books":
+            all_folders.add(folder_name)  # Add the folder name to the set
 
     return all_folders
 
@@ -137,72 +136,73 @@ def get_book(books):
         time.sleep(DELAY_SECONDS)
 
     while book in all_books:
-        try:
-            # Book has already been selected, choose a different one
-            st.sidebar.warning(
-                "Oh, you've read this book already. Choosing a different book..."
-            )
+        # Book has already been selected, choose a different one
+        st.sidebar.warning(
+            "Oh, you've read this book already. Choosing a different book..."
+        )
 
-            response = openai.ChatCompletion.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": f"""
-                        You are a professional life coach with great knowledge of charisma and leadership. Having witnessed a wide range of experiences, overcome challenges, and achieved success in life, you will choose books that teach users to better their lives.
-                    """,
-                    },
-                    {
-                        "role": "user",
-                        "content": f"""
-                    I have read this book already, please give me 1 different book. Different than these books: {all_books}
-                    """,
-                    },
-                    {
-                        "role": "assistant",
-                        "content": """
-                    Desired format:
-                    Book Title by Author Name
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            try:
+                response = openai.ChatCompletion.create(
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": f"""
+                            You are a professional life coach with great knowledge of charisma and leadership. Having witnessed a wide range of experiences, overcome challenges, and achieved success in life, you will choose books that teach users to better their lives.
+                        """,
+                        },
+                        {
+                            "role": "user",
+                            "content": f"""
+                        I have read this book already, please give me 1 different book. Different than these books: {all_books}
+                        """,
+                        },
+                        {
+                            "role": "assistant",
+                            "content": """
+                        Desired format:
+                        Book Title by Author Name
 
-                    Undesired format:
-                    "Book Title" by Aurhor name
-                    Book Title: Author name
-                    """,
-                    },
-                    {
-                        "role": "assistant",
-                        "content": """
-                    Just 1 book, no more. Give me just text in form of derired format, notthing else. No = or . or : either. 
+                        Undesired format:
+                        "Book Title" by Aurhor name
+                        Book Title: Author name
+                        """,
+                        },
+                        {
+                            "role": "assistant",
+                            "content": """
+                        Just 1 book, no more. Give me just text in form of desired format, nothing else. No = or . or : either. 
 
-                    Example template:
-                    Unlimited Power by Tony Robbins
+                        Example template:
+                        Unlimited Power by Tony Robbins
 
-                    Another example:
-                    Brain Rules 12 Principles for Surviving and Thriving at Work Home and School by John Medina
+                        Another example:
+                        Brain Rules 12 Principles for Surviving and Thriving at Work Home and School by John Medina
 
-                    """,
-                    },
-                ],
-                model="gpt-3.5-turbo",
-                max_tokens=50,
-            )
-            book = (
-                response["choices"][0]["message"]["content"]
-                .replace(".", "")
-                .replace("=", "")
-                .replace(":", "")
-                .replace("'", "")
-                .replace(",", "")
-                .replace('"', "")
-            )
-            # If the code execution is successful, break out of the loop
-            break
-        except Exception as e:
-            # Handle RateLimitError
-            st.sidebar.error(
-                f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
-            )
-        # Wait for the specified delay before the next attempt
-        time.sleep(DELAY_SECONDS)
+                        """,
+                        },
+                    ],
+                    model="gpt-3.5-turbo",
+                    max_tokens=50,
+                )
+                book = (
+                    response["choices"][0]["message"]["content"]
+                    .replace(".", "")
+                    .replace("=", "")
+                    .replace(":", "")
+                    .replace("'", "")
+                    .replace(",", "")
+                    .replace('"', "")
+                )
+                # If the code execution is successful, break out of the loop
+                break
+            except Exception as e:
+                # Handle RateLimitError
+                st.sidebar.error(
+                    f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
+                )
+            # Wait for the specified delay before the next attempt
+            time.sleep(DELAY_SECONDS)
 
     st.sidebar.success(f"{book}")
 
