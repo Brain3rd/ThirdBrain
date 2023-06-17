@@ -12,7 +12,7 @@ from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 
 BOOK_FOLDER = "books"
 
-TITLE = "ChatBot - Third Brain"
+TITLE = "ChatBot"
 ABOUT = """
     Engage in dynamic conversations with our advanced Conversational ChatBot, powered by ChatGPT. Our ChatBot utilizes cutting-edge language technology, including Langchain and ChatGPT, to deliver interactive and natural interactions.
 
@@ -38,10 +38,10 @@ if st.session_state.authentication_status:
     openai.api_key = st.secrets.OPENAI_API_KEY
 
     if "responses" not in st.session_state:
-        st.session_state["responses"] = []
+        st.session_state["responses"] = ["Hey Human"]
     ## past stores User's questions
     if "requests" not in st.session_state:
-        st.session_state["requests"] = []
+        st.session_state["requests"] = ["Hi ChatBot"]
 
     if "buffer_memory" not in st.session_state:
         st.session_state.buffer_memory = ConversationBufferWindowMemory(k=3)
@@ -61,7 +61,7 @@ if st.session_state.authentication_status:
     with st.sidebar:
         st.title("ChatGPT")
         st.markdown(ABOUT)
-        add_vertical_space(5)
+        add_vertical_space(2)
         st.write("💡 Note: API key required!")
 
     # Generate empty lists for GPT_generated and past.

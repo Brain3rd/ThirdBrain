@@ -5,7 +5,7 @@ from streamlit_chat import message
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
 
-TITLE = "Text Reader - Third Brain"
+TITLE = "Text Reader"
 ABOUT = """
 Welcome to the Text Reader App, a powerful tool designed for text reading and accessibility. Our app utilizes advanced AI text-to-speech features to bring written content to life.
 
@@ -31,7 +31,7 @@ if st.session_state.authentication_status:
     with st.sidebar:
         st.title(TITLE)
         st.markdown(ABOUT)
-        add_vertical_space(5)
+        add_vertical_space(2)
         st.write("💡 Note: API key required!")
 
     if "audio" not in st.session_state:

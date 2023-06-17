@@ -20,7 +20,7 @@ if st.session_state.authentication_status:
     cookies = sign.login()
     sign.saveCookies()
 
-    TITLE = "HugChat - Third Brain"
+    TITLE = "HugChat"
     ABOUT = """
         Welcome to the HugChat App, an innovative chatbot experience powered by the LLM model. Our chatbot, HugChat, utilizes the advanced capabilities of the OpenAssistant/oasst-sft-6-llama-30b-xor LLM model to provide intelligent and interactive conversations.
 
@@ -43,7 +43,7 @@ if st.session_state.authentication_status:
     with st.sidebar:
         st.title("🤗💬 HugChat App")
         st.markdown(ABOUT)
-        add_vertical_space(5)
+        add_vertical_space(2)
         st.write("💡 Note: No API key required!")
 
     # Generate empty lists for generated and past.

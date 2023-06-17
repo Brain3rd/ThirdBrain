@@ -34,7 +34,7 @@ dbx = dropbox.Dropbox(
 
 # Looping parameters for error handling
 MAX_ATTEMPTS = 2
-DELAY_SECONDS = 20
+DELAY_SECONDS = 10
 
 
 def read_file_contents(file_name: str, encoding="utf-8") -> List[str]:
@@ -47,39 +47,41 @@ all_books = set(read_file_contents("book_titles.txt"))
 
 
 # Get random book
-books = [
-    {
-        "role": "system",
-        "content": f"""
-        You are a professional life coach with great knowledge of charisma and leadership. Having witnessed a wide range of experiences, overcome challenges, and achieved success in life, you will choose books that teach users to better their lives.
-    """,
-    },
-    {
-        "role": "user",
-        "content": f"""
-    Give me a random book from all time best selling self help books.
-    Different than these books:
-    {all_books}
-    """,
-    },
-    {
-        "role": "assistant",
-        "content": """
-    Desired format:
-    Book Title by Author Name
+def book_picker():
+    books = [
+        {
+            "role": "system",
+            "content": f"""
+            You are a professional life coach with great knowledge of charisma and leadership. Having witnessed a wide range of experiences, overcome challenges, and achieved success in life, you will choose books that teach users to better their lives.
+        """,
+        },
+        {
+            "role": "user",
+            "content": f"""
+        Give me a random book from all time best selling self help books.
+        Different than these books:
+        {all_books}
+        """,
+        },
+        {
+            "role": "assistant",
+            "content": """
+        Desired format:
+        Book Title by Author Name
 
-    Undesired format:
-    "Book Title" by Aurhor name
-    Book Title: Author name
-    """,
-    },
-    {
-        "role": "assistant",
-        "content": """
-    Give me just text in form of derired format, notthing else. No = or . or : either. 
-    """,
-    },
-]
+        Undesired format:
+        "Book Title" by Aurhor name
+        Book Title: Author name
+        """,
+        },
+        {
+            "role": "assistant",
+            "content": """
+        Give me just text in form of derired format, notthing else. No = or . or : either. 
+        """,
+        },
+    ]
+    return books
 
 
 def get_book(books: List[dict], file_name: str, encoding="utf-8") -> str:
@@ -412,6 +414,7 @@ def summarizer(book_input=None) -> str:
         with open("book_titles.txt", "a", encoding="utf-8") as f:
             f.write(f"{st.session_state.new_book}\n")
     else:
+        books = book_picker()
         st.session_state.new_book = get_book(books, "book_titles.txt")
 
     st.session_state.book_summary = summarize_book(st.session_state.new_book)

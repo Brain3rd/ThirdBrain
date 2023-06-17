@@ -8,7 +8,7 @@ from dropbox.exceptions import AuthError
 
 BOOK_FOLDER = "books"
 
-TITLE = "Book Summarizer - Third Brain"
+TITLE = "Book Summarizer"
 ABOUT = """
     Experience the power of AI-generated book summaries with our Book Summarizer tool. Harnessing the capabilities of ChatGPT, our tool provides concise and insightful summaries of books. Whether you're a busy reader seeking quick overviews or a researcher looking to gather key points, our Book Summarizer has got you covered.
 
@@ -20,7 +20,7 @@ about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
 
 
 st.set_page_config(
-    page_icon="📙",
+    page_icon="📚",
     page_title=TITLE,
     layout="wide",
     initial_sidebar_state="auto",
@@ -45,7 +45,7 @@ if st.session_state.authentication_status:
     with st.sidebar:
         st.title(TITLE)
         st.markdown(ABOUT)
-        add_vertical_space(5)
+        add_vertical_space(2)
         st.write("💡 Note: API key required!")
 
     def input_form():
@@ -91,7 +91,7 @@ if st.session_state.authentication_status:
         ]
 
         # Reverse the order of the books displayed
-        # folders.reverse()
+        folders.reverse()
 
         for folder in folders:
             folder_name = os.path.basename(folder.path_display).replace("_", " ")
@@ -203,5 +203,5 @@ if st.session_state.authentication_status:
 
     # Run the app
     if __name__ == "__main__":
-        display_book_summaries()
         input_form()
+        display_book_summaries()

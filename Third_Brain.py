@@ -48,8 +48,4 @@ if st.session_state.authentication_status:
 
     st.sidebar.success("Select an App Above.")
 
-    st.markdown(
-        """
-    Welcome to Third Brain, your one-stop destination for self-development AI tools. Our website offers a wide range of powerful applications developed using Python and Streamlit. Whether you're looking to enhance your productivity, boost your creativity, or improve your personal growth, we've got you covered. Explore our collection of innovative AI tools designed to assist you on your journey towards self-improvement. With a perfect blend of cutting-edge technology and user-friendly interfaces, Third Brain is here to empower you on your path to success. Start your self-development journey today with our intuitive and transformative AI tools.
-    """
-    )
+    st.markdown(ABOUT)
