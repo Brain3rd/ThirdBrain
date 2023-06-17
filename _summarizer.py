@@ -269,7 +269,7 @@ def get_cover_prompt(summary):
                     {
                         "role": "system",
                         "content": """
-                As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals. Your mission is to create text to image prompts for image generating AI. You do not draw any images, just written textual representation of an image.
+                As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals. 
                 """,
                     },
                     {
@@ -303,6 +303,23 @@ Here are 10 of examples of an desired output:
 
 10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture. --Beta --Upbeta
                 """,
+                    },
+                    {
+                        "role": "system",
+                        "content": """
+                As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals. 
+                """,
+                    },
+                    {
+                        "role": "user",
+                        "content": "Generate a short textual representation of an image using keywords from the book summary.",
+                    },
+                    {
+                        "role": "assistant",
+                        "content": """
+                        Undesired output:
+                        Sorry, I cannot perform the given task as generating images using text is beyond my current capabilities as an AI language model.
+                        """,
                     },
                 ],
                 model="gpt-3.5-turbo",
