@@ -281,7 +281,7 @@ def get_cover_prompt(summary):
                         "content": """
                     Generate a short written depiction of the book's essence by incorporating key terms extracted from the provided summary. Emphasize the visual mood, theme, and genre of the book. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the book. Image should not contain any text.
 
-Here are 10 of examples of an desired output:
+Here are 10 examples of an desired output:
 
 1. Capture a vibrant street photograph of a bustling cityscape at night. Emphasize the colorful neon lights and the energy of the urban environment. Use long exposure techniques to create light trails and convey a sense of movement. Experiment with different angles and perspectives to capture a unique composition. -Beta -AR -16:9 -Upbeta
 
@@ -319,6 +319,9 @@ Here are 10 of examples of an desired output:
                         "content": """
                         Undesired output:
                         Sorry, I cannot perform the given task as generating images using text is beyond my current capabilities as an AI language model.
+
+                        Undesired output:
+                        However, I can provide an example of a textual representation of an image using keywords from the book summary:
                         """,
                     },
                 ],
