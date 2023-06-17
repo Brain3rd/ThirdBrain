@@ -37,26 +37,33 @@ MAX_ATTEMPTS = 2
 DELAY_SECONDS = 10
 
 
-def read_file_contents(file_name: str, encoding="utf-8") -> List[str]:
-    download_path = os.path.join(
-        os.getcwd(), file_name
-    )  # Specify the local directory path
-    dbx.files_download_to_file(download_path, f"/all_books/{file_name}")
+def read_file_contents():
+    try:
+        # List all files and folders in the /books folder of Dropbox
+        result = dbx.files_list_folder("/books", recursive=True)
+        entries = result.entries
+    except dropbox.exceptions.AuthError as e:
+        # Handle authentication error
+        # st.error(f"Dropbox authentication failed: {e}")
+        return
 
-    with open(download_path, "r", encoding=encoding) as file:
-        contents = file.readlines()
+    # Filter out folders from the entries
+    folders = [
+        entry for entry in entries if isinstance(entry, dropbox.files.FolderMetadata)
+    ]
 
-    return [line.strip() for line in contents]
+    all_folders = []
+    for folder in folders:
+        folder_name = os.path.basename(folder.path_display).replace("_", " ")
+        if folder_name == "books":
+            pass
+        else:
+            all_folders.append(folder_name)
+
+    return all_folders
 
 
-all_books = set(read_file_contents("book_titles.txt"))
-
-
-def write_file_contents(file_name: str, contents: str, encoding="utf-8"):
-    data = contents.encode(encoding)
-    dbx.files_upload(
-        data, f"/all_books/{file_name}", mode=dropbox.files.WriteMode("overwrite")
-    )
+all_books = read_file_contents()
 
 
 # Get random book
@@ -97,7 +104,7 @@ def book_picker():
     return books
 
 
-def get_book(books: List[dict], file_name: str, encoding="utf-8") -> str:
+def get_book(books):
     st.sidebar.info("Selecting random book...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -183,8 +190,6 @@ def get_book(books: List[dict], file_name: str, encoding="utf-8") -> str:
             )
         # Wait for the specified delay before the next attempt
         time.sleep(DELAY_SECONDS)
-
-    write_file_contents("book_titles.txt", f"{book}\n")
 
     st.sidebar.success(f"{book}")
 
@@ -421,12 +426,11 @@ def summarizer(book_input=None) -> str:
     st.sidebar.info("Summarizanion progress started...")
     if book_input:
         st.session_state.new_book = book_input
-        all_books.add(st.session_state.new_book)
-        write_file_contents("book_titles.txt", f"{st.session_state.new_book}\n")
+        all_books.append(st.session_state.new_book)
 
     else:
         books = book_picker()
-        st.session_state.new_book = get_book(books, "book_titles.txt")
+        st.session_state.new_book = get_book(books)
 
     st.session_state.book_summary = summarize_book(st.session_state.new_book)
     book_content = f"{st.session_state.new_book}\n\n{st.session_state.book_summary}"
