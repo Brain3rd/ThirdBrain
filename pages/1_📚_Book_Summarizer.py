@@ -98,7 +98,8 @@ if st.session_state.authentication_status:
 
             # Extract the title from the folder name
             if folder_name not in st.session_state["title"]:
-                st.session_state.title = folder_name
+                if folder_name != "books":
+                    st.session_state.title = folder_name
 
             expander = st.expander(st.session_state.title)
 
