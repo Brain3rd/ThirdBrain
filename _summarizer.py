@@ -38,7 +38,7 @@ DELAY_SECONDS = 10
 
 
 def read_file_contents(file_name: str, encoding="utf-8") -> List[str]:
-    response = dbx.files_download(f"/all_books/{file_name}")
+    response, _ = dbx.files_download(f"/all_books/{file_name}")
     contents = response.content.decode(encoding)
     return contents.splitlines()
 
