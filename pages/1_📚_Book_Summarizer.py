@@ -64,131 +64,135 @@ if st.session_state.authentication_status:
             # Clear the cache
             st.cache_data.clear()
 
+    @st.cache_data()
+    def display_book_summaries(num_summaries=None):
+        if "title" not in st.session_state:
+            st.session_state.title = ""
+        if "image_url" not in st.session_state:
+            st.session_state.image_url = ""
+        if "audio" not in st.session_state:
+            st.session_state.audio = {}
+        if "url" not in st.session_state:
+            st.session_state.url = {}
 
-@st.cache_data()
-def display_book_summaries(num_summaries=None):
-    if "title" not in st.session_state:
-        st.session_state.title = ""
-    if "image_url" not in st.session_state:
-        st.session_state.image_url = ""
-    if "audio" not in st.session_state:
-        st.session_state.audio = {}
-    if "url" not in st.session_state:
-        st.session_state.url = {}
+        try:
+            # List all files and folders in the /books folder of Dropbox
+            result = dbx.files_list_folder("/books", recursive=True)
+            entries = result.entries
+        except dropbox.exceptions.AuthError as e:
+            # Handle authentication error
+            st.error(f"Dropbox authentication failed: {e}")
+            return
 
-    try:
-        # List all files and folders in the /books folder of Dropbox
-        result = dbx.files_list_folder("/books", recursive=True)
-        entries = result.entries
-    except dropbox.exceptions.AuthError as e:
-        # Handle authentication error
-        st.error(f"Dropbox authentication failed: {e}")
-        return
-
-    # Filter out folders from the entries
-    folders = [
-        entry for entry in entries if isinstance(entry, dropbox.files.FolderMetadata)
-    ]
-
-    # Reverse the order of the books displayed
-    folders.reverse()
-
-    for folder in folders:
-        folder_name = os.path.basename(folder.path_display).replace("_", " ")
-
-        # Extract the title from the folder name
-        if folder_name not in st.session_state["title"]:
-            if folder_name != "books":
-                st.session_state.title = str(folder_name)
-
-        expander = st.expander(st.session_state.title)
-
-        # Get the files inside the folder
-        folder_files = [
+        # Filter out folders from the entries
+        folders = [
             entry
             for entry in entries
-            if isinstance(entry, dropbox.files.FileMetadata)
-            and os.path.dirname(entry.path_display) == folder.path_display
+            if isinstance(entry, dropbox.files.FolderMetadata)
         ]
 
-        # Separate image files and text file
-        image_files = [
-            file for file in folder_files if file.path_display.endswith(".png")
-        ]
-        text_file = [
-            file for file in folder_files if file.path_display.endswith(".txt")
-        ]
+        # Reverse the order of the books displayed
+        folders.reverse()
 
-        # Calculate the number of columns needed for the images
-        num_images = len(image_files)
-        num_columns = 2  # Number of columns for the images
-        num_rows = math.ceil(num_images / num_columns)
+        for folder in folders:
+            folder_name = os.path.basename(folder.path_display).replace("_", " ")
 
-        # Display the images in two columns
-        with expander:
-            image_urls = []  # List to store the temporary links of all images
+            # Extract the title from the folder name
+            if folder_name not in st.session_state["title"]:
+                if folder_name != "books":
+                    st.session_state.title = str(folder_name)
 
-            col1, col2 = st.columns(2)  # Create two columns
+            expander = st.expander(st.session_state.title)
 
-            for i, image_file in enumerate(image_files):
-                # Get temporary link for the image file
-                res = dbx.files_get_temporary_link(image_file.path_display).link
-                image_urls.append(res)  # Add the temporary link to the list
+            # Get the files inside the folder
+            folder_files = [
+                entry
+                for entry in entries
+                if isinstance(entry, dropbox.files.FileMetadata)
+                and os.path.dirname(entry.path_display) == folder.path_display
+            ]
 
-                # Determine the column to display the image based on the index
-                if i % num_columns == 0:
-                    column = col1
-                else:
-                    column = col2
+            # Separate image files and text file
+            image_files = [
+                file for file in folder_files if file.path_display.endswith(".png")
+            ]
+            text_file = [
+                file for file in folder_files if file.path_display.endswith(".txt")
+            ]
 
-                # Display the image in the respective column
-                with column:
-                    st.image(
-                        res,
-                        caption=os.path.splitext(image_file.name)[0],
-                    )
+            # Calculate the number of columns needed for the images
+            num_images = len(image_files)
+            num_columns = 2  # Number of columns for the images
+            num_rows = math.ceil(num_images / num_columns)
 
-            if st.session_state.title not in st.session_state.url:
-                st.session_state.url[st.session_state.title] = []
-                st.session_state.url[st.session_state.title].extend(
-                    image_urls
-                )  # Add all temporary links to the session state
+            # Display the images in two columns
+            with expander:
+                image_urls = []  # List to store the temporary links of all images
 
-            # Add delete option for the expander
-            delete_expander = st.button("Delete Expander")
-            if delete_expander:
-                # Delete files and folder from Dropbox
-                try:
-                    dbx.files_delete(folder.path_display)
-                    st.success("Expander deleted successfully")
-                except dropbox.exceptions.ApiError as e:
-                    st.error(f"Failed to delete expander: {e}")
+                col1, col2 = st.columns(2)  # Create two columns
 
-                # Delete local files
-                shutil.rmtree(folder_name, ignore_errors=True)
-                del st.session_state.url[st.session_state.title]
-                del st.session_state.audio[st.session_state.title]
+                for i, image_file in enumerate(image_files):
+                    # Get temporary link for the image file
+                    res = dbx.files_get_temporary_link(image_file.path_display).link
+                    image_urls.append(res)  # Add the temporary link to the list
+
+                    # Determine the column to display the image based on the index
+                    if i % num_columns == 0:
+                        column = col1
+                    else:
+                        column = col2
+
+                    # Display the image in the respective column
+                    with column:
+                        st.image(
+                            res,
+                            caption=os.path.splitext(image_file.name)[0],
+                        )
+
+                if st.session_state.title not in st.session_state.url:
+                    st.session_state.url[st.session_state.title] = []
+                    st.session_state.url[st.session_state.title].extend(
+                        image_urls
+                    )  # Add all temporary links to the session state
+
+                # Add delete option for the expander
+                delete_expander = st.button("Delete Expander")
+                if delete_expander:
+                    # Delete files and folder from Dropbox
+                    try:
+                        dbx.files_delete(folder.path_display)
+                        st.success("Expander deleted successfully")
+                    except dropbox.exceptions.ApiError as e:
+                        st.error(f"Failed to delete expander: {e}")
+
+                    # Delete local files
+                    shutil.rmtree(folder_name, ignore_errors=True)
+                    del st.session_state.url[st.session_state.title]
+                    del st.session_state.audio[st.session_state.title]
+                    break
+
+            # Display the text files without columns
+            with expander:
+                for txt_file in text_file:
+                    # Download the file content
+                    _, res = dbx.files_download(txt_file.path_display)
+                    st.session_state.file_content = res.content.decode("utf-8")
+
+                    # Store title and file content in st.session_state.audio
+                    st.session_state.audio[
+                        st.session_state.title
+                    ] = st.session_state.file_content
+
+                    # Display the text
+                    st.title(st.session_state.title)
+                    st.write(st.session_state.file_content)
+
+            # Break the loop if the specified number of summaries is reached
+            if (
+                num_summaries is not None
+                and len(st.session_state.audio) >= num_summaries
+            ):
                 break
-
-        # Display the text files without columns
-        with expander:
-            for txt_file in text_file:
-                # Download the file content
-                _, res = dbx.files_download(txt_file.path_display)
-                st.session_state.file_content = res.content.decode("utf-8")
-
-                # Store title and file content in st.session_state.audio
-                st.session_state.audio[
-                    st.session_state.title
-                ] = st.session_state.file_content
-
-                # Display the text
-                st.title(st.session_state.title)
-                st.write(st.session_state.file_content)
-
-        # Break the loop if the specified number of summaries is reached
-        if num_summaries is not None and len(st.session_state.audio) >= num_summaries:
-            break
 
     ### Option to use Local File Storage ###
     # def display_book_summaries():
