@@ -283,6 +283,6 @@ def art_gerator(art_input, art_name):
             st.image(image_data)
 
         st.title(art_name)
-        st.write(st.session_state.art_prompt)
+        st.write(art_name)
 
     st.sidebar.success("Art Generated!")
