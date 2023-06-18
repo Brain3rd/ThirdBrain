@@ -177,7 +177,7 @@ def create_stable_image(prompt):
                     "cfg_scale": 7,
                     "clip_guidance_preset": "FAST_BLUE",
                     "height": 512,
-                    "width": 512,
+                    "width": 768,
                     "samples": 2,
                     "steps": 50,
                 },

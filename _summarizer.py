@@ -372,7 +372,7 @@ def create_stable_image(prompt):
                     "text_prompts": [{"text": f"{prompt}"}],
                     "cfg_scale": 7,
                     "clip_guidance_preset": "FAST_BLUE",
-                    "height": 512,
+                    "height": 768,
                     "width": 512,
                     "samples": 2,
                     "steps": 50,
