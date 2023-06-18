@@ -75,8 +75,6 @@ if st.session_state.authentication_status:
 
         if user_input_name_button:
             st.session_state.user_input_name = user_input_name
-            # print(st.session_state.user_input)
-            # print(st.session_state.user_input_name)
             st.sidebar.info(st.session_state.user_input_name)
             art_gerator(st.session_state.user_input, st.session_state.user_input_name)
             st.cache_data.clear()
@@ -119,7 +117,7 @@ if st.session_state.authentication_status:
                 if art_folder_name != "images":
                     st.session_state.art_title = str(art_folder_name)
 
-            expander = st.expander(st.session_state.art_title)
+            expander = st.expander(st.session_state.art_title, expanded=False)
 
             # Get the files inside the folder
             art_folder_files = [
@@ -189,6 +187,7 @@ if st.session_state.authentication_status:
                     # Display the text
                     st.title(st.session_state.art_title)
                     st.write(st.session_state.art_file_content)
+                    print(st.session_state.art_file_content)
             # Break the loop if the specified number of summaries is reached
             if num_art is not None and len(st.session_state.audio) >= num_art:
                 break

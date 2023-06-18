@@ -206,7 +206,7 @@ def create_stable_image(prompt):
     return stable_data
 
 
-def save_all(image_name, image_prompt, dalle_data, stability_data):
+def save_all(image_name, image_prompt, dalle_data, stability_data, user_input):
     dalle_arts = []
     stable_arts = []
 
@@ -231,7 +231,7 @@ def save_all(image_name, image_prompt, dalle_data, stability_data):
 
         # Save image prompt to txt file
         art_path = f"{folder_path}/{image_name}.txt"
-        data_to_txt = f"Image prompt: {image_prompt}"
+        data_to_txt = f"User input: {user_input}\nAI Generated prompt: {image_prompt}\nStable Diffusion: stable-diffusion-v1-5 768x512\nDALL-E: 512x512"
         dbx.files_upload(data_to_txt.encode("utf-8"), art_path)
 
         # Save DALL-E images to png
@@ -269,10 +269,10 @@ def art_gerator(art_input, art_name):
     stable_art = create_stable_image(art_prompt)
 
     st.session_state.dalle_art, st.session_state.stable_art = save_all(
-        art_name, art_prompt, dalle_art, stable_art
+        art_name, art_prompt, dalle_art, stable_art, art_input
     )
 
-    st.session_state.art_expander = st.expander(art_name)
+    st.session_state.art_expander = st.expander(art_name, expanded=True)
     with st.session_state.art_expander:
         # Display DALL-E images
         for image_data in st.session_state.dalle_art:
@@ -283,6 +283,7 @@ def art_gerator(art_input, art_name):
             st.image(image_data)
 
         st.title(art_name)
+        st.write(art_input)
         st.write(art_prompt)
 
     st.sidebar.success("Art Generated!")

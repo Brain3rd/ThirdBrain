@@ -488,7 +488,9 @@ def summarizer(book_input=None) -> str:
         dalle_prompt,
     )
 
-    st.session_state.new_expander = st.expander(st.session_state.new_book)
+    st.session_state.new_expander = st.expander(
+        st.session_state.new_book, expanded=True
+    )
     with st.session_state.new_expander:
         # Display DALL-E images
         for image_data in st.session_state.dalle_cover:
