@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os
 import streamlit as st
 from streamlit_extras.add_vertical_space import add_vertical_space
@@ -6,6 +5,7 @@ from _summarizer import summarizer
 import dropbox
 from dropbox.exceptions import AuthError
 import math
+from environment import load_env_variables, get_api_key
 
 
 BOOK_FOLDER = "books"
@@ -29,26 +29,27 @@ st.set_page_config(
     menu_items={"About": f"{TITLE}{about_content}"},
 )
 
+with st.sidebar:
+    st.title(TITLE)
+    st.markdown(ABOUT)
+    add_vertical_space(2)
+    st.write("💡 Note: API key required!")
+
 
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
+    load_env_variables()
     # Dropbox keys
-    APP_KEY = st.secrets.APP_KEY
-    APP_SECRET = st.secrets.APP_SECRET
-    DROPBOX_REFRESH_TOKEN = st.secrets.DROPBOX_REFRESH_TOKEN
+    APP_KEY = get_api_key("APP_KEY")
+    APP_SECRET = get_api_key("APP_SECRET")
+    DROPBOX_REFRESH_TOKEN = get_api_key("DROPBOX_REFRESH_TOKEN")
     dbx = dropbox.Dropbox(
         app_key=APP_KEY,
         app_secret=APP_SECRET,
         oauth2_refresh_token=DROPBOX_REFRESH_TOKEN,
     )
-
-    with st.sidebar:
-        st.title(TITLE)
-        st.markdown(ABOUT)
-        add_vertical_space(2)
-        st.write("💡 Note: API key required!")
 
     def input_form():
         with st.form("Summarize Book", clear_on_submit=True):
@@ -67,8 +68,6 @@ if st.session_state.authentication_status:
     def display_book_summaries(num_summaries=None):
         if "title" not in st.session_state:
             st.session_state.title = ""
-        if "image_url" not in st.session_state:
-            st.session_state.image_url = ""
         if "audio" not in st.session_state:
             st.session_state.audio = {}
         if "url" not in st.session_state:

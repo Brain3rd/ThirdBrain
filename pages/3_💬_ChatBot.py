@@ -1,9 +1,8 @@
+from environment import load_env_variables, get_api_key
 import streamlit as st
 from streamlit_chat import message
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
-from dotenv import load_dotenv
-import os
 import openai
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
@@ -35,7 +34,8 @@ if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
-    openai.api_key = st.secrets.OPENAI_API_KEY
+    load_env_variables()
+    openai.api_key = get_api_key("OPENAI_API_KEY")
 
     if "responses" not in st.session_state:
         st.session_state["responses"] = ["Hey Human"]

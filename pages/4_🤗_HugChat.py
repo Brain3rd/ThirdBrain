@@ -4,17 +4,16 @@ from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
 from hugchat import hugchat
 from hugchat.login import Login
-from dotenv import load_dotenv
-import os
-
+from environment import load_env_variables, get_api_key
 
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
+    load_env_variables()
     # login
-    HUGGING_EMAIL = st.secrets.HUGGING_EMAIL
-    HUGGING_PASSWORD = st.secrets.HUGGING_PASSWORD
+    HUGGING_EMAIL = get_api_key("HUGGING_EMAIL")
+    HUGGING_PASSWORD = get_api_key("HUGGING_PASSWORD")
 
     sign = Login(HUGGING_EMAIL, HUGGING_PASSWORD)
     cookies = sign.login()

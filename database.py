@@ -1,9 +1,12 @@
+from dotenv import load_dotenv
 from deta import Deta
-import os
 import streamlit as st
+from environment import load_env_variables, get_api_key
 
 
-deta = Deta(st.secrets.DETA_KEY)
+load_env_variables()
+DETA_KEY = get_api_key("DETA_KEY")
+deta = Deta(DETA_KEY)
 
 db = deta.Base("users_db")
 

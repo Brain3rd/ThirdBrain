@@ -6,25 +6,27 @@ import requests
 import base64
 import dropbox
 import streamlit as st
+from environment import load_env_variables, get_api_key
 
 
 # Openai Keys
-openai.api_key = st.secrets.OPENAI_API_KEY
+load_env_variables()
+openai.api_key = get_api_key("OPENAI_API_KEY")
 
 
 # Stable.ai Keys
 api_host = os.getenv("API_HOST", "https://api.stability.ai")
 url = f"{api_host}/v1/user/account"
 engine_id = "stable-diffusion-v1-5"
-api_key = st.secrets.STABILITY_API_KEY
+api_key = get_api_key("STABILITY_API_KEY")
 if api_key is None:
     raise Exception("Missing Stability API key.")
 
 
 # Dropbox Keys
-APP_KEY = st.secrets.APP_KEY
-APP_SECRET = st.secrets.APP_SECRET
-DROPBOX_REFRESH_TOKEN = st.secrets.DROPBOX_REFRESH_TOKEN
+APP_KEY = get_api_key("APP_KEY")
+APP_SECRET = get_api_key("APP_SECRET")
+DROPBOX_REFRESH_TOKEN = get_api_key("DROPBOX_REFRESH_TOKEN")
 
 
 dbx = dropbox.Dropbox(
@@ -261,7 +263,7 @@ def summarize_book(book: str) -> str:
     return summary
 
 
-def get_cover_prompt(summary):
+def get_cover_prompt(book):
     st.sidebar.info("Creating prompt for the images...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -275,7 +277,7 @@ def get_cover_prompt(summary):
                     },
                     {
                         "role": "user",
-                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece using keywords from the book summary: {summary}",
+                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece using keywords from the book summary: {book}",
                     },
                     {
                         "role": "assistant",
@@ -378,7 +380,7 @@ def create_stable_image(prompt):
             )
 
             if response.status_code != 200:
-                data = "No stability book"
+                stable_data = "No stability book"
                 st.sidebar.error("Stable not in a drawing mood today")
                 raise Exception("Non-200 response: " + str(response.text))
             else:
