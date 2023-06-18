@@ -10,11 +10,13 @@ import math
 
 TITLE = "Photo Artist"
 ABOUT = """
-    Experience the power of AI-generated book summaries with our Book Summarizer tool. Harnessing the capabilities of ChatGPT, our tool provides concise and insightful summaries of books. Whether you're a busy reader seeking quick overviews or a researcher looking to gather key points, our Book Summarizer has got you covered.
+    Welcome to Photo Artist, where creativity meets artificial intelligence. Our innovative platform harnesses the power of ChatGPT, Stable Diffusion, and DALL-E to create captivating art experiences.
 
-    But that's not all. We go beyond text and incorporate the visual realm with the help of DALL-E and Stability AI. Our tool generates captivating image prompts related to the book content, adding an immersive and visually stimulating element to your reading experience.
+    With Photo Artist, you can input your artistic ideas, and ChatGPT will generate a written textual representation of your vision. This unique collaboration between human imagination and AI algorithms brings your ideas to life in a new and exciting way.
 
-    Unlock the potential of AI-driven book summarization and visual enhancement with our Book Summarizer tool. Start exploring the world of knowledge in a whole new way.
+    But that's not all. We go beyond words and venture into the realm of visuals. Through the integration of Stable Diffusion and DALL-E, our platform transforms those textual representations into breathtaking images. Prepare to be amazed as your artistic concepts materialize into stunning visuals.
+
+    Unleash your creativity with Photo Artist and witness the synergy of AI and human imagination. Explore the possibilities, immerse yourself in the realm of art, and discover the beauty of AI-assisted creation. Start your artistic journey today and experience the magic of our platform.
     """
 about_content = "\n".join([line for line in ABOUT.splitlines() if line.strip()])
 

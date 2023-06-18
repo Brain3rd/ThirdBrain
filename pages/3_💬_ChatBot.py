@@ -30,6 +30,12 @@ st.set_page_config(
     menu_items={"About": f"{TITLE}{about_content}"},
 )
 
+with st.sidebar:
+    st.title("ChatGPT")
+    st.markdown(ABOUT)
+    add_vertical_space(2)
+    st.write("💡 Note: API key required!")
+
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
@@ -57,12 +63,6 @@ if st.session_state.authentication_status:
 
     llm = ChatOpenAI(model_name="gpt-3.5-turbo")
     llm(messages)
-
-    with st.sidebar:
-        st.title("ChatGPT")
-        st.markdown(ABOUT)
-        add_vertical_space(2)
-        st.write("💡 Note: API key required!")
 
     # Generate empty lists for GPT_generated and past.
     ## GPT_generated stores AI GPT_generated responses
