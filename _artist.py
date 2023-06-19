@@ -161,7 +161,7 @@ def create_dalle_image(prompt):
     return dalle_data
 
 
-def create_stable_image(prompt):
+def create_stable_image(prompt, width, height):
     st.sidebar.info("Drawing Stable image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -176,8 +176,8 @@ def create_stable_image(prompt):
                     "text_prompts": [{"text": f"{prompt}"}],
                     "cfg_scale": 7,
                     "clip_guidance_preset": "FAST_BLUE",
-                    "height": 512,
-                    "width": 768,
+                    "height": height,
+                    "width": width,
                     "samples": 2,
                     "steps": 50,
                 },
@@ -256,7 +256,7 @@ def save_all(image_name, image_prompt, dalle_data, stability_data, user_input):
     return dalle_arts, stable_arts
 
 
-def art_gerator(art_input, art_name):
+def art_gerator(art_input, art_name, width, height):
     if "dalle_art" not in st.session_state:
         st.session_state.dalle_art = ""
     if "stable_art" not in st.session_state:
@@ -266,7 +266,7 @@ def art_gerator(art_input, art_name):
 
     art_prompt = get_image_prompt(art_input)
     dalle_art = create_dalle_image(art_prompt)
-    stable_art = create_stable_image(art_prompt)
+    stable_art = create_stable_image(art_prompt, width, height)
 
     st.session_state.dalle_art, st.session_state.stable_art = save_all(
         art_name, art_prompt, dalle_art, stable_art, art_input

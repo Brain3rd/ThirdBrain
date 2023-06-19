@@ -34,7 +34,7 @@ st.set_page_config(
 with st.sidebar:
     st.title(TITLE)
     st.markdown(ABOUT)
-    add_vertical_space(2)
+    add_vertical_space(1)
     st.write("💡 Note: API key required!")
 
 
@@ -64,8 +64,8 @@ if st.session_state.authentication_status:
         if "height" not in st.session_state:
             st.session_state.height = ""
 
-        # st.session_state.width = st.sidebar.radio("Image Width", (256, 512, 768))
-        # st.session_state.height = st.sidebar.radio("Image Height", (256, 512, 768))
+        width = st.sidebar.select_slider("Image Width", (256, 512, 768))
+        height = st.sidebar.select_slider("Image Height", (256, 512, 768))
 
         with st.form("Art", clear_on_submit=True):
             user_input = st.text_area(
@@ -87,6 +87,8 @@ if st.session_state.authentication_status:
             art_gerator(
                 st.session_state.user_input,
                 st.session_state.user_input_name,
+                width,
+                height,
             )
             st.cache_data.clear()
 
