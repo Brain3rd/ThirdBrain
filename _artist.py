@@ -195,7 +195,7 @@ def create_stable_image(prompt):
         except Exception as e:
             # Handle the specific exception (if known) or catch all exceptions
             st.sidebar.error(
-                f"Attempt {attempt} failed. Waiting a bit and trying again..."
+                f"Attempt {attempt} failed. {e} Waiting a bit and trying again..."
             )
 
         # Wait for the specified delay before the next attempt

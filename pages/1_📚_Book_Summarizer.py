@@ -130,9 +130,36 @@ if st.session_state.authentication_status:
                 col1, col2 = st.columns(2)  # Create two columns
 
                 for i, image_file in enumerate(image_files):
-                    # Get temporary link for the image file
-                    res = dbx.files_get_temporary_link(image_file.path_display).link
-                    image_urls.append(res)  # Add the temporary link to the list
+                    try:
+                        shared_link_metadata = dbx.sharing_create_shared_link_with_settings(
+                            image_file.path_display,
+                            dropbox.sharing.SharedLinkSettings(
+                                requested_visibility=dropbox.sharing.RequestedVisibility.public
+                            ),
+                        )
+                    except dropbox.exceptions.ApiError as e:
+                        if e.error.is_shared_link_already_exists():
+                            # A shared link already exists, retrieve the existing links for the file
+                            links = dbx.sharing_list_shared_links(
+                                image_file.path_display
+                            ).links
+                            shared_link_metadata = links[
+                                0
+                            ]  # Assuming there is only one existing link, you can modify this logic based on your requirements
+                        else:
+                            # Handle other types of ApiError if needed
+                            raise e
+
+                    # Extract the URL from the shared link metadata
+                    shared_link_url = shared_link_metadata.url
+
+                    # Modify the shared link URL to force file download
+                    res = shared_link_url.replace(
+                        "www.dropbox.com", "dl.dropboxusercontent.com"
+                    ).split("?")[0]
+
+                    # Add the permanent link to the list
+                    image_urls.append(res)
 
                     # Determine the column to display the image based on the index
                     if i % num_columns == 0:

@@ -6,6 +6,7 @@ import dropbox
 from dropbox.exceptions import AuthError
 import os
 import math
+import json
 
 
 TITLE = "Photo Artist"
@@ -58,6 +59,14 @@ if st.session_state.authentication_status:
             st.session_state.user_input = ""
         if "user_input_name" not in st.session_state:
             st.session_state.user_input_name = ""
+        if "width" not in st.session_state:
+            st.session_state.width = ""
+        if "height" not in st.session_state:
+            st.session_state.height = ""
+
+        # st.session_state.width = st.sidebar.radio("Image Width", (256, 512, 768))
+        # st.session_state.height = st.sidebar.radio("Image Height", (256, 512, 768))
+
         with st.form("Art", clear_on_submit=True):
             user_input = st.text_area(
                 "Enter a description of an art to generate:",
@@ -67,7 +76,6 @@ if st.session_state.authentication_status:
         if user_input_button:
             st.session_state.user_input = user_input
             st.sidebar.info(st.session_state.user_input)
-            # print(st.session_state.user_input)
 
         with st.form("Art name", clear_on_submit=True):
             user_input_name = st.text_input("Name your Art", value="")
@@ -76,7 +84,10 @@ if st.session_state.authentication_status:
         if user_input_name_button:
             st.session_state.user_input_name = user_input_name
             st.sidebar.info(st.session_state.user_input_name)
-            art_gerator(st.session_state.user_input, st.session_state.user_input_name)
+            art_gerator(
+                st.session_state.user_input,
+                st.session_state.user_input_name,
+            )
             st.cache_data.clear()
 
     @st.cache_data()
@@ -147,11 +158,37 @@ if st.session_state.authentication_status:
                 col1, col2 = st.columns(2)  # Create two columns
 
                 for i, art_image_file in enumerate(art_image_files):
-                    # Get temporary link for the image file
-                    art_res = dbx.files_get_temporary_link(
-                        art_image_file.path_display
-                    ).link
-                    art_image_urls.append(art_res)  # Add the temporary link to the list
+                    # Get shared link for the image file
+                    try:
+                        shared_link_metadata = dbx.sharing_create_shared_link_with_settings(
+                            art_image_file.path_display,
+                            dropbox.sharing.SharedLinkSettings(
+                                requested_visibility=dropbox.sharing.RequestedVisibility.public
+                            ),
+                        )
+                    except dropbox.exceptions.ApiError as e:
+                        if e.error.is_shared_link_already_exists():
+                            # A shared link already exists, retrieve the existing links for the file
+                            links = dbx.sharing_list_shared_links(
+                                art_image_file.path_display
+                            ).links
+                            shared_link_metadata = links[
+                                0
+                            ]  # Assuming there is only one existing link, you can modify this logic based on your requirements
+                        else:
+                            # Handle other types of ApiError if needed
+                            raise e
+
+                    # Extract the URL from the shared link metadata
+                    shared_link_url = shared_link_metadata.url
+
+                    # Modify the shared link URL to force file download
+                    art_res = shared_link_url.replace(
+                        "www.dropbox.com", "dl.dropboxusercontent.com"
+                    ).split("?")[0]
+
+                    # Add the permanent link to the list
+                    art_image_urls.append(art_res)
 
                     # Determine the column to display the image based on the index
                     if i % num_columns == 0:
@@ -187,7 +224,6 @@ if st.session_state.authentication_status:
                     # Display the text
                     st.title(st.session_state.art_title)
                     st.write(st.session_state.art_file_content)
-                    print(st.session_state.art_file_content)
             # Break the loop if the specified number of summaries is reached
             if num_art is not None and len(st.session_state.audio) >= num_art:
                 break
