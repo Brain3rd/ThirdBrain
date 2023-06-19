@@ -17,7 +17,6 @@ openai.api_key = env.get_api_key("OPENAI_API_KEY")
 # Stable.ai Keys
 api_host = os.getenv("API_HOST", "https://api.stability.ai")
 url = f"{api_host}/v1/user/account"
-engine_id = "stable-diffusion-v1-5"
 api_key = env.get_api_key("STABILITY_API_KEY")
 if api_key is None:
     raise Exception("Missing Stability API key.")
@@ -161,7 +160,7 @@ def create_dalle_image(prompt):
     return dalle_data
 
 
-def create_stable_image(prompt, width, height):
+def create_stable_image(prompt, width, height, engine_id):
     st.sidebar.info("Drawing Stable image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -256,7 +255,7 @@ def save_all(image_name, image_prompt, dalle_data, stability_data, user_input):
     return dalle_arts, stable_arts
 
 
-def art_gerator(art_input, art_name, width, height):
+def art_gerator(art_input, art_name, width, height, engine):
     if "dalle_art" not in st.session_state:
         st.session_state.dalle_art = ""
     if "stable_art" not in st.session_state:
@@ -266,7 +265,7 @@ def art_gerator(art_input, art_name, width, height):
 
     art_prompt = get_image_prompt(art_input)
     dalle_art = create_dalle_image(art_prompt)
-    stable_art = create_stable_image(art_prompt, width, height)
+    stable_art = create_stable_image(art_prompt, width, height, engine)
 
     st.session_state.dalle_art, st.session_state.stable_art = save_all(
         art_name, art_prompt, dalle_art, stable_art, art_input

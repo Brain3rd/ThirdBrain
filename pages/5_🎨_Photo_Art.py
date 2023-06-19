@@ -6,7 +6,8 @@ import dropbox
 from dropbox.exceptions import AuthError
 import os
 import math
-import json
+import streamlit_authenticator as stauth
+import database as db
 
 
 TITLE = "Photo Artist"
@@ -38,11 +39,33 @@ with st.sidebar:
     st.write("💡 Note: API key required!")
 
 
-# Authentication
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
+
+users = db.fetch_all_users()
+usernames = [user["key"] for user in users]
+names = [user["name"] for user in users]
+hashed_passwords = [user["password"] for user in users]
+
+
+authenticator = stauth.Authenticate(
+    names, usernames, hashed_passwords, "thirdbrain", "chocolate", cookie_expiry_days=20
+)
+
+name, st.session_state.authentication_status, username = authenticator.login(
+    "Login", "main"
+)
+
+
+if st.session_state.authentication_status == False:
+    st.error("Username / Password is Incorrect!")
+
+if st.session_state.authentication_status == None:
+    st.warning("Please enter you username and password")
+
 if st.session_state.authentication_status:
+    authenticator.logout("Logout", "sidebar")
     load_env_variables()
     # Dropbox keys
     APP_KEY = get_api_key("APP_KEY")
@@ -59,13 +82,18 @@ if st.session_state.authentication_status:
             st.session_state.user_input = ""
         if "user_input_name" not in st.session_state:
             st.session_state.user_input_name = ""
-        if "width" not in st.session_state:
-            st.session_state.width = ""
-        if "height" not in st.session_state:
-            st.session_state.height = ""
 
-        width = st.sidebar.select_slider("Image Width", (256, 512, 768))
-        height = st.sidebar.select_slider("Image Height", (256, 512, 768))
+        width = st.sidebar.select_slider("Image Width", (512, 640, 683, 768, 896))
+        height = st.sidebar.select_slider("Image Height", (512, 640, 683, 768, 896))
+        engine = st.sidebar.selectbox(
+            "Engine",
+            (
+                "stable-diffusion-v1-5",
+                "stable-diffusion-512-v2-1",
+                "stable-diffusion-768-v2-1",
+                "stable-diffusion-xl-beta-v2-2-2",
+            ),
+        )
 
         with st.form("Art", clear_on_submit=True):
             user_input = st.text_area(
@@ -89,6 +117,7 @@ if st.session_state.authentication_status:
                 st.session_state.user_input_name,
                 width,
                 height,
+                engine,
             )
             st.cache_data.clear()
 
