@@ -28,30 +28,7 @@ st.set_page_config(
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
-
-users = db.fetch_all_users()
-usernames = [user["key"] for user in users]
-names = [user["name"] for user in users]
-hashed_passwords = [user["password"] for user in users]
-
-
-authenticator = stauth.Authenticate(
-    names, usernames, hashed_passwords, "thirdbrain", "chocolate", cookie_expiry_days=20
-)
-
-name, st.session_state.authentication_status, username = authenticator.login(
-    "Login", "main"
-)
-
-
-if st.session_state.authentication_status == False:
-    st.error("Username / Password is Incorrect!")
-
-if st.session_state.authentication_status == None:
-    st.warning("Please enter you username and password")
-
 if st.session_state.authentication_status:
-    authenticator.logout("Logout", "sidebar")
     with st.sidebar:
         st.title(TITLE)
         st.markdown(ABOUT)

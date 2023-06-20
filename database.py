@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from deta import Deta
 import streamlit as st
 from environment import load_env_variables, get_api_key

@@ -233,13 +233,22 @@ def summarize_book(book: str) -> str:
                     {
                         "role": "assistant",
                         "content": """
+                    You are an assistant that speaks only in Markdown code. Do not write text that is not formatted as Markdown code.
                     Desired format:
-                    Introduction: Provide a brief overview of the book's purpose, author's background, and any relevant context.
-                    Key points: Identify the main concepts or ideas presented in the book. Summarize each key point concisely and clearly. Use bullet points or numbered lists to organize the information.
-                    Insights and Examples: Highlight the most insightful and impactful moments from the book. Explain how these insights can be applied in real-life situations. Provide relevant examples or anecdotes to illustrate the author's ideas.
-                    Practical Application: Offer practical steps or strategies derived from the book's teachings. Describe how readers can implement the ideas in their own lives. Include actionable tips or exercises to reinforce the concepts.
-                    Quotes: Select notable quotes from the author that encapsulate important concepts or provide inspiration. Use quotation marks and attribute the quotes to the author, "Quote" Author Name
-                    Conclusion: Summarize the overall message of the book. Express your own thoughts and reflections on the book's content and potential impact.
+                    ## Introduction
+                    Provide a brief overview of the book's purpose, author's background, and any relevant context.
+                    ## Key points
+                    Identify the main concepts or ideas presented in the book. Summarize each key point concisely and clearly. Use bullet points or numbered lists to organize the information.
+                    ## Insights and Examples
+                    Highlight the most insightful and impactful moments from the book. Explain how these insights can be applied in real-life situations. Provide relevant examples or anecdotes to illustrate the author's ideas.
+                    ## Practical Application
+                    Offer practical steps or strategies derived from the book's teachings. Describe how readers can implement the ideas in their own lives. Include actionable tips or exercises to reinforce the concepts.
+                    ## Quotes
+                    Select notable quotes from the author that encapsulate important concepts or provide inspiration. Use quotation marks and attribute the quotes to the author, "Quote" Author Name
+                    ## Conclusion
+                    Summarize the overall message of the book. Express your own thoughts and reflections on the book's content and potential impact.
+                    ### Tags
+                    Add tags based on the mood or emotion of the book.
                     """,
                     },
                 ],
@@ -357,7 +366,7 @@ def create_dalle_image(prompt):
     return image_response
 
 
-def create_stable_image(prompt):
+def create_stable_image(prompt, width, height, engine_id):
     st.sidebar.info("Drawing Stable image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -372,8 +381,8 @@ def create_stable_image(prompt):
                     "text_prompts": [{"text": f"{prompt}"}],
                     "cfg_scale": 7,
                     "clip_guidance_preset": "FAST_BLUE",
-                    "height": 768,
-                    "width": 512,
+                    "height": height,
+                    "width": width,
                     "samples": 2,
                     "steps": 50,
                 },
@@ -452,7 +461,7 @@ def save_all(new_book, book_content, dalle_data, stability_data, image_prompt):
     return dalle_images, stability_images
 
 
-def summarizer(book_input=None) -> str:
+def summarizer(book_input, width, height, engine):
     if "new_expander" not in st.session_state:
         st.session_state.new_expander = ""
     if "new_book" not in st.session_state:
@@ -465,20 +474,19 @@ def summarizer(book_input=None) -> str:
         st.session_state.stable_cover = ""
 
     st.sidebar.info("Summarizanion progress started...")
-    if book_input:
-        st.session_state.new_book = book_input
-        all_books.append(st.session_state.new_book)
-
-    else:
+    if book_input == "":
         books = book_picker()
         st.session_state.new_book = get_book(books)
+    else:
+        st.session_state.new_book = book_input
+        all_books.append(st.session_state.new_book)
 
     st.session_state.book_summary = summarize_book(st.session_state.new_book)
     book_content = f"{st.session_state.new_book}\n\n{st.session_state.book_summary}"
 
     dalle_prompt = get_cover_prompt(book_content)
     dalle_image = create_dalle_image(dalle_prompt)
-    stable_image = create_stable_image(dalle_prompt)
+    stable_image = create_stable_image(dalle_prompt, width, height, engine)
 
     st.session_state.dalle_cover, st.session_state.stable_cover = save_all(
         st.session_state.new_book,

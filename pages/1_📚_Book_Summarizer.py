@@ -6,8 +6,7 @@ import dropbox
 from dropbox.exceptions import AuthError
 import math
 from environment import load_env_variables, get_api_key
-import streamlit_authenticator as stauth
-import database as db
+
 
 BOOK_FOLDER = "books"
 
@@ -40,30 +39,7 @@ with st.sidebar:
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
-
-users = db.fetch_all_users()
-usernames = [user["key"] for user in users]
-names = [user["name"] for user in users]
-hashed_passwords = [user["password"] for user in users]
-
-
-authenticator = stauth.Authenticate(
-    names, usernames, hashed_passwords, "thirdbrain", "chocolate", cookie_expiry_days=20
-)
-
-name, st.session_state.authentication_status, username = authenticator.login(
-    "Login", "main"
-)
-
-
-if st.session_state.authentication_status == False:
-    st.error("Username / Password is Incorrect!")
-
-if st.session_state.authentication_status == None:
-    st.warning("Please enter you username and password")
-
 if st.session_state.authentication_status:
-    authenticator.logout("Logout", "sidebar")
     load_env_variables()
     # Dropbox keys
     APP_KEY = get_api_key("APP_KEY")
@@ -76,6 +52,17 @@ if st.session_state.authentication_status:
     )
 
     def input_form():
+        width = st.sidebar.select_slider("Image Width", (512, 640, 683, 768, 896))
+        height = st.sidebar.select_slider("Image Height", (512, 640, 683, 768, 896))
+        engine = st.sidebar.selectbox(
+            "Engine",
+            (
+                "stable-diffusion-v1-5",
+                "stable-diffusion-512-v2-1",
+                "stable-diffusion-768-v2-1",
+                "stable-diffusion-xl-beta-v2-2-2",
+            ),
+        )
         with st.form("Summarize Book", clear_on_submit=True):
             text_input = st.text_input(
                 "Enter Book to Summarize or Leave Empty for Random Book",
@@ -84,9 +71,8 @@ if st.session_state.authentication_status:
             submit_button = st.form_submit_button("Submit")
 
         if submit_button:
-            summarizer(text_input)
-            # Clear the cache
             st.cache_data.clear()
+            summarizer(text_input, width, height, engine)
 
     @st.cache_data()
     def display_book_summaries(num_summaries=None):
@@ -218,7 +204,7 @@ if st.session_state.authentication_status:
 
                     # Display the text
                     st.title(st.session_state.title)
-                    st.write(st.session_state.file_content)
+                    st.markdown(st.session_state.file_content)
 
             # Break the loop if the specified number of summaries is reached
             if (

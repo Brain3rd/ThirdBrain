@@ -42,30 +42,7 @@ with st.sidebar:
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
-
-users = db.fetch_all_users()
-usernames = [user["key"] for user in users]
-names = [user["name"] for user in users]
-hashed_passwords = [user["password"] for user in users]
-
-
-authenticator = stauth.Authenticate(
-    names, usernames, hashed_passwords, "thirdbrain", "chocolate", cookie_expiry_days=20
-)
-
-name, st.session_state.authentication_status, username = authenticator.login(
-    "Login", "main"
-)
-
-
-if st.session_state.authentication_status == False:
-    st.error("Username / Password is Incorrect!")
-
-if st.session_state.authentication_status == None:
-    st.warning("Please enter you username and password")
-
 if st.session_state.authentication_status:
-    authenticator.logout("Logout", "sidebar")
     load_env_variables()
     # Dropbox keys
     APP_KEY = get_api_key("APP_KEY")
@@ -110,6 +87,7 @@ if st.session_state.authentication_status:
             user_input_name_button = st.form_submit_button("Submit")
 
         if user_input_name_button:
+            st.cache_data.clear()
             st.session_state.user_input_name = user_input_name
             st.sidebar.info(st.session_state.user_input_name)
             art_gerator(
@@ -119,7 +97,6 @@ if st.session_state.authentication_status:
                 height,
                 engine,
             )
-            st.cache_data.clear()
 
     @st.cache_data()
     def display_art(num_art=None):
