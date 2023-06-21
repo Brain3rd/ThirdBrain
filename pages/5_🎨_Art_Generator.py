@@ -1,4 +1,4 @@
-from _artist import art_gerator
+from _artist import art_generator
 import streamlit as st
 from streamlit_extras.add_vertical_space import add_vertical_space
 from environment import load_env_variables, get_api_key
@@ -60,9 +60,29 @@ if st.session_state.authentication_status:
         if "user_input_name" not in st.session_state:
             st.session_state.user_input_name = ""
 
-        width = st.sidebar.select_slider("Image Width", (512, 640, 683, 768, 896))
-        height = st.sidebar.select_slider("Image Height", (512, 640, 683, 768, 896))
-        engine = st.sidebar.selectbox(
+        st.markdown("Stable Diffusion Settings")
+
+        size = st.select_slider(
+            "Image Size",
+            (
+                "896x512",
+                "768x512",
+                "683x512",
+                "640x512",
+                "512x512",
+                "512x640",
+                "512x683",
+                "512x768",
+                "512x896",
+            ),
+            value="512x512",
+        )
+
+        width, height = map(int, size.split("x"))
+
+        samples = st.slider("Samples", 0, 10, 2, 1)
+        steps = st.slider("Steps", 30, 100, 50, 1)
+        engine = st.selectbox(
             "Engine",
             (
                 "stable-diffusion-v1-5",
@@ -70,6 +90,12 @@ if st.session_state.authentication_status:
                 "stable-diffusion-768-v2-1",
                 "stable-diffusion-xl-beta-v2-2-2",
             ),
+            3,
+        )
+        add_vertical_space(1)
+        user_input_name = st.text_input(
+            "**Name your Art:**",
+            value="",
         )
 
         with st.form("Art", clear_on_submit=True):
@@ -78,24 +104,21 @@ if st.session_state.authentication_status:
                 value="",
             )
             user_input_button = st.form_submit_button("Submit")
+            add_vertical_space(1)
         if user_input_button:
+            st.cache_data.clear()
             st.session_state.user_input = user_input
             st.sidebar.info(st.session_state.user_input)
-
-        with st.form("Art name", clear_on_submit=True):
-            user_input_name = st.text_input("Name your Art", value="")
-            user_input_name_button = st.form_submit_button("Submit")
-
-        if user_input_name_button:
-            st.cache_data.clear()
             st.session_state.user_input_name = user_input_name
             st.sidebar.info(st.session_state.user_input_name)
-            art_gerator(
+            art_generator(
                 st.session_state.user_input,
                 st.session_state.user_input_name,
                 width,
                 height,
                 engine,
+                samples,
+                steps,
             )
 
     @st.cache_data()
@@ -231,7 +254,7 @@ if st.session_state.authentication_status:
 
                     # Display the text
                     st.title(st.session_state.art_title)
-                    st.write(st.session_state.art_file_content)
+                    st.markdown(st.session_state.art_file_content)
             # Break the loop if the specified number of summaries is reached
             if num_art is not None and len(st.session_state.audio) >= num_art:
                 break

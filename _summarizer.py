@@ -366,7 +366,7 @@ def create_dalle_image(prompt):
     return image_response
 
 
-def create_stable_image(prompt, width, height, engine_id):
+def create_stable_image(prompt, width, height, engine_id, samples, steps):
     st.sidebar.info("Drawing Stable image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -383,13 +383,13 @@ def create_stable_image(prompt, width, height, engine_id):
                     "clip_guidance_preset": "FAST_BLUE",
                     "height": height,
                     "width": width,
-                    "samples": 2,
-                    "steps": 50,
+                    "samples": samples,
+                    "steps": steps,
                 },
             )
 
             if response.status_code != 200:
-                stable_data = "No stability book"
+                data = "No stability book"
                 st.sidebar.error("Stable not in a drawing mood today")
                 raise Exception("Non-200 response: " + str(response.text))
             else:
@@ -411,7 +411,16 @@ def create_stable_image(prompt, width, height, engine_id):
     return data
 
 
-def save_all(new_book, book_content, dalle_data, stability_data, image_prompt):
+def save_all(
+    new_book,
+    book_content,
+    dalle_data,
+    stability_data,
+    image_prompt,
+    engine,
+    width,
+    height,
+):
     dalle_images = []
     stability_images = []
 
@@ -436,7 +445,9 @@ def save_all(new_book, book_content, dalle_data, stability_data, image_prompt):
 
         # Save summary to txt file
         summary_path = f"{folder_path}/{new_book}.txt"
-        data_to_txt = f"\nImage prompt: {image_prompt}\n\n{book_content}"
+        data_to_txt = f"""
+        **Prompt:** {image_prompt}\n\n  **Stable Diffusion:** {engine} {width}x{height}\n  **DALL-E:** 512x512\n\n{book_content}
+        """
         dbx.files_upload(data_to_txt.encode("utf-8"), summary_path)
 
         # Save DALL-E images to png
@@ -461,7 +472,7 @@ def save_all(new_book, book_content, dalle_data, stability_data, image_prompt):
     return dalle_images, stability_images
 
 
-def summarizer(book_input, width, height, engine):
+def summarizer(book_input, width, height, engine, samples, steps):
     if "new_expander" not in st.session_state:
         st.session_state.new_expander = ""
     if "new_book" not in st.session_state:
@@ -494,6 +505,8 @@ def summarizer(book_input, width, height, engine):
         dalle_image,
         stable_image,
         dalle_prompt,
+        samples,
+        steps,
     )
 
     st.session_state.new_expander = st.expander(

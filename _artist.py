@@ -160,7 +160,7 @@ def create_dalle_image(prompt):
     return dalle_data
 
 
-def create_stable_image(prompt, width, height, engine_id):
+def create_stable_image(prompt, width, height, engine_id, samples, steps):
     st.sidebar.info("Drawing Stable image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -177,8 +177,8 @@ def create_stable_image(prompt, width, height, engine_id):
                     "clip_guidance_preset": "FAST_BLUE",
                     "height": height,
                     "width": width,
-                    "samples": 2,
-                    "steps": 50,
+                    "samples": samples,
+                    "steps": steps,
                 },
             )
 
@@ -205,7 +205,16 @@ def create_stable_image(prompt, width, height, engine_id):
     return stable_data
 
 
-def save_all(image_name, image_prompt, dalle_data, stability_data, user_input):
+def save_all(
+    image_name,
+    image_prompt,
+    dalle_data,
+    stability_data,
+    user_input,
+    width,
+    height,
+    engine,
+):
     dalle_arts = []
     stable_arts = []
 
@@ -230,7 +239,7 @@ def save_all(image_name, image_prompt, dalle_data, stability_data, user_input):
 
         # Save image prompt to txt file
         art_path = f"{folder_path}/{image_name}.txt"
-        data_to_txt = f"User input: {user_input}\nAI Generated prompt: {image_prompt}\nStable Diffusion: stable-diffusion-v1-5 768x512\nDALL-E: 512x512"
+        data_to_txt = f"**User input:** {user_input}\n  **AI Generated prompt:** {image_prompt}\n\n  **Stable Diffusion:** {engine} {width}x{height}\n  **DALL-E:** 512x512"
         dbx.files_upload(data_to_txt.encode("utf-8"), art_path)
 
         # Save DALL-E images to png
@@ -255,7 +264,7 @@ def save_all(image_name, image_prompt, dalle_data, stability_data, user_input):
     return dalle_arts, stable_arts
 
 
-def art_gerator(art_input, art_name, width, height, engine):
+def art_generator(art_input, art_name, width, height, engine, samples, steps):
     if "dalle_art" not in st.session_state:
         st.session_state.dalle_art = ""
     if "stable_art" not in st.session_state:
@@ -265,10 +274,10 @@ def art_gerator(art_input, art_name, width, height, engine):
 
     art_prompt = get_image_prompt(art_input)
     dalle_art = create_dalle_image(art_prompt)
-    stable_art = create_stable_image(art_prompt, width, height, engine)
+    stable_art = create_stable_image(art_prompt, width, height, engine, samples, steps)
 
     st.session_state.dalle_art, st.session_state.stable_art = save_all(
-        art_name, art_prompt, dalle_art, stable_art, art_input
+        art_name, art_prompt, dalle_art, stable_art, art_input, width, height, engine
     )
 
     st.session_state.art_expander = st.expander(art_name, expanded=True)

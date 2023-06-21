@@ -52,8 +52,28 @@ if st.session_state.authentication_status:
     )
 
     def input_form():
-        width = st.sidebar.select_slider("Image Width", (512, 640, 683, 768, 896))
-        height = st.sidebar.select_slider("Image Height", (512, 640, 683, 768, 896))
+        st.sidebar.markdown("**Stable Diffusion**")
+
+        size = st.sidebar.select_slider(
+            "Image Size",
+            (
+                "896x512",
+                "768x512",
+                "683x512",
+                "640x512",
+                "512x512",
+                "512x640",
+                "512x683",
+                "512x768",
+                "512x896",
+            ),
+            value="512x512",
+        )
+
+        width, height = map(int, size.split("x"))
+
+        samples = st.sidebar.slider("Samples", 0, 10, 2, 1)
+        steps = st.sidebar.slider("Steps", 30, 100, 50, 1)
         engine = st.sidebar.selectbox(
             "Engine",
             (
@@ -62,17 +82,19 @@ if st.session_state.authentication_status:
                 "stable-diffusion-768-v2-1",
                 "stable-diffusion-xl-beta-v2-2-2",
             ),
+            3,
         )
-        with st.form("Summarize Book", clear_on_submit=True):
-            text_input = st.text_input(
-                "Enter Book to Summarize or Leave Empty for Random Book",
-                value="",
-            )
-            submit_button = st.form_submit_button("Submit")
 
-        if submit_button:
+        text_input = st.sidebar.text_input(
+            "Enter Book to Summarize or Leave Empty for Random Book",
+            value="",
+        )
+
+        if text_input:
+            if text_input == "r" or "R":
+                text_input = ""
+            summarizer(text_input, width, height, engine, samples, steps)
             st.cache_data.clear()
-            summarizer(text_input, width, height, engine)
 
     @st.cache_data()
     def display_book_summaries(num_summaries=None):
