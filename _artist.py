@@ -239,7 +239,7 @@ def save_all(
 
         # Save image prompt to txt file
         art_path = f"{folder_path}/{image_name}.txt"
-        data_to_txt = f"**User input:** {user_input}\n  **AI Generated prompt:** {image_prompt}\n\n  **Stable Diffusion:** {engine} {width}x{height}\n  **DALL-E:** 512x512"
+        data_to_txt = f"**User input:** {user_input}\n\n**AI Generated prompt:** {image_prompt}\n\n**Stable Diffusion:** {engine} {width}x{height}\n\n**DALL-E:** 512x512"
         dbx.files_upload(data_to_txt.encode("utf-8"), art_path)
 
         # Save DALL-E images to png

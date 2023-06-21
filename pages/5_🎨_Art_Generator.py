@@ -60,9 +60,9 @@ if st.session_state.authentication_status:
         if "user_input_name" not in st.session_state:
             st.session_state.user_input_name = ""
 
-        st.markdown("Stable Diffusion Settings")
+        st.sidebar.markdown("Stable Diffusion Settings")
 
-        size = st.select_slider(
+        size = st.sidebar.select_slider(
             "Image Size",
             (
                 "896x512",
@@ -80,9 +80,9 @@ if st.session_state.authentication_status:
 
         width, height = map(int, size.split("x"))
 
-        samples = st.slider("Samples", 0, 10, 2, 1)
-        steps = st.slider("Steps", 30, 100, 50, 1)
-        engine = st.selectbox(
+        samples = st.sidebar.slider("Samples", 0, 10, 2, 1)
+        steps = st.sidebar.slider("Steps", 30, 100, 50, 1)
+        engine = st.sidebar.selectbox(
             "Engine",
             (
                 "stable-diffusion-v1-5",
@@ -93,10 +93,6 @@ if st.session_state.authentication_status:
             3,
         )
         add_vertical_space(1)
-        user_input_name = st.text_input(
-            "**Name your Art:**",
-            value="",
-        )
 
         with st.form("Art", clear_on_submit=True):
             user_input = st.text_area(
@@ -106,20 +102,25 @@ if st.session_state.authentication_status:
             user_input_button = st.form_submit_button("Submit")
             add_vertical_space(1)
         if user_input_button:
-            st.cache_data.clear()
-            st.session_state.user_input = user_input
-            st.sidebar.info(st.session_state.user_input)
-            st.session_state.user_input_name = user_input_name
-            st.sidebar.info(st.session_state.user_input_name)
-            art_generator(
-                st.session_state.user_input,
-                st.session_state.user_input_name,
-                width,
-                height,
-                engine,
-                samples,
-                steps,
+            user_input_name = st.text_input(
+                "**Name your Art:**",
+                value="",
             )
+            if user_input_name:
+                st.cache_data.clear()
+                st.session_state.user_input = user_input
+                st.sidebar.info(st.session_state.user_input)
+                st.session_state.user_input_name = user_input_name
+                st.sidebar.info(st.session_state.user_input_name)
+                art_generator(
+                    st.session_state.user_input,
+                    st.session_state.user_input_name,
+                    width,
+                    height,
+                    engine,
+                    samples,
+                    steps,
+                )
 
     @st.cache_data()
     def display_art(num_art=None):

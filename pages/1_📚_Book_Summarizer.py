@@ -72,9 +72,9 @@ if st.session_state.authentication_status:
 
         width, height = map(int, size.split("x"))
 
-        samples = st.sidebar.slider("Samples", 0, 10, 2, 1)
-        steps = st.sidebar.slider("Steps", 30, 100, 50, 1)
-        engine = st.sidebar.selectbox(
+        book_art_samples = st.sidebar.slider("Samples", 0, 10, 2, 1)
+        book_art_steps = st.sidebar.slider("Steps", 30, 100, 50, 1)
+        book_art_engine = st.sidebar.selectbox(
             "Engine",
             (
                 "stable-diffusion-v1-5",
@@ -85,16 +85,22 @@ if st.session_state.authentication_status:
             3,
         )
 
-        text_input = st.sidebar.text_input(
-            "Enter Book to Summarize or Leave Empty for Random Book",
+        text_input = st.text_input(
+            "Enter a Book to Summarize or Type R for a Random Book",
             value="",
         )
 
         if text_input:
             if text_input == "r" or "R":
                 text_input = ""
-            summarizer(text_input, width, height, engine, samples, steps)
-            st.cache_data.clear()
+            summarizer(
+                text_input,
+                width,
+                height,
+                book_art_engine,
+                book_art_samples,
+                book_art_steps,
+            )
 
     @st.cache_data()
     def display_book_summaries(num_summaries=None):

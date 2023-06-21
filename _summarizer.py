@@ -446,7 +446,7 @@ def save_all(
         # Save summary to txt file
         summary_path = f"{folder_path}/{new_book}.txt"
         data_to_txt = f"""
-        **Prompt:** {image_prompt}\n\n  **Stable Diffusion:** {engine} {width}x{height}\n  **DALL-E:** 512x512\n\n{book_content}
+        **Prompt:** {image_prompt}\n\n**Stable Diffusion:** {engine} {width}x{height}\n\n**DALL-E:** 512x512\n\n{book_content}
         """
         dbx.files_upload(data_to_txt.encode("utf-8"), summary_path)
 
@@ -497,7 +497,9 @@ def summarizer(book_input, width, height, engine, samples, steps):
 
     dalle_prompt = get_cover_prompt(book_content)
     dalle_image = create_dalle_image(dalle_prompt)
-    stable_image = create_stable_image(dalle_prompt, width, height, engine)
+    stable_image = create_stable_image(
+        dalle_prompt, width, height, engine, samples, steps
+    )
 
     st.session_state.dalle_cover, st.session_state.stable_cover = save_all(
         st.session_state.new_book,
@@ -507,6 +509,7 @@ def summarizer(book_input, width, height, engine, samples, steps):
         dalle_prompt,
         samples,
         steps,
+        height,
     )
 
     st.session_state.new_expander = st.expander(
