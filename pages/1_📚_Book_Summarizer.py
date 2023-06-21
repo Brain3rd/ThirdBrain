@@ -85,14 +85,15 @@ if st.session_state.authentication_status:
             3,
         )
 
-        text_input = st.text_input(
-            "Enter a Book to Summarize or Type R for a Random Book",
-            value="",
-        )
+        with st.form("Book", clear_on_submit=True):
+            text_input = st.text_input(
+                "Submit a Book to Summarize or Leave Empty for a Random Book:",
+                value="",
+            )
+            text_input_button = st.form_submit_button("Submit")
+            add_vertical_space(1)
 
-        if text_input:
-            if text_input == "r" or "R":
-                text_input = ""
+        if text_input_button:
             summarizer(
                 text_input,
                 width,

@@ -92,11 +92,10 @@ if st.session_state.authentication_status:
             ),
             3,
         )
-        add_vertical_space(1)
 
         with st.form("Art", clear_on_submit=True):
             user_input = st.text_area(
-                "Enter a description of an art to generate:",
+                "Submit a Description of an Art to Generate:",
                 value="",
             )
             user_input_button = st.form_submit_button("Submit")
@@ -107,7 +106,6 @@ if st.session_state.authentication_status:
                 value="",
             )
             if user_input_name:
-                st.cache_data.clear()
                 st.session_state.user_input = user_input
                 st.sidebar.info(st.session_state.user_input)
                 st.session_state.user_input_name = user_input_name
