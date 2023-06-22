@@ -33,7 +33,7 @@ with st.sidebar:
     st.title("🤗💬 HugChat App")
     st.markdown(ABOUT)
     add_vertical_space(2)
-    st.write("💡 Note: No API key required!")
+    st.write("💡 Note: No API keys required!")
 
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
