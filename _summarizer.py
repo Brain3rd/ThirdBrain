@@ -507,8 +507,8 @@ def summarizer(book_input, width, height, engine, samples, steps):
         dalle_image,
         stable_image,
         dalle_prompt,
-        samples,
-        steps,
+        engine,
+        width,
         height,
     )
 
