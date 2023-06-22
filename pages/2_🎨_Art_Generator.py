@@ -33,7 +33,7 @@ with st.sidebar:
     st.title(TITLE)
     st.markdown(ABOUT)
     add_vertical_space(1)
-    st.write("💡 Note: API keys required!")
+    st.write("💡 Note: API keys required!!")
 
 
 if "authentication_status" not in st.session_state:

@@ -138,7 +138,7 @@ def get_book(books):
         time.sleep(DELAY_SECONDS)
 
     while book in all_books:
-        # Book has already been selected, choose a different one
+        # Book has already been  selected, choose a different one
         st.sidebar.warning(
             "Oh, you've read this book already. Choosing a different book..."
         )

@@ -98,7 +98,7 @@ def display_book_summaries_and_save_to_database(num_summaries=None):
                             0
                         ]  # Assuming there is only one existing link, you can modify this logic based on your requirements
                     else:
-                        # Handle other types of ApiError if needed
+                        # Handle other  types of ApiError if needed
                         raise e
 
                 # Extract the URL from the shared link metadata

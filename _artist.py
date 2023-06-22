@@ -33,7 +33,7 @@ dbx = dropbox.Dropbox(
 )
 
 
-# Looping parameters for error handling
+# Looping parameters for errorr handling
 MAX_ATTEMPTS = 2
 DELAY_SECONDS = 10
 

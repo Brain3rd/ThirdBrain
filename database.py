@@ -67,7 +67,7 @@ def fetch_all_books():
     all_books = db_books.fetch()
     response = all_books.items
 
-    # Sort the books by date in descending order
+    # Sort the books by date in descending  order
     sorted_books = sorted(response, key=lambda x: x["date"], reverse=True)
 
     # Initialize empty lists to store the extracted information

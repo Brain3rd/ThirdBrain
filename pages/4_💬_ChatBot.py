@@ -36,7 +36,7 @@ with st.sidebar:
     st.title("ChatGPT")
     st.markdown(ABOUT)
     add_vertical_space(2)
-    st.write("💡 Note: API keys required!")
+    st.write("💡 Note: API keys required!!")
 
 if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
