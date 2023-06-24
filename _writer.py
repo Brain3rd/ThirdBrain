@@ -5,6 +5,7 @@ from database import (
     insert_ebook_title,
     insert_ebook_table_of_content,
     insert_ebook_chapter,
+    insert_target_audience,
 )
 import streamlit as st
 
@@ -19,7 +20,7 @@ MAX_ATTEMPTS = 2
 DELAY_SECONDS = 10
 
 
-def new_ebook(user_input):
+def new_ebook(user_input, target_audience):
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -27,12 +28,20 @@ def new_ebook(user_input):
                     {
                         "role": "system",
                         "content": """
-            You are an esteemed best-selling Ebook author known for your unique and engaging content that provides immense value to readers.
+            You are an esteemed best-selling book author known for your unique and engaging content that provides immense value to readers.
             """,
                     },
                     {
                         "role": "user",
-                        "content": f"I would like you to brainstorm a book title related to {user_input} that is completely distinct from any existing books in the market. Please provide me with ONE compelling title.",
+                        "content": f"""
+                        Please, brainstorm book titles based on user input:
+                        {user_input}
+                        
+                        and target audience:
+                        {target_audience}
+
+                        Using the user input and target audience provided, I kindly request your expertise in creating something that is completely distinct from any existing book title in the market. Utilize keyword research tools to identify popular search terms related to topic. Please provide me with ONE compelling title.
+                        """,
                     },
                     {
                         "role": "assistant",
@@ -68,7 +77,7 @@ def new_ebook(user_input):
     return ebook_title
 
 
-def table_of_content(ebook, user_input):
+def table_of_content(ebook, user_input, target_audience):
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -85,16 +94,19 @@ def table_of_content(ebook, user_input):
                         Based on this user input:
                         {user_input} 
 
+                        and this target audience:
+                        {target_audience}
+
                         We have crafted unique book title:
                         {ebook}
 
-                        Using the user input and book title provided, I kindly request your expertise in creating a captivating table of contents for this book.
+                        Using the user input, target audience and book title provided, I kindly request your expertise in creating a captivating table of contents for this book. Consider how the content will best resonate with target audience and address their specific needs and interests. This process allows you to refine this book's angle, structure, and tone, ensuring that it captures the attention of target audience and provides them with the value they are seeking. Utilize keyword research tools to identify popular search terms related to this book.
                         """,
                     },
                     {
                         "role": "assistant",
                         "content": f"""
-                    Provide detailed table of contents for the book formatted in Markdown code. Avoid any apologies or compliments:
+                    Provide detailed table of contents for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. Remember to maintain a logical progression wit the outline, allowing ideas to build upon one another and creating a sense of continuity. Futhermore, consider incorporating storytelling elements or personal anecdotes that relate to each chapter's theme. This will help in establishing an emotional connection with readers:
                     # {ebook} 
                     *Include your author name or pen name and any relevant subtitle or tagline.*
 
@@ -158,11 +170,12 @@ def table_of_content(ebook, user_input):
 
     # Save to database
     insert_ebook_table_of_content(ebook, content)
+    insert_target_audience(ebook, target_audience)
 
     return content
 
 
-def write_chapter(ebook, chapter_nro, template, chapter_to_write):
+def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audience):
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -180,7 +193,10 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write):
                     {template}
 
                     Now, I would greatly appreciate if you could write the following section of the book:
-                    {chapter_to_write}                        
+                    {chapter_to_write} 
+
+                    Choose language that is clear, concise, and accessible to your target audience:
+                    {target_audience}
                     """,
                     },
                     {
@@ -188,7 +204,7 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write):
                         "content": f"""                      
                     When crafting chapter titles, use markdown formatting to enhance their visual appeal. Employ the following format: ## Title, ### Subtitle. Feel free to use **bold** and *italic* when it fits the theme.
 
-                    It is important to establish a seamless flow within your chapters, maintaining a novel-like structure that entices readers to delve deeper into your story, rather than selling picth for upcoming book. Avoid constructing sentences that imply a conversation between the author and the reader, such as apologies or compliments. Instead, focus on delivering the content seamlessly without referencing the interaction.
+                    It is important to establish a seamless flow within your chapters, maintaining a novel-like structure that entices readers to delve deeper into your story, rather than selling picth for upcoming book. Avoid apologies or compliments. While your aim is to educate and provide valuable information, you also want to create a connection with your readers. Use language that is relatable and conversational, making your readers feel like they are having a conversation with a knowledgeable friend.
 
                     """,
                     },

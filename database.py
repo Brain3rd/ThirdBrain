@@ -195,6 +195,10 @@ def insert_ebook_table_of_content(title, table_of_content):
     db_ebook.update({"table_of_content": table_of_content}, title)
 
 
+def insert_target_audience(title, target_audience):
+    db_ebook.update({"target_audience": target_audience}, title)
+
+
 def insert_ebook_chapter(title, chapter_nro, chapter_content):
     db_ebook.update({f"chapter_{chapter_nro}": chapter_content}, title)
 
@@ -232,6 +236,15 @@ def get_table_of_content(ebook):
         return response
     else:
         return None
+
+
+def get_target_audience(ebook):
+    selected_ebook = db_ebook.get(ebook)
+    if "target_audience" in selected_ebook:
+        response = selected_ebook["target_audience"]
+        return response
+    else:
+        return "Everybody who is interesting in self-development and personal growth."
 
 
 def get_all_chapters(ebook):

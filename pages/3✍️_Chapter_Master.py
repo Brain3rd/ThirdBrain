@@ -97,15 +97,16 @@ if st.session_state.authentication_status:
         new_topic = st.form("New eBook")
         with new_topic:
             # Generate new Title and Outline for the book
-            user_input_text = st.text_input("Enter a topic for the eBook: ")
+            user_input_text = st.text_area("Topic for the eBook")
+            target_audience = st.text_input("Target Audience")
             user_input_button = st.form_submit_button("Submit")
             if user_input_button:
                 st.sidebar.info("Brainstormin Title Options...")
-                ebook_title = wr.new_ebook(user_input_text)
+                ebook_title = wr.new_ebook(user_input_text, target_audience)
                 st.sidebar.success(ebook_title)
                 st.sidebar.info("Writing Book Outline...")
                 ebook_table_of_contet = wr.table_of_content(
-                    ebook_title, user_input_text
+                    ebook_title, user_input_text, target_audience
                 )
                 st.sidebar.success("Table of Contents is ready!")
                 st.experimental_rerun()
@@ -243,11 +244,13 @@ if st.session_state.authentication_status:
             chapter_input_button = st.form_submit_button("Submit")
             if chapter_input_button:
                 st.sidebar.info("Writing the chapter...")
+                target_audience = db.get_target_audience(ebook_title)
                 write_new_chapter = wr.write_chapter(
                     ebook_title,
                     len(chapters) + 1,
                     current_table_of_content,
                     chapter_input,
+                    target_audience,
                 )
                 st.sidebar.success(f"Chapter {len(chapters) + 1} written!")
                 st.cache_data.clear()
