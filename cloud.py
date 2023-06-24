@@ -3,7 +3,7 @@ import streamlit as st
 import dropbox
 import math
 from environment import load_env_variables, get_api_key
-from database import insert_book, insert_art
+from database import insert_book, insert_art, insert_ebook_art, insert_ebook_cover
 
 
 load_env_variables()
@@ -18,7 +18,7 @@ dbx = dropbox.Dropbox(
 )
 
 
-@st.cache_data()
+# @st.cache_data()
 def display_book_summaries_and_save_to_database(num_summaries=None):
     if "title" not in st.session_state:
         st.session_state.title = ""
@@ -168,7 +168,7 @@ def display_book_summaries_and_save_to_database(num_summaries=None):
             break
 
 
-@st.cache_data()
+# @st.cache_data()
 def display_art_and_save_to_database(num_art=None):
     if "art_url" not in st.session_state:
         st.session_state.art_url = {}
@@ -314,3 +314,81 @@ def display_art_and_save_to_database(num_art=None):
         # Break the loop if the specified number of summaries is reached
         if num_art is not None and len(st.session_state.art_prompt) >= num_art:
             break
+
+
+def display_files_and_save_to_database(ebook_title, chapter):
+    try:
+        # List all files and folders in the /books folder of Dropbox
+        all_art = dbx.files_list_folder(f"/ebooks/{ebook_title}", recursive=True)
+        art_entries = all_art.entries
+    except dropbox.exceptions.AuthError as e:
+        # Handle authentication error
+        st.error(f"Dropbox authentication failed: {e}")
+        return
+
+    # Filter out folders from the entries
+    art_folders = [
+        art_entry
+        for art_entry in art_entries
+        if isinstance(art_entry, dropbox.files.FolderMetadata)
+    ]
+
+    # Reverse the order of the books displayed
+    art_folders.reverse()
+
+    for art_folder in art_folders:
+        art_folder_name = os.path.basename(art_folder.path_display).replace("_", " ")
+
+        # Extract the title from the folder name
+
+        art_title = str(art_folder_name)
+        if art_title == chapter:
+            # Get the files inside the folder
+            art_folder_files = [
+                art_entry
+                for art_entry in art_entries
+                if isinstance(art_entry, dropbox.files.FileMetadata)
+                and os.path.dirname(art_entry.path_display) == art_folder.path_display
+            ]
+
+            # Separate image files and text file
+            art_image_files = [
+                file for file in art_folder_files if file.path_display.endswith(".png")
+            ]
+
+            art_image_urls = []
+
+            for i, art_image_file in enumerate(art_image_files):
+                # Get shared link for the image file
+                try:
+                    shared_link_metadata = dbx.sharing_create_shared_link_with_settings(
+                        art_image_file.path_display,
+                        dropbox.sharing.SharedLinkSettings(
+                            requested_visibility=dropbox.sharing.RequestedVisibility.public
+                        ),
+                    )
+                except dropbox.exceptions.ApiError as e:
+                    if e.error.is_shared_link_already_exists():
+                        # A shared link already exists, retrieve the existing links for the file
+                        links = dbx.sharing_list_shared_links(
+                            art_image_file.path_display
+                        ).links
+                        shared_link_metadata = links[
+                            0
+                        ]  # Assuming there is only one existing link, you can modify this logic based on your requirements
+                    else:
+                        # Handle other types of ApiError if needed
+                        raise e
+
+                # Extract the URL from the shared link metadata
+                shared_link_url = shared_link_metadata.url
+
+                # Modify the shared link URL to force file download
+                art_res = shared_link_url.replace(
+                    "www.dropbox.com", "dl.dropboxusercontent.com"
+                ).split("?")[0]
+
+                # Add the permanent link to the list
+                art_image_urls.append(art_res)
+
+            insert_ebook_art(ebook_title, chapter, art_image_urls)

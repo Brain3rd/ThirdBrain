@@ -133,31 +133,32 @@ def get_image_prompt(user_input):
     return image_prompt
 
 
-def create_dalle_image(prompt):
-    st.sidebar.info("Drawing DALL-E image...")
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        try:
-            dalle_data = openai.Image.create(
-                prompt=prompt,
-                n=2,
-                size="512x512",
-                response_format="b64_json",  # Get image data instead of url
-            )
-            # If the code execution is successful, break out of the loop
-            break
-        except Exception as e:
-            # Handle RateLimitError
-            st.sidebar.error(
-                f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
-            )
-        # Wait for the specified delay before the next attempt
-        time.sleep(DELAY_SECONDS)
+def create_dalle_image(prompt, samples, dalle_num=True):
+    if dalle_num:
+        st.sidebar.info("Drawing DALL-E image...")
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            try:
+                dalle_data = openai.Image.create(
+                    prompt=prompt,
+                    n=samples,
+                    size="512x512",
+                    response_format="b64_json",  # Get image data instead of url
+                )
+                # If the code execution is successful, break out of the loop
+                break
+            except Exception as e:
+                # Handle RateLimitError
+                st.sidebar.error(
+                    f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
+                )
+            # Wait for the specified delay before the next attempt
+            time.sleep(DELAY_SECONDS)
 
-    # Return url instead of b64_json
-    # image_url = image_response["data"][0]["url"]
+        # Return url instead of b64_json
+        # image_url = image_response["data"][0]["url"]
 
-    st.sidebar.success("DALL-E image created!")
-    return dalle_data
+        st.sidebar.success("DALL-E image created!")
+        return dalle_data
 
 
 def create_stable_image(prompt, width, height, engine_id, samples, steps):
@@ -214,18 +215,21 @@ def save_all(
     width,
     height,
     engine,
+    folder,
+    dalle_num=True,
 ):
     dalle_arts = []
     stable_arts = []
 
     try:
         # Create a new folder for the book in Dropbox
-        folder_path = f"/images/{image_name}"
+        folder_path = f"/{folder}/{image_name}"
 
         # Check if the folder already exists
         try:
             dbx.files_get_metadata(folder_path)
         except dropbox.exceptions.ApiError as e:
+            print(e)
             if (
                 isinstance(e.error, dropbox.files.GetMetadataError)
                 and e.error.is_path()
@@ -242,12 +246,13 @@ def save_all(
         data_to_txt = f"**User input:** {user_input}\n\n**AI Generated prompt:** {image_prompt}\n\n**Stable Diffusion:** {engine} {width}x{height}\n\n**DALL-E:** 512x512"
         dbx.files_upload(data_to_txt.encode("utf-8"), art_path)
 
-        # Save DALL-E images to png
-        for i, image in enumerate(dalle_data["data"]):
-            image_path = f"{folder_path}/{image_name}_dalle_{i}.png"
-            image_data = base64.b64decode(image["b64_json"])
-            dbx.files_upload(image_data, image_path)
-            dalle_arts.append(image_data)
+        if dalle_num:
+            # Save DALL-E images to png
+            for i, image in enumerate(dalle_data["data"]):
+                image_path = f"{folder_path}/{image_name}_dalle_{i}.png"
+                image_data = base64.b64decode(image["b64_json"])
+                dbx.files_upload(image_data, image_path)
+                dalle_arts.append(image_data)
 
         # Save Stability images to png
         if stability_data != "No stability art":
@@ -273,11 +278,19 @@ def art_generator(art_input, art_name, width, height, engine, samples, steps):
         st.session_state.art_expander = ""
 
     art_prompt = get_image_prompt(art_input)
-    dalle_art = create_dalle_image(art_prompt)
+    dalle_art = create_dalle_image(art_prompt, samples)
     stable_art = create_stable_image(art_prompt, width, height, engine, samples, steps)
 
     st.session_state.dalle_art, st.session_state.stable_art = save_all(
-        art_name, art_prompt, dalle_art, stable_art, art_input, width, height, engine
+        art_name,
+        art_prompt,
+        dalle_art,
+        stable_art,
+        art_input,
+        width,
+        height,
+        engine,
+        "images",
     )
 
     st.session_state.art_expander = st.expander(art_name, expanded=True)
@@ -295,3 +308,51 @@ def art_generator(art_input, art_name, width, height, engine, samples, steps):
         st.write(art_prompt)
 
     st.sidebar.success("Art Generated!")
+
+
+def save_chapter_img(
+    ebook_title, chapter_name, dalle_data, stability_data, dalle_num=True
+):
+    dalle_arts = []
+    stable_arts = []
+
+    try:
+        # Create a new folder for the book in Dropbox
+        folder_path = f"/ebooks/{ebook_title}/{chapter_name}"
+
+        # Check if the folder already exists
+        try:
+            dbx.files_get_metadata(folder_path)
+        except dropbox.exceptions.ApiError as e:
+            if (
+                isinstance(e.error, dropbox.files.GetMetadataError)
+                and e.error.is_path()
+                and e.error.get_path().is_not_found()
+            ):
+                # Folder does not exist, create it
+                dbx.files_create_folder(folder_path)
+            else:
+                # Unexpected error, raise it
+                raise e
+
+        # Save DALL-E images to png
+        if dalle_num:
+            for i, image in enumerate(dalle_data["data"]):
+                image_path = f"{folder_path}/{chapter_name}_dalle_{i}.png"
+                image_data = base64.b64decode(image["b64_json"])
+                dbx.files_upload(image_data, image_path)
+                dalle_arts.append(image_data)
+
+        # Save Stability images to png
+        if stability_data != "No stability art":
+            for i, image in enumerate(stability_data["artifacts"]):
+                image_path = f"{folder_path}/{chapter_name}_stability_{i}.png"
+                image_data = base64.b64decode(image["base64"])
+                dbx.files_upload(image_data, image_path)
+                stable_arts.append(image_data)
+
+    except Exception as e:
+        # Handle the specific exception (if known) or catch all exceptions
+        st.sidebar.error(f"An error occurred while saving to Dropbox: {str(e)}")
+
+    return dalle_arts, stable_arts

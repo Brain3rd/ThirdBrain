@@ -339,13 +339,13 @@ def get_cover_prompt(book):
     return image_prompt
 
 
-def create_dalle_image(prompt):
+def create_dalle_image(prompt, samples):
     st.sidebar.info("Drawing DALL-E image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             image_response = openai.Image.create(
                 prompt=prompt,
-                n=2,
+                n=samples,
                 size="512x512",
                 response_format="b64_json",  # Get image data instead of url
             )
@@ -496,7 +496,7 @@ def summarizer(book_input, width, height, engine, samples, steps):
     book_content = f"{st.session_state.new_book}\n\n{st.session_state.book_summary}"
 
     dalle_prompt = get_cover_prompt(book_content)
-    dalle_image = create_dalle_image(dalle_prompt)
+    dalle_image = create_dalle_image(dalle_prompt, samples)
     stable_image = create_stable_image(
         dalle_prompt, width, height, engine, samples, steps
     )

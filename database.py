@@ -3,6 +3,8 @@ import streamlit as st
 from environment import load_env_variables, get_api_key
 import datetime
 import re
+from streamlit_extras.add_vertical_space import add_vertical_space
+import _artist as ar
 
 
 load_env_variables()
@@ -12,6 +14,7 @@ deta = Deta(DETA_KEY)
 db_users = deta.Base("users_db")
 db_books = deta.Base("books")
 db_art = deta.Base("art")
+db_ebook = deta.Base("ebook")
 
 
 ### User Database ###
@@ -43,18 +46,6 @@ def insert_book(title, author, content, img_urls):
         {
             "key": title,
             "author": author,
-            "content": content,
-            "img_url": img_urls,
-            "date": current_date,
-        }
-    )
-
-
-def insert_art(title, content, img_urls):
-    current_date = datetime.date.today().strftime("%Y-%m-%d")
-    db_art.put(
-        {
-            "key": title,
             "content": content,
             "img_url": img_urls,
             "date": current_date,
@@ -121,6 +112,19 @@ def fetch_all_books():
             st.markdown(content)
 
 
+### Art Database ###
+def insert_art(title, content, img_urls):
+    current_date = datetime.date.today().strftime("%Y-%m-%d")
+    db_art.put(
+        {
+            "key": title,
+            "content": content,
+            "img_url": img_urls,
+            "date": current_date,
+        }
+    )
+
+
 @st.cache_data()
 def fetch_all_art():
     all_art = db_art.fetch()
@@ -174,3 +178,137 @@ def fetch_all_art():
             # Display the title and content inside the expander
             st.title(art_title)
             st.markdown(art_content)
+
+
+### eBook Database ###
+def insert_ebook_title(title):
+    current_date = datetime.date.today().strftime("%Y-%m-%d")
+    db_ebook.put(
+        {
+            "key": title,
+            "date": current_date,
+        }
+    )
+
+
+def insert_ebook_table_of_content(title, table_of_content):
+    db_ebook.update({"table_of_content": table_of_content}, title)
+
+
+def insert_ebook_chapter(title, chapter_nro, chapter_content):
+    db_ebook.update({f"chapter_{chapter_nro}": chapter_content}, title)
+
+
+def insert_ebook_cover(title, url):
+    db_ebook.update({f"cover_art": url}, title)
+
+
+def insert_cover_prompt(title, prompt):
+    db_ebook.update({f"Prompt_Cover": prompt}, title)
+
+
+def insert_ebook_art(title, chapter_nro, url):
+    db_ebook.update({chapter_nro: url}, title)
+
+
+def insert_image_prompt(title, chapter_nro, prompt):
+    db_ebook.update({f"Prompt_{chapter_nro}": prompt}, title)
+
+
+def fetch_all_ebook_titles():
+    all_ebooks = db_ebook.fetch()
+    response = all_ebooks.items
+
+    # Extract the 'key' values from the response and store them in a tuple
+    titles = tuple(ebook["key"] for ebook in response)
+
+    return titles
+
+
+def get_table_of_content(ebook):
+    selected_ebook = db_ebook.get(ebook)
+    if "table_of_content" in selected_ebook:
+        response = selected_ebook["table_of_content"]
+        return response
+    else:
+        return None
+
+
+def get_all_chapters(ebook):
+    selected_ebook = db_ebook.get(ebook)
+    chapters = []
+    for key, value in selected_ebook.items():
+        if key.startswith("chapter_"):
+            chapters.append(value)
+            chapter = key.replace("_", " ").capitalize()
+            chapter_expander = st.expander(chapter)
+            with chapter_expander:
+                st.markdown(value)
+
+                add_vertical_space(2)
+                chapter_art_button = st.button("Generate Chapter Art")
+                if chapter_art_button:
+                    chapter_prompt = ar.get_image_prompt(value)
+                    dalle_image = ar.create_dalle_image(
+                        chapter_prompt, st.session_state.samples
+                    )
+                    stable_image = ar.create_stable_image(
+                        chapter_prompt,
+                        st.session_state.width,
+                        st.session_state.height,
+                        st.session_state.engine,
+                        st.session_state.samples,
+                        st.session_state.steps,
+                    )
+                    ar.save_all(
+                        selected_ebook,
+                        chapter_prompt,
+                        dalle_image,
+                        stable_image,
+                        selected_ebook,
+                        st.session_state.width,
+                        st.session_state.height,
+                        st.session_state.engine,
+                        "ebooks",
+                    )
+
+    if chapters:
+        return len(chapters)
+    else:
+        return 0
+
+
+def get_ebook_cover(ebook):
+    selected_ebook = db_ebook.get(ebook)
+    if "Cover" in selected_ebook:
+        response = selected_ebook["Cover"]
+        return response
+    else:
+        return None
+
+
+def get_cover_prompt(ebook):
+    selected_ebook = db_ebook.get(ebook)
+    if "Prompt_Cover" in selected_ebook:
+        response = selected_ebook["Prompt_Cover"]
+        return response
+    else:
+        return None
+
+
+def get_chapter_art(ebook, chapter):
+    selected_ebook = db_ebook.get(ebook)
+    if chapter in selected_ebook:
+        response = selected_ebook[chapter]
+        return response
+    else:
+        return None
+
+
+def get_chapter_prompt(ebook, chapter):
+    selected_ebook = db_ebook.get(ebook)
+    if f"Prompt_{chapter}" in selected_ebook:
+        response = selected_ebook[f"Prompt_{chapter}"]
+        return response
+    else:
+        return None

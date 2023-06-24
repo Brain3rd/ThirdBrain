@@ -117,6 +117,7 @@ if st.session_state.authentication_status:
                 steps,
             )
             display_art_and_save_to_database(1)
+            st.experimental_rerun()
 
     # Run the app
     if __name__ == "__main__":
