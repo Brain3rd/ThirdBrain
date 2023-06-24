@@ -68,7 +68,7 @@ def new_ebook(user_input):
     return ebook_title
 
 
-def table_of_content(ebook):
+def table_of_content(ebook, user_input):
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -76,14 +76,19 @@ def table_of_content(ebook):
                     {
                         "role": "system",
                         "content": """
-                    You are an accomplished best-selling eBook author renowned for your ability to create engaging and valuable content. Remember that maintaining a suitable balance between perplexity and burstiness is crucial in crafting effective text. Perplexity assesses the complexity of the writing, while burstiness evaluates the variation in sentence structures. By incorporating a mix of long and short sentences, you can ensure a captivating reading experience for your audience.
+                    You are an accomplished best-selling Book author renowned for your ability to create engaging and valuable content. Remember that maintaining a suitable balance between perplexity and burstiness is crucial in crafting effective text. Perplexity assesses the complexity of the writing, while burstiness evaluates the variation in sentence structures. By incorporating a mix of long and short sentences, you can ensure a captivating reading experience for your audience.
                     """,
                     },
                     {
                         "role": "user",
                         "content": f"""
-                        The title of the eBook created based on the unique book title is: {ebook}
-                        Please create a compelling table of contents for this eBook.
+                        Based on this user input:
+                        {user_input} 
+
+                        We have crafted unique book title:
+                        {ebook}
+
+                        Using the user input and book title provided, I kindly request your expertise in creating a captivating table of contents for this book.
                         """,
                     },
                     {
@@ -95,11 +100,21 @@ def table_of_content(ebook):
 
                     ## Table of Contents
 
-                    List the main sections or chapters of your eBook. 
+                    List the main chapters, sections and subsections of the book. 
                     1. Introduction
-                    2. Chapter 1
-                    3. Chapter 2
-                    4. Chapter 3
+                    2. Chapter
+                        - 2.1 Section
+                        - 2.2 Section 
+                        - 2.3 Section
+                    3. Chapter
+                        - 3.1 Section
+                            -3.1.1 Subsection
+                            -3.1.2 Subsection
+                            -3.1.3 Subsection
+                        - 3.2 Section
+                    4. Chapter
+                        - Sections
+                            - Subsections
                     5. ...
                     10. Conclusion
 
@@ -115,10 +130,10 @@ def table_of_content(ebook):
                     *Repeat the structure used in the previous chapter for subsequent chapters or sections.*
 
                     ## Chapter 3
-                    *Continue with the same structure if your eBook has more chapters or sections.*
+                    *Continue with the same structure if the Book has more chapters or sections.*
 
                     ## Conclusion
-                    *Summarize the key points discussed in your eBook.*
+                    *Summarize the key points discussed in the Book.*
                     - Provide any final thoughts, recommendations, or calls to action.
 
                     ### Additional Resources/Appendix (optional)

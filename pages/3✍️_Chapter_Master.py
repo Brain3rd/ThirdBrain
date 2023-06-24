@@ -104,7 +104,9 @@ if st.session_state.authentication_status:
                 ebook_title = wr.new_ebook(user_input_text)
                 st.sidebar.success(ebook_title)
                 st.sidebar.info("Writing Book Outline...")
-                ebook_table_of_contet = wr.table_of_content(ebook_title)
+                ebook_table_of_contet = wr.table_of_content(
+                    ebook_title, user_input_text
+                )
                 st.sidebar.success("Table of Contents is ready!")
                 st.experimental_rerun()
 
