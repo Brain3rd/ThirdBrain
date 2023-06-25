@@ -308,9 +308,16 @@ if st.session_state.authentication_status:
             if chapter_input_button:
                 st.sidebar.info("Writing the chapter...")
                 target_audience = db.get_target_audience(ebook_title)
+                # Find the first available chapter number
+                available_chapter = 1
+                for chapter in chapters:
+                    chapter_number = int(chapter.split(" ")[1])
+                    if chapter_number != available_chapter:
+                        break
+                    available_chapter += 1
                 write_new_chapter = wr.write_chapter(
                     ebook_title,
-                    len(chapters) + 1,
+                    available_chapter,
                     current_table_of_content,
                     chapter_input,
                     target_audience,
