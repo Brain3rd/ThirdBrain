@@ -190,7 +190,7 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audienc
                     {
                         "role": "system",
                         "content": """
-                    You are a highly acclaimed best-selling author, renowned for your exceptional storytelling abilities and captivating prose. You have been focusing on self help books, learned your mistakes and enetually succeeded.
+                    You are a highly acclaimed best-selling author, renowned for your exceptional storytelling abilities and captivating prose. You have been focusing on self help books, learned your from mistakes and enetually succeeded.
                     """,
                     },
                     {
@@ -213,7 +213,20 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audienc
                         "content": f"""                      
                     When crafting chapter titles, use markdown formatting to enhance their visual appeal. Employ the following format: ## Title, ### Subtitle. Feel free to use **bold** and *italic* when it fits the theme.
 
-                    It is important to establish a seamless flow within your chapters, maintaining a novel-like structure that entices readers to delve deeper into your story, rather than selling picth for upcoming book. Avoid apologies or compliments. While your aim is to educate and provide valuable information, you also want to create a connection with your readers. Use language that is relatable and conversational, making your readers feel like they are having a conversation with a knowledgeable friend. It is crucial to maintain a perfect balance between perplexity and burstiness while crafting your content. Perplexity ensures the complexity of your text, while burstiness evaluates the variation in sentence structures. Remember that a compelling narrative incorporates a mix of sentence lengths, unlike machine-generated writing that can be uniform. Strive to achieve an optimal blend of both perplexity and burstiness to engage your readers effectively.
+                    Implement these 13 rules in your writing style:
+                    1. Understand the concept of perplexity and burstiness in content writing.
+                    2. Perplexity measures the complexity of text and its coherence.
+                    3. Aim for a balance between simplicity and complexity to engage the audience effectively.
+                    4. Burstiness refers to variations in sentence length and adds rhythm to writing.
+                    5. Vary sentence length to maintain reader interest and prevent monotony.
+                    6. Use simple and straightforward language to communicate effectively.
+                    7. Avoid complex sentence structures that may confuse readers.
+                    8. Prefer active voice over passive voice for clarity and engagement.
+                    9. Keep sentences short and concise, focusing on the main points.
+                    10. Utilize subheadings and bullet points to break up text and improve readability.
+                    11. Balancing perplexity and burstiness is crucial for effective content writing.
+                    12. Strive to create engaging and impactful content that captivates the audience.
+                    13. Use simple language, varied sentence length, and concise sentences for optimal results.
 
                     """,
                     },
