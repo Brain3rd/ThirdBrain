@@ -3,7 +3,7 @@ import streamlit as st
 import dropbox
 import math
 from environment import load_env_variables, get_api_key
-from database import insert_book, insert_art, insert_ebook_art, insert_ebook_cover
+from database import insert_book, insert_art, insert_ebook_art
 
 
 load_env_variables()
@@ -18,7 +18,7 @@ dbx = dropbox.Dropbox(
 )
 
 
-# @st.cache_data()
+@st.cache_data()
 def display_book_summaries_and_save_to_database(num_summaries=None):
     if "title" not in st.session_state:
         st.session_state.title = ""
@@ -168,7 +168,7 @@ def display_book_summaries_and_save_to_database(num_summaries=None):
             break
 
 
-# @st.cache_data()
+@st.cache_data()
 def display_art_and_save_to_database(num_art=None):
     if "art_url" not in st.session_state:
         st.session_state.art_url = {}
@@ -316,6 +316,7 @@ def display_art_and_save_to_database(num_art=None):
             break
 
 
+@st.cache_data()
 def display_files_and_save_to_database(ebook_title, chapter):
     try:
         # List all files and folders in the /books folder of Dropbox
@@ -389,6 +390,7 @@ def display_files_and_save_to_database(ebook_title, chapter):
                 ).split("?")[0]
 
                 # Add the permanent link to the list
+
                 art_image_urls.append(art_res)
 
             insert_ebook_art(ebook_title, chapter, art_image_urls)

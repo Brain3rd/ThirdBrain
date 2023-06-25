@@ -40,7 +40,7 @@ def new_ebook(user_input, target_audience):
                         and target audience:
                         {target_audience}
 
-                        Using the user input and target audience provided, I kindly request your expertise in creating something that is completely distinct from any existing book title in the market. Utilize keyword research tools to identify popular search terms related to topic. Please provide me with ONE compelling title.
+                        Using the user input and target audience provided, I kindly request your expertise in creating something that is completely distinct from any existing book title in the market. Utilize keyword research tools to identify popular search terms related to topic. Please provide me with ONE compelling title. Thank you.
                         """,
                     },
                     {
@@ -100,16 +100,20 @@ def table_of_content(ebook, user_input, target_audience):
                         We have crafted unique book title:
                         {ebook}
 
-                        Using the user input, target audience and book title provided, I kindly request your expertise in creating a captivating table of contents for this book. Consider how the content will best resonate with target audience and address their specific needs and interests. This process allows you to refine this book's angle, structure, and tone, ensuring that it captures the attention of target audience and provides them with the value they are seeking. Utilize keyword research tools to identify popular search terms related to this book.
+                        Using the user input, target audience and book title provided, I kindly request your expertise in creating a captivating table of contents for this book. Consider how the content will best resonate with target audience and address their specific needs and interests. This process allows you to refine this book's angle, structure, and tone, ensuring that it captures the attention of target audience and provides them with the value they are seeking. Utilize keyword research tools to identify popular search terms related to this book. Thank you.
                         """,
                     },
                     {
                         "role": "assistant",
                         "content": f"""
-                    Provide detailed table of contents for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. Remember to maintain a logical progression wit the outline, allowing ideas to build upon one another and creating a sense of continuity. Futhermore, consider incorporating storytelling elements or personal anecdotes that relate to each chapter's theme. This will help in establishing an emotional connection with readers:
+                    Provide long ind-depth and detailed table of contests and script for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. 
+                    
+                    
+
                     # {ebook} 
                     *Include your author name or pen name and any relevant subtitle or tagline.*
 
+                    Table of Contents:
                     ## Table of Contents
 
                     List the main chapters, sections and subsections of the book. 
@@ -129,7 +133,7 @@ def table_of_content(ebook, user_input, target_audience):
                             - Subsections
                     5. ...
                     10. Conclusion
-
+                    
                     ## Introduction
                     *Begin with an engaging introduction that grabs the reader's attention and provides an overview of what your eBook will cover.*
 
@@ -150,10 +154,13 @@ def table_of_content(ebook, user_input, target_audience):
 
                     ### Additional Resources/Appendix (optional)
                     *Include any relevant resources, links, or references that can further enhance the reader's understanding or provide additional value.*
+                    
+                    Script:
+                    Add details for the writer to follow like a scripts. So remember to maintain a logical progression, allowing ideas to build upon one another and creating a sense of continuity. Futhermore, consider incorporating storytelling elements or personal anecdotes that relate to each chapter's theme. This will help in establishing an emotional connection with readers. For example, if one chapter has mentioned a character, in the next chapter it should be mentioned so there is a continuum. Aim to add important details so that if previous chapter is forgotten, the writer can continue the story with all it characters, and details:
                     """,
                     },
                 ],
-                model="gpt-3.5-turbo",
+                model="gpt-3.5-turbo-16k",
             )
 
             # If the code execution is successful, break out of the loop
@@ -197,6 +204,8 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audienc
 
                     Choose language that is clear, concise, and accessible to your target audience:
                     {target_audience}
+
+                    Write long in-depth and detailed section. Always write in markdown. Thank you.
                     """,
                     },
                     {

@@ -7,6 +7,7 @@ import base64
 import dropbox
 import streamlit as st
 import environment as env
+import random
 
 
 # Openai Keys
@@ -249,15 +250,23 @@ def save_all(
         if dalle_num:
             # Save DALL-E images to png
             for i, image in enumerate(dalle_data["data"]):
-                image_path = f"{folder_path}/{image_name}_dalle_{i}.png"
+                timestamp = int(time.time())  # Get the current timestamp
+                random_number = random.randint(
+                    1000, 9999
+                )  # Generate a random 4-digit number
+                image_path = f"{folder_path}/{image_name}_dalle_{timestamp}_{random_number}_{i}.png"
                 image_data = base64.b64decode(image["b64_json"])
                 dbx.files_upload(image_data, image_path)
                 dalle_arts.append(image_data)
 
-        # Save Stability images to png
         if stability_data != "No stability art":
+            # Save Stability images to png
             for i, image in enumerate(stability_data["artifacts"]):
-                image_path = f"{folder_path}/{image_name}_stability_{i}.png"
+                timestamp = int(time.time())  # Get the current timestamp
+                random_number = random.randint(
+                    1000, 9999
+                )  # Generate a random 4-digit number
+                image_path = f"{folder_path}/{image_name}_stability_{timestamp}_{random_number}_{i}.png"
                 image_data = base64.b64decode(image["base64"])
                 dbx.files_upload(image_data, image_path)
                 stable_arts.append(image_data)
@@ -338,7 +347,11 @@ def save_chapter_img(
         # Save DALL-E images to png
         if dalle_num:
             for i, image in enumerate(dalle_data["data"]):
-                image_path = f"{folder_path}/{chapter_name}_dalle_{i}.png"
+                timestamp = int(time.time())  # Get the current timestamp
+                random_number = random.randint(
+                    1000, 9999
+                )  # Generate a random 4-digit number
+                image_path = f"{folder_path}/{chapter_name}_dalle_{timestamp}_{random_number}.png"
                 image_data = base64.b64decode(image["b64_json"])
                 dbx.files_upload(image_data, image_path)
                 dalle_arts.append(image_data)
@@ -346,7 +359,11 @@ def save_chapter_img(
         # Save Stability images to png
         if stability_data != "No stability art":
             for i, image in enumerate(stability_data["artifacts"]):
-                image_path = f"{folder_path}/{chapter_name}_stability_{i}.png"
+                timestamp = int(time.time())  # Get the current timestamp
+                random_number = random.randint(
+                    1000, 9999
+                )  # Generate a random 4-digit number
+                image_path = f"{folder_path}/{chapter_name}_stability_{timestamp}_{random_number}.png"
                 image_data = base64.b64decode(image["base64"])
                 dbx.files_upload(image_data, image_path)
                 stable_arts.append(image_data)

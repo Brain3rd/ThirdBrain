@@ -22,11 +22,13 @@ def insert_user(username, name, password):
     return db_users.put({"key": username, "name": name, "password": password})
 
 
+@st.cache_data()
 def fetch_all_users():
     res = db_users.fetch()
     return res.items
 
 
+@st.cache_data()
 def get_user(username):
     return db_users.get(username)
 
@@ -203,22 +205,23 @@ def insert_ebook_chapter(title, chapter_nro, chapter_content):
     db_ebook.update({f"chapter_{chapter_nro}": chapter_content}, title)
 
 
-def insert_ebook_cover(title, url):
-    db_ebook.update({f"cover_art": url}, title)
-
-
 def insert_cover_prompt(title, prompt):
     db_ebook.update({f"Prompt_Cover": prompt}, title)
 
 
-def insert_ebook_art(title, chapter_nro, url):
-    db_ebook.update({chapter_nro: url}, title)
+def insert_ebook_art(title, chapter_name, url):
+    db_ebook.update({chapter_name: url}, title)
 
 
 def insert_image_prompt(title, chapter_nro, prompt):
     db_ebook.update({f"Prompt_{chapter_nro}": prompt}, title)
 
 
+def delete_ebook(title):
+    return db_ebook.delete(title)
+
+
+@st.cache_data()
 def fetch_all_ebook_titles():
     all_ebooks = db_ebook.fetch()
     response = all_ebooks.items
@@ -229,6 +232,7 @@ def fetch_all_ebook_titles():
     return titles
 
 
+@st.cache_data()
 def get_table_of_content(ebook):
     selected_ebook = db_ebook.get(ebook)
     if "table_of_content" in selected_ebook:
@@ -238,6 +242,7 @@ def get_table_of_content(ebook):
         return None
 
 
+@st.cache_data()
 def get_target_audience(ebook):
     selected_ebook = db_ebook.get(ebook)
     if "target_audience" in selected_ebook:
@@ -247,50 +252,7 @@ def get_target_audience(ebook):
         return "Everybody who is interesting in self-development and personal growth."
 
 
-def get_all_chapters(ebook):
-    selected_ebook = db_ebook.get(ebook)
-    chapters = []
-    for key, value in selected_ebook.items():
-        if key.startswith("chapter_"):
-            chapters.append(value)
-            chapter = key.replace("_", " ").capitalize()
-            chapter_expander = st.expander(chapter)
-            with chapter_expander:
-                st.markdown(value)
-
-                add_vertical_space(2)
-                chapter_art_button = st.button("Generate Chapter Art")
-                if chapter_art_button:
-                    chapter_prompt = ar.get_image_prompt(value)
-                    dalle_image = ar.create_dalle_image(
-                        chapter_prompt, st.session_state.samples
-                    )
-                    stable_image = ar.create_stable_image(
-                        chapter_prompt,
-                        st.session_state.width,
-                        st.session_state.height,
-                        st.session_state.engine,
-                        st.session_state.samples,
-                        st.session_state.steps,
-                    )
-                    ar.save_all(
-                        selected_ebook,
-                        chapter_prompt,
-                        dalle_image,
-                        stable_image,
-                        selected_ebook,
-                        st.session_state.width,
-                        st.session_state.height,
-                        st.session_state.engine,
-                        "ebooks",
-                    )
-
-    if chapters:
-        return len(chapters)
-    else:
-        return 0
-
-
+@st.cache_data()
 def get_ebook_cover(ebook):
     selected_ebook = db_ebook.get(ebook)
     if "Cover" in selected_ebook:
@@ -300,6 +262,7 @@ def get_ebook_cover(ebook):
         return None
 
 
+@st.cache_data()
 def get_cover_prompt(ebook):
     selected_ebook = db_ebook.get(ebook)
     if "Prompt_Cover" in selected_ebook:
@@ -309,6 +272,7 @@ def get_cover_prompt(ebook):
         return None
 
 
+@st.cache_data()
 def get_chapter_art(ebook, chapter):
     selected_ebook = db_ebook.get(ebook)
     if chapter in selected_ebook:
@@ -318,6 +282,7 @@ def get_chapter_art(ebook, chapter):
         return None
 
 
+@st.cache_data()
 def get_chapter_prompt(ebook, chapter):
     selected_ebook = db_ebook.get(ebook)
     if f"Prompt_{chapter}" in selected_ebook:

@@ -55,6 +55,9 @@ if "height" not in st.session_state:
     st.session_state.height = 512
 if "num_of_chapters" not in st.session_state:
     st.session_state.num_of_chapters = 0
+if "ebook_title" not in st.session_state:
+    st.session_state.ebook_title = ""
+
 
 if st.session_state.authentication_status:
     st.sidebar.markdown("Stable Diffusion Settings")
@@ -102,30 +105,39 @@ if st.session_state.authentication_status:
             user_input_button = st.form_submit_button("Submit")
             if user_input_button:
                 st.sidebar.info("Brainstormin Title Options...")
-                ebook_title = wr.new_ebook(user_input_text, target_audience)
-                st.sidebar.success(ebook_title)
+                st.session_state.ebook_title = wr.new_ebook(
+                    user_input_text, target_audience
+                )
+                st.sidebar.success(st.session_state.ebook_title)
                 st.sidebar.info("Writing Book Outline...")
                 ebook_table_of_contet = wr.table_of_content(
-                    ebook_title, user_input_text, target_audience
+                    st.session_state.ebook_title, user_input_text, target_audience
                 )
                 st.sidebar.success("Table of Contents is ready!")
+                st.cache_data.clear()
                 st.experimental_rerun()
 
     else:
-        # Choose an existig book to read or continue writing
+        # Choose an existing book to read or continue writing
         ebook_title = ebook_to_write
-        current_table_of_content = db.get_table_of_content(ebook_title)
+        try:
+            current_table_of_content = db.get_table_of_content(ebook_title)
+        except Exception as e:
+            pass
         if current_table_of_content:
-            # Create expander for the Table of content
+            delete_this_book = ebook_title
+            # Create an expander for the Table of Content
             table_of_content_expander = st.expander("Table of Content")
             with table_of_content_expander:
-                # Load book cover urls from database
+                # Load book cover URLs from the database
                 urls = db.get_ebook_cover(ebook_title)
-                # Display the urls in two columns
+
+                # Display the URLs in two columns
                 if urls:
+                    deleted_url = urls[:]
                     col1, col2 = st.columns(2)  # Create two columns
                     for j, cover_url in enumerate(urls):
-                        # Extract the caption from the image_url
+                        # Extract the caption from the image URL
                         match = re.search(r"_(\w+)_\d+\.png", cover_url)
                         caption = match.group(1) if match else ""
 
@@ -135,8 +147,15 @@ if st.session_state.authentication_status:
                         # Display the image with the extracted caption
                         with column:
                             st.image(cover_url, caption=caption)
+                            delete_cover_button = st.button(f"Delete Cover Art {j}")
+                            if delete_cover_button:
+                                deleted_url.remove(cover_url)
+                                db.insert_ebook_art(ebook_title, "Cover", deleted_url)
+                                st.sidebar.error(f"Cover Art {j} deleted!")
+                                st.cache_data.clear()
+                                st.experimental_rerun()
 
-                # Display cover arts
+                # Display cover prompt
                 is_cover_prompt = db.get_cover_prompt(ebook_title)
                 if is_cover_prompt:
                     st.markdown(is_cover_prompt)
@@ -150,7 +169,7 @@ if st.session_state.authentication_status:
                 if cover_art_button:
                     cover_prompt = ar.get_image_prompt(current_table_of_content)
                     dalle_image = ar.create_dalle_image(
-                        cover_prompt, st.session_state.samples, dalle_num=False
+                        cover_prompt, st.session_state.samples, dalle_num=True
                     )
                     stable_image = ar.create_stable_image(
                         cover_prompt,
@@ -162,79 +181,123 @@ if st.session_state.authentication_status:
                     )
                     # Save cover images to the cloud storage
                     ar.save_chapter_img(
-                        ebook_title, "Cover", dalle_image, stable_image, dalle_num=False
+                        ebook_title, "Cover", dalle_image, stable_image, dalle_num=True
                     )
 
                     # Save cover prompt and urls to database
                     db.insert_cover_prompt(ebook_title, cover_prompt)
                     cl.display_files_and_save_to_database(ebook_title, "Cover")
+                    st.cache_data.clear()
+                    st.experimental_rerun()
+
+                delete_ebook_button = st.button(f"Delete {delete_this_book}")
+                if delete_ebook_button:
+                    db.delete_ebook(delete_this_book)
+                    st.sidebar.warning(f"{delete_this_book} deleted!")
+                    st.cache_data.clear()
                     st.experimental_rerun()
 
             # Display all the already written chapters
             selected_ebook = db.db_ebook.get(ebook_title)
             chapters = []
-            for key, value in selected_ebook.items():
-                if key.startswith("chapter_"):
-                    chapters.append(value)
-                    chapter = key.replace("_", " ").capitalize()
-                    chapter_expander = st.expander(chapter)
-                    with chapter_expander:
-                        # Display all the chapter images with 2 columns
-                        urls = db.get_chapter_art(ebook_title, chapter)
+            try:
+                for key, value in selected_ebook.items():
+                    if key.startswith("chapter_") and value != "deleted":
+                        delete_this = int("".join(filter(str.isdigit, key)))
+                        chapter = key.replace("_", " ").capitalize()
+                        chapters.append(chapter)
+                        chapter_expander = st.expander(chapter)
+                        with chapter_expander:
+                            # Display all the chapter images with 2 columns
+                            urls = db.get_chapter_art(ebook_title, chapter)
+                            if urls:
+                                deleted_chapter_url = urls[:]
+                                col1, col2 = st.columns(2)  # Create two columns
+                                for j, cover_url in enumerate(urls):
+                                    # Extract the caption from the image_url
+                                    match = re.search(r"_(\w+)_\d+\.png", cover_url)
+                                    caption = match.group(1) if match else ""
 
-                        if urls:
-                            col1, col2 = st.columns(2)  # Create two columns
-                            for j, cover_url in enumerate(urls):
-                                # Extract the caption from the image_url
-                                match = re.search(r"_(\w+)_\d+\.png", cover_url)
-                                caption = match.group(1) if match else ""
+                                    # Determine the column to display the image based on the index
+                                    column = col1 if j % 2 == 0 else col2
 
-                                # Determine the column to display the image based on the index
-                                column = col1 if j % 2 == 0 else col2
+                                    # Display the image with the extracted caption
+                                    with column:
+                                        st.image(cover_url, caption=caption)
+                                        delete_chapter_url_button = st.button(
+                                            f"Delete Chapter Art {j}"
+                                        )
+                                        if delete_chapter_url_button:
+                                            deleted_chapter_url.remove(cover_url)
+                                            db.insert_ebook_art(
+                                                ebook_title,
+                                                chapter,
+                                                deleted_chapter_url,
+                                            )
+                                            st.sidebar.warning(
+                                                f"Chapter Art {j} deleted!"
+                                            )
+                                            st.cache_data.clear()
+                                            st.experimental_rerun()
 
-                                # Display the image with the extracted caption
-                                with column:
-                                    st.image(cover_url, caption=caption)
-
-                        # Display chapter arts
-                        is_chapter_prompt = db.get_chapter_prompt(ebook_title, chapter)
-                        if is_chapter_prompt:
-                            st.markdown(is_chapter_prompt)
-                        add_vertical_space(1)
-                        # Display the chapter text
-                        st.markdown(value)
-                        add_vertical_space(2)
-
-                        # Button for the Chapter images
-                        chapter_art_button = st.button(f"Generate {chapter} Art")
-                        if chapter_art_button:
-                            chapter_prompt = ar.get_image_prompt(value)
-                            dalle_image = ar.create_dalle_image(
-                                chapter_prompt,
-                                st.session_state.samples,
-                                dalle_num=False,
+                            # Display chapter arts
+                            is_chapter_prompt = db.get_chapter_prompt(
+                                ebook_title, chapter
                             )
-                            stable_image = ar.create_stable_image(
-                                chapter_prompt,
-                                st.session_state.width,
-                                st.session_state.height,
-                                st.session_state.engine,
-                                st.session_state.samples,
-                                st.session_state.steps,
-                            )
-                            # Save Chapter images to the cloud storage
-                            ar.save_chapter_img(
-                                ebook_title,
-                                chapter,
-                                dalle_image,
-                                stable_image,
-                                dalle_num=False,
-                            )
+                            if is_chapter_prompt:
+                                st.markdown(is_chapter_prompt)
+                            add_vertical_space(1)
+                            # Display the chapter text
+                            st.markdown(value)
+                            add_vertical_space(2)
 
-                            # Save cthe Chapter prompt and image urls to database
-                            db.insert_image_prompt(ebook_title, chapter, chapter_prompt)
-                            cl.display_files_and_save_to_database(ebook_title, chapter)
-                            st.experimental_rerun()
+                            # Button for the Chapter images
+                            chapter_art_button = st.button(f"Generate {chapter} Art")
+                            if chapter_art_button:
+                                chapter_prompt = ar.get_image_prompt(value)
+                                dalle_image = ar.create_dalle_image(
+                                    chapter_prompt,
+                                    st.session_state.samples,
+                                    dalle_num=True,
+                                )
+                                stable_image = ar.create_stable_image(
+                                    chapter_prompt,
+                                    st.session_state.width,
+                                    st.session_state.height,
+                                    st.session_state.engine,
+                                    st.session_state.samples,
+                                    st.session_state.steps,
+                                )
+                                # Save Chapter images to the cloud storage
+                                ar.save_chapter_img(
+                                    ebook_title,
+                                    chapter,
+                                    dalle_image,
+                                    stable_image,
+                                    dalle_num=True,
+                                )
+
+                                # Save cthe Chapter prompt and image urls to database
+                                db.insert_image_prompt(
+                                    ebook_title, chapter, chapter_prompt
+                                )
+                                cl.display_files_and_save_to_database(
+                                    ebook_title, chapter
+                                )
+                                st.cache_data.clear()
+                                st.experimental_rerun()
+                            delete_chapter_button = st.button(f"Delete {chapter}")
+                            if delete_chapter_button:
+                                db.insert_ebook_chapter(
+                                    ebook_title, delete_this, "deleted"
+                                )
+                                st.sidebar.warning(f"{chapter} deleted!")
+                                st.cache_data.clear()
+                                st.experimental_rerun()
+
+            except AttributeError as e:
+                st.cache_data.clear()
+                st.experimental_rerun()
 
         # Insert form to write new chapter
         new_chapter = st.form("New Chapter")
