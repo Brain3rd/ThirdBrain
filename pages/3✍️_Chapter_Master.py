@@ -295,7 +295,7 @@ if st.session_state.authentication_status:
                                 st.cache_data.clear()
                                 st.experimental_rerun()
 
-            except AttributeError as e:
+            except Exception as e:
                 st.cache_data.clear()
                 st.experimental_rerun()
 

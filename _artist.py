@@ -81,7 +81,7 @@ def get_image_prompt(user_input):
                     },
                     {
                         "role": "user",
-                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece using keywords from the user input: {user_input}",
+                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece using keywords and themes from the user input: {user_input}",
                     },
                     {
                         "role": "assistant",
@@ -110,7 +110,7 @@ def get_image_prompt(user_input):
 
             10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture. Futuristic architecture, Industrial urban, Architectural symmetry, Dramatic city skylines.
 
-            Please bear in mind that the aforementioned illustrations serve as a reference and a source of inspiration. It is crucial to employ ARTISTIC and PHOTOGRAPHIC vocabulary in crafting a distinct and customized textual depiction that ALIGNS WITH THE USER INPUT AND THEMES.
+            Please bear in mind that the aforementioned illustrations serve as a reference and a source of inspiration. It is crucial to employ keywords and vocabulary that aligns with the user input and themes.
 
             """,
                     },
