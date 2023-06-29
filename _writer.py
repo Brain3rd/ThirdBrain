@@ -205,29 +205,29 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audienc
                     Choose language that is clear, concise, and accessible to your target audience:
                     {target_audience}
 
-                    Write long in-depth and detailed section. Always write in markdown. Thank you.
+                    Write LONG in-depth and detailed section.. Always write in markdown. Thank you.
                     """,
                     },
                     {
                         "role": "assistant",
                         "content": f"""                      
-                    When crafting chapter titles, use markdown formatting to enhance their visual appeal. Employ the following format: ## Title, ### Subtitle. Feel free to use **bold** and *italic* when it fits the theme. However, do not combine bullet points with Headings, for example "## -" or "- **".
+When crafting chapter titles, use markdown formatting to enhance their visual appeal. Employ the following format: ## Title, ### Subtitle. Feel free to use **bold** and *italic* when it fits the theme. However, do not combine bullet points with Headings, for example "## -" or "- **".
 
-                    Implement these 14 rules in your writing style:
-                    1. Understand the concept of perplexity and burstiness in content writing.
-                    2. Perplexity measures the complexity of text and its coherence.
-                    3. Aim for a balance between simplicity and complexity to engage the audience effectively.
-                    4. Burstiness refers to variations in sentence length and adds rhythm to writing.
-                    5. Vary sentence length to maintain reader interest and prevent monotony.
-                    6. Use simple and straightforward language to communicate effectively.
-                    7. Avoid complex sentence structures that may confuse readers.
-                    8. Prefer active voice over passive voice for clarity and engagement.
-                    9. Keep sentences short and concise, focusing on the main points.
-                    10. Utilize subheadings to break up text and improve readability.
-                    11. Balancing perplexity and burstiness is crucial for effective content writing.
-                    12. Strive to create engaging and impactful content that captivates the audience.
-                    13. Use simple language, varied sentence length, and concise sentences for optimal results.
-                    14. Avoid starting paragraphs with phrases like "In conclusion", "Finally" and "Remember".
+Implement these 14 rules in your writing style:
+1. Understand the concept of perplexity and burstiness in content writing.
+2. Perplexity measures the complexity of text and its coherence.
+3. Aim for a balance between simplicity and complexity to engage the audience effectively.
+4. Burstiness refers to variations in sentence length and adds rhythm to writing.
+5. Vary sentence length to maintain reader interest and prevent monotony.
+6. Use simple and straightforward language to communicate effectively.
+7. Avoid complex sentence structures that may confuse readers.
+8. Prefer active voice over passive voice for clarity and engagement.
+9. Keep sentences short and concise, focusing on the main points.
+10. Utilize subheadings to break up text and improve readability.
+11. Balancing perplexity and burstiness is crucial for effective content writing.
+12. Strive to create engaging and impactful content that captivates the audience.
+13. Use simple language, varied sentence length, and concise sentences for optimal results.
+14. Avoid starting paragraphs with phrases like "In conclusion", "Finally" and "Remember".
 
                     """,
                     },

@@ -104,7 +104,7 @@ if st.session_state.authentication_status:
             target_audience = st.text_input("Target Audience")
             user_input_button = st.form_submit_button("Submit")
             if user_input_button:
-                st.sidebar.info("Brainstormin Title Options...")
+                st.sidebar.info("Brainstorming Title Options...")
                 st.session_state.ebook_title = wr.new_ebook(
                     user_input_text, target_audience
                 )
@@ -169,7 +169,7 @@ if st.session_state.authentication_status:
                 if cover_art_button:
                     cover_prompt = ar.get_image_prompt(current_table_of_content)
                     dalle_image = ar.create_dalle_image(
-                        cover_prompt, st.session_state.samples, dalle_num=True
+                        cover_prompt, st.session_state.samples, dalle_num=False
                     )
                     stable_image = ar.create_stable_image(
                         cover_prompt,
@@ -181,7 +181,7 @@ if st.session_state.authentication_status:
                     )
                     # Save cover images to the cloud storage
                     ar.save_chapter_img(
-                        ebook_title, "Cover", dalle_image, stable_image, dalle_num=True
+                        ebook_title, "Cover", dalle_image, stable_image, dalle_num=False
                     )
 
                     # Save cover prompt and urls to database
@@ -225,7 +225,7 @@ if st.session_state.authentication_status:
                                     with column:
                                         st.image(cover_url, caption=caption)
                                         delete_chapter_url_button = st.button(
-                                            f"Delete Chapter Art {j}"
+                                            f"Delete {chapter}_{j} Art",
                                         )
                                         if delete_chapter_url_button:
                                             deleted_chapter_url.remove(cover_url)
@@ -258,7 +258,7 @@ if st.session_state.authentication_status:
                                 dalle_image = ar.create_dalle_image(
                                     chapter_prompt,
                                     st.session_state.samples,
-                                    dalle_num=True,
+                                    dalle_num=False,
                                 )
                                 stable_image = ar.create_stable_image(
                                     chapter_prompt,
@@ -274,7 +274,7 @@ if st.session_state.authentication_status:
                                     chapter,
                                     dalle_image,
                                     stable_image,
-                                    dalle_num=True,
+                                    dalle_num=False,
                                 )
 
                                 # Save cthe Chapter prompt and image urls to database
@@ -302,11 +302,11 @@ if st.session_state.authentication_status:
         # Insert form to write new chapter
         new_chapter = st.form("New Chapter")
         with new_chapter:
-            chapter_input = st.text_area("Copy and Paste a Chapter to Write:")
+            chapter_input = st.text_area("Copy and Paste a Chapter to Write")
             # Button to write the given chapter
             chapter_input_button = st.form_submit_button("Submit")
             if chapter_input_button:
-                st.sidebar.info("Writing the chapter...")
+                st.sidebar.info(f"Writing the chapter...")
                 target_audience = db.get_target_audience(ebook_title)
                 # Find the first available chapter number
                 available_chapter = 1
