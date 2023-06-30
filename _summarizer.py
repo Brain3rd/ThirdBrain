@@ -315,7 +315,7 @@ def get_cover_prompt(book):
 
             10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture. Futuristic architecture, Industrial urban, Architectural symmetry, Dramatic city skylines.
 
-            Please bear in mind that the aforementioned illustrations serve as a reference and a source of inspiration. It is crucial to employ keywords and vocabulary that aligns with the user input and themes.
+            Please bear in mind that the aforementioned illustrations serve as a reference and a source of inspiration. It is crucial to employ artistic and photographic vocabulary in crafting a distinct and customized textual depiction that aligns with the book's summary and themes.
 
             """,
                     },
