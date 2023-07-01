@@ -167,7 +167,8 @@ if st.session_state.authentication_status:
                 # Button to generate Cover image drawed from the book Outline
                 cover_art_button = st.button("Generate Cover Art")
                 if cover_art_button:
-                    cover_prompt = ar.get_image_prompt(current_table_of_content)
+                    cover_prompt = wr.get_ebook_prompt(current_table_of_content)
+                    negative_prompt = ar.get_negative_prompt(cover_prompt)
                     dalle_image = ar.create_dalle_image(
                         cover_prompt, st.session_state.samples, dalle_num=False
                     )
@@ -185,7 +186,7 @@ if st.session_state.authentication_status:
                     )
 
                     # Save cover prompt and urls to database
-                    db.insert_cover_prompt(ebook_title, cover_prompt)
+                    db.insert_cover_prompt(ebook_title, cover_prompt, negative_prompt)
                     cl.display_files_and_save_to_database(ebook_title, "Cover")
                     st.cache_data.clear()
                     st.experimental_rerun()
@@ -254,7 +255,8 @@ if st.session_state.authentication_status:
                             # Button for the Chapter images
                             chapter_art_button = st.button(f"Generate {chapter} Art")
                             if chapter_art_button:
-                                chapter_prompt = ar.get_image_prompt(value)
+                                chapter_prompt = wr.get_ebook_prompt(value)
+                                neg_prompt = ar.get_negative_prompt(chapter_prompt)
                                 dalle_image = ar.create_dalle_image(
                                     chapter_prompt,
                                     st.session_state.samples,
@@ -279,7 +281,7 @@ if st.session_state.authentication_status:
 
                                 # Save cthe Chapter prompt and image urls to database
                                 db.insert_image_prompt(
-                                    ebook_title, chapter, chapter_prompt
+                                    ebook_title, chapter, chapter_prompt, neg_prompt
                                 )
                                 cl.display_files_and_save_to_database(
                                     ebook_title, chapter

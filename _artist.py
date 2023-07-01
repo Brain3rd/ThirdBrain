@@ -81,12 +81,12 @@ def get_image_prompt(user_input):
                     },
                     {
                         "role": "user",
-                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece using keywords and themes from the user input: {user_input}",
+                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece from this user input: {user_input}",
                     },
                     {
                         "role": "assistant",
                         "content": """
-            Generate a short written textual representation of the art piece that captures the essence, mood, and theme of the user input. Incorporate key terms extracted from the provided input. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the input. The output should not contain any images, only a textual representation of an art piece. Avoid any apologies or examples.
+            Generate a short written textual, max 400 characters long, representation of the art piece that captures the essence, mood, and theme of the user input. Incorporate key terms extracted from the provided. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the input. The output should not contain any images, only a textual representation of an art piece. Avoid any apologies or examples. 
 
             Here are 10 great examples of textual representation of art pieces that you can learn from:
 
@@ -110,8 +110,7 @@ def get_image_prompt(user_input):
 
             10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture. Futuristic architecture, Industrial urban, Architectural symmetry, Dramatic city skylines.
 
-            Please bear in mind that the aforementioned illustrations serve as a reference and a source of inspiration. It is crucial to employ artistic and photographic vocabulary in crafting a distinct and customized textual depiction that aligns with the user input and themes related to it.
-
+            Please bear in mind that the aforementioned illustrations serve as a reference and a source of inspiration. It is crucial to employ artistic and photographic vocabulary in crafting a distinct and customized textual depiction FROM THE USER INPUT. Under 400 charachters long.
             """,
                     },
                 ],
@@ -135,7 +134,7 @@ def get_image_prompt(user_input):
 
 
 def create_dalle_image(prompt, samples, dalle_num=True):
-    if dalle_num:
+    if dalle_num and samples != 0:
         st.sidebar.info("Drawing DALL-E image...")
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
@@ -160,51 +159,57 @@ def create_dalle_image(prompt, samples, dalle_num=True):
 
         st.sidebar.success("DALL-E image created!")
         return dalle_data
+    else:
+        return None
 
 
 def create_stable_image(prompt, width, height, engine_id, samples, steps):
-    st.sidebar.info("Drawing Stable image...")
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        try:
-            response = requests.post(
-                f"{api_host}/v1/generation/{engine_id}/text-to-image",
-                headers={
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": f"Bearer {api_key}",
-                },
-                json={
-                    "text_prompts": [{"text": f"{prompt}"}],
-                    "cfg_scale": 7,
-                    "clip_guidance_preset": "FAST_BLUE",
-                    "height": height,
-                    "width": width,
-                    "samples": samples,
-                    "steps": steps,
-                },
-            )
+    if samples != 0:
+        st.sidebar.info("Drawing Stable image...")
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            try:
+                response = requests.post(
+                    f"{api_host}/v1/generation/{engine_id}/text-to-image",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": f"Bearer {api_key}",
+                    },
+                    json={
+                        "text_prompts": [{"text": f"{prompt}"}],
+                        "cfg_scale": 7,
+                        "clip_guidance_preset": "FAST_BLUE",
+                        "height": height,
+                        "width": width,
+                        "samples": samples,
+                        "steps": steps,
+                    },
+                )
 
-            if response.status_code != 200:
-                stable_data = "No stability book"
-                st.sidebar.error("Stable not in a drawing mood today")
-                raise Exception("Non-200 response: " + str(response.text))
-            else:
-                stable_data = response.json()
+                if response.status_code != 200:
+                    stable_data = "No stability book"
+                    st.sidebar.error("Stable not in a drawing mood today")
+                    raise Exception("Non-200 response: " + str(response.text))
+                else:
+                    stable_data = response.json()
 
-            # If the code execution is successful, break out of the loop
-            break
-        except Exception as e:
-            # Handle the specific exception (if known) or catch all exceptions
-            st.sidebar.error(
-                f"Attempt {attempt} failed. {e} Waiting a bit and trying again..."
-            )
+                # If the code execution is successful, break out of the loop
+                break
+            except Exception as e:
+                # Handle the specific exception (if known) or catch all exceptions
+                st.sidebar.error(
+                    f"Attempt {attempt} failed. {e} Waiting a bit and trying again..."
+                )
 
-        # Wait for the specified delay before the next attempt
-        time.sleep(DELAY_SECONDS)
+            # Wait for the specified delay before the next attempt
+            time.sleep(DELAY_SECONDS)
 
-    st.sidebar.success("Stable image created!")
+        st.sidebar.success("Stable image created!")
 
-    return stable_data
+        return stable_data
+
+    else:
+        return None
 
 
 def save_all(
@@ -223,6 +228,8 @@ def save_all(
     stable_arts = []
 
     try:
+        # Create negative prompt
+        neg_prompt = get_negative_prompt(image_prompt)
         # Create a new folder for the book in Dropbox
         folder_path = f"/{folder}/{image_name}"
 
@@ -244,10 +251,10 @@ def save_all(
 
         # Save image prompt to txt file
         art_path = f"{folder_path}/{image_name}.txt"
-        data_to_txt = f"**User input:** {user_input}\n\n**AI Generated prompt:** {image_prompt}\n\n**Stable Diffusion:** {engine} {width}x{height}\n\n**DALL-E:** 512x512"
+        data_to_txt = f"**User input:** {user_input}\n\n**AI Generated prompt:** {image_prompt}\n\n**Stable Diffusion:** {engine} {width}x{height}\n\n**DALL-E:** 512x512\n\n **Negative prompt:** {neg_prompt}"
         dbx.files_upload(data_to_txt.encode("utf-8"), art_path)
 
-        if dalle_num:
+        if dalle_num and dalle_data:
             # Save DALL-E images to png
             for i, image in enumerate(dalle_data["data"]):
                 timestamp = int(time.time())  # Get the current timestamp
@@ -259,7 +266,7 @@ def save_all(
                 dbx.files_upload(image_data, image_path)
                 dalle_arts.append(image_data)
 
-        if stability_data != "No stability art":
+        if stability_data:
             # Save Stability images to png
             for i, image in enumerate(stability_data["artifacts"]):
                 timestamp = int(time.time())  # Get the current timestamp
@@ -357,7 +364,7 @@ def save_chapter_img(
                 dalle_arts.append(image_data)
 
         # Save Stability images to png
-        if stability_data != "No stability art":
+        if stability_data:
             for i, image in enumerate(stability_data["artifacts"]):
                 timestamp = int(time.time())  # Get the current timestamp
                 random_number = random.randint(
@@ -373,3 +380,48 @@ def save_chapter_img(
         st.sidebar.error(f"An error occurred while saving to Dropbox: {str(e)}")
 
     return dalle_arts, stable_arts
+
+
+def get_negative_prompt(pos_prompt):
+    st.sidebar.info("Creating negative prompt for the images...")
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            response = openai.ChatCompletion.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """
+            As a seasoned artist and photographer, you possess extensive expertise and skill honed over the years. Your journey has been filled with invaluable experiences, where you've embraced failures as valuable lessons and triumphed in your pursuit of capturing breathtaking visuals. 
+            """,
+                    },
+                    {
+                        "role": "user",
+                        "content": f"From the negative list provided, choose words that would be visually negative and unfitting to this textual representation: {pos_prompt}",
+                    },
+                    {
+                        "role": "assistant",
+                        "content": """
+                        Choose words from the negative list that would make give textual representation visullay ugly. Output should contain only list of words, seperated with comma. Avoid any apologies or compliments.
+
+                        negative list:
+                        Ugly, Disfigured, Deformed, Low quality, Pixelated, Blurry, Grains, Text, Watermark, Signature, Out of frame, Disproportioned, Bad proportions, Gross, proportions, Bad anatomy, Duplicate, Cropped, Extra hands, Extra arms, Extra legs, Extra fingers, Extra limbs, Long neck, Mutation, Mutilated, Mutated  Hands, Poorly drawn face, Poorly drawn hands, Missing hands, Missing arms, Missing legs, Missing fingers, Low resolution, Morbid
+            """,
+                    },
+                ],
+                model="gpt-3.5-turbo",
+            )
+
+            # If the code execution is successful, break out of the loop
+            break
+        except Exception as e:
+            # Handle RateLimitError
+            st.sidebar.error(
+                f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
+            )
+        # Wait for the specified delay before the next attempt
+        time.sleep(DELAY_SECONDS)
+
+    image_prompt = response["choices"][0]["message"]["content"]
+
+    st.sidebar.success(image_prompt)
+    return image_prompt

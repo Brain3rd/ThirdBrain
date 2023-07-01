@@ -205,16 +205,20 @@ def insert_ebook_chapter(title, chapter_nro, chapter_content):
     db_ebook.update({f"chapter_{chapter_nro}": chapter_content}, title)
 
 
-def insert_cover_prompt(title, prompt):
-    db_ebook.update({f"Prompt_Cover": prompt}, title)
+def insert_cover_prompt(title, prompt, neg_prompt):
+    db_ebook.update(
+        {f"Prompt_Cover": f"{prompt}\n\nNegative Prompt: {neg_prompt}"}, title
+    )
 
 
 def insert_ebook_art(title, chapter_name, url):
     db_ebook.update({chapter_name: url}, title)
 
 
-def insert_image_prompt(title, chapter_nro, prompt):
-    db_ebook.update({f"Prompt_{chapter_nro}": prompt}, title)
+def insert_image_prompt(title, chapter_nro, prompt, neg_prompt):
+    db_ebook.update(
+        {f"Prompt_{chapter_nro}": f"{prompt}\n\nNegative Prompt: {neg_prompt}"}, title
+    )
 
 
 def delete_ebook(title):

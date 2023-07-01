@@ -79,7 +79,7 @@ def book_picker():
         {
             "role": "user",
             "content": f"""
-        Give me a 1 random book from all time best selling self help books.
+        Pleas, give me a 1 random book from all time best selling self help books. Thank you.
         Different than these books:
         {all_books}
         """,
@@ -98,12 +98,12 @@ def book_picker():
         {
             "role": "assistant",
             "content": """
-        Just 1 book, no more. Give me just text in form of derired format, notthing else. No = or . or : either. 
+        Just 1 book, no more. Give me just text in form of derired format, notthing else. No = or . or : either. Avoid any apologies or compliments.
 
-        Example template:
-        Unlimited Power by Tony Robbins
+        Desired template:
+        Book Title with Subtitle by Author Name
 
-        Another example:
+        Example:
         Brain Rules 12 Principles for Surviving and Thriving at Work Home and School by John Medina
         """,
         },
@@ -286,12 +286,12 @@ def get_cover_prompt(book):
                     },
                     {
                         "role": "user",
-                        "content": f"Generate a short, under 400 characters long, written textual representation of an art piece using keywords from the book summary: {book}",
+                        "content": f"Generate a short, under 400 characters long, written textual representation of an image from this book: {book}",
                     },
                     {
                         "role": "assistant",
                         "content": """
-            Generate a short written textual representation of the art piece that captures the essence, mood, and theme of the book. Incorporate key terms extracted from the provided summary. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, or significant elements of the book. The output should not contain any images, only a textual representation of an art piece. Avoid any apologies or examples.
+            Generate a short written textual, max 400 characters long, representation of the image that captures the essence, mood, and theme of the book. Incorporate key terms extracted from the input provided. Consider a suitable color scheme that aligns with the intended atmosphere. Use evocative language to describe visuals that reflect the plot, themes, significant elements or characters of the input. Do your best to captivate the core message visually. The output should not contain any images, only a textual representation of an art piece. Avoid any apologies or examples. 
 
             Here are 10 great examples of textual representation of art pieces that you can learn from:
 
@@ -315,8 +315,7 @@ def get_cover_prompt(book):
 
             10. Capture a unique architectural photograph that highlights the symmetry, lines, and textures of a modern building. Look for interesting angles and perspectives to showcase the building's design and aesthetics. Experiment with different lighting conditions to create a mood that complements the architecture. Futuristic architecture, Industrial urban, Architectural symmetry, Dramatic city skylines.
 
-            Please bear in mind that the aforementioned illustrations serve as a reference and a source of inspiration. It is crucial to employ artistic and photographic vocabulary in crafting a distinct and customized textual depiction that aligns with the book's summary and themes.
-
+            Please bear in mind that the aforementioned illustrations serve only as a reference and a source of inspiration. It is crucial to employ photographic vocabulary in crafting a distinct and customized textual depiction FROM THE USER INPUT. Under 400 charachters long.
             """,
                     },
                 ],

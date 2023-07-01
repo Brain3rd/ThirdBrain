@@ -307,6 +307,7 @@ def display_art_and_save_to_database(num_art=None):
                     st.session_state.art_file_content,
                     art_image_urls,
                 )
+
                 st.sidebar.success("Database updated!")
                 st.cache_data.clear()
                 st.experimental_rerun()
