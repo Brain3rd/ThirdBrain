@@ -108,8 +108,6 @@ def table_of_content(ebook, user_input, target_audience):
                         "content": f"""
                     Provide long ind-depth and detailed table of contests and script for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. 
                     
-                    
-
                     # {ebook} 
                     *Include your author name or pen name and any relevant subtitle or tagline.*
 
@@ -205,7 +203,7 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audienc
                     Choose language that is clear, concise, and accessible to your target audience:
                     {target_audience}
 
-                    Write LONG in-depth and detailed section.. Always write in markdown. Thank you.
+                    Write LONG in-depth and detailed. Always write in markdown. Thank you.
                     """,
                     },
                     {
