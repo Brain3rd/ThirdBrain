@@ -354,6 +354,7 @@ def create_dalle_image(prompt, samples):
             st.sidebar.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
+            return None
         # Wait for the specified delay before the next attempt
         time.sleep(DELAY_SECONDS)
 
@@ -530,5 +531,4 @@ def summarizer(book_input, width, height, engine, samples, steps):
     st.sidebar.success("Book summarized!")
 
 
-if __name__ == "__main__":
-    summarizer()
+all_books = read_file_contents()
