@@ -97,9 +97,12 @@ def display_book_summaries_and_save_to_database(num_summaries=None):
                         shared_link_metadata = links[
                             0
                         ]  # Assuming there is only one existing link, you can modify this logic based on your requirements
-                    else:
-                        # Handle other  types of ApiError if needed
-                        raise e
+                    elif isinstance(e.error, dropbox.exceptions.InternalServerError):
+                        # Handle InternalServerError and continue to the next iteration
+                        st.sidebar.error(
+                            f"InternalServerError occurred for file {image_file.path_display}. Skipping..."
+                        )
+                        continue
 
                 # Extract the URL from the shared link metadata
                 shared_link_url = shared_link_metadata.url

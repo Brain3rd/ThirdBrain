@@ -5,6 +5,8 @@ import datetime
 import re
 from streamlit_extras.add_vertical_space import add_vertical_space
 import _artist as ar
+import random
+import string
 
 
 load_env_variables()
@@ -12,7 +14,7 @@ DETA_KEY = get_api_key("DETA_KEY")
 deta = Deta(DETA_KEY)
 
 db_users = deta.Base("users_db")
-db_books = deta.Base("books")
+db_books = deta.Base("booksummaries")
 db_art = deta.Base("art")
 db_ebook = deta.Base("ebook")
 
@@ -55,12 +57,16 @@ def insert_book(title, author, content, img_urls):
     )
 
 
-@st.cache_data()
+def delete_summary(title):
+    return db_books.delete(title)
+
+
+# @st.cache_data()
 def fetch_all_books():
     all_books = db_books.fetch()
     response = all_books.items
 
-    # Sort the books by date in descending  order
+    # Sort the books by date in descending order
     sorted_books = sorted(response, key=lambda x: x["date"], reverse=True)
 
     # Initialize empty lists to store the extracted information
@@ -88,6 +94,10 @@ def fetch_all_books():
         author = authors[i]
         content = contents[i]
         image_urls = img_urls_list[i]
+        # Generate a random string of length 5
+        # random_string = "".join(
+        #     random.choices(string.ascii_lowercase + string.digits, k=5)
+        # )
 
         # Display the images in two columns
         expander = st.expander(
@@ -112,6 +122,29 @@ def fetch_all_books():
             # Display the title and content inside the expander
             st.title(title)
             st.markdown(content)
+            add_vertical_space(1)
+
+            # # Provide a unique key for each button
+            # unique_key = f"delete_button_{title}_{j}_{random_string}"
+            # delete_summary_button = st.button(f"Delete {unique_key} summary")
+            # if delete_summary_button:
+            #     print("test")
+
+        #     # delete_summary(title)
+        #     # st.sidebar.warning(f"{title} summary deleted!")
+        #     # st.cache_data.clear()
+        #     # st.experimental_rerun()
+
+
+@st.cache_data()
+def fetch_all_book_titles():
+    all_books = db_books.fetch()
+    response = all_books.items
+
+    # Extract the 'key' values from the response and store them in a tuple
+    titles = tuple(book["key"] for book in response)
+
+    return titles
 
 
 ### Art Database ###

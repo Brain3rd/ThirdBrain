@@ -7,6 +7,7 @@ import base64
 import dropbox
 import streamlit as st
 from environment import load_env_variables, get_api_key
+from database import fetch_all_book_titles
 
 
 # Openai Keys
@@ -123,6 +124,7 @@ def get_book(books, all_books):
                 .replace("'", "")
                 .replace(",", "")
                 .replace('"', "")
+                .strip()
             )
             # If the code execution is successful, break out of the loop
             break
@@ -192,6 +194,7 @@ def get_book(books, all_books):
                     .replace("'", "")
                     .replace(",", "")
                     .replace('"', "")
+                    .strip()
                 )
                 # If the code execution is successful, break out of the loop
                 if book not in all_books:
@@ -439,8 +442,7 @@ def save_all(
                 # Folder does not exist, create it
                 dbx.files_create_folder(folder_path)
             else:
-                # Unexpected error, raise it
-                raise e
+                folder_path = f"{folder_path}_copy"
 
         # Save summary to txt file
         summary_path = f"{folder_path}/{new_book}.txt"
@@ -485,7 +487,7 @@ def summarizer(book_input, width, height, engine, samples, steps):
 
     st.sidebar.info("Summarizanion progress started...")
 
-    all_books = read_file_contents()
+    all_books = fetch_all_book_titles()
     if book_input == "":
         books = book_picker(all_books)
         st.session_state.new_book = get_book(books, all_books)
@@ -529,6 +531,3 @@ def summarizer(book_input, width, height, engine, samples, steps):
         st.write(st.session_state.book_summary)
 
     st.sidebar.success("Book summarized!")
-
-
-all_books = read_file_contents()
