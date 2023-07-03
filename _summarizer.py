@@ -64,11 +64,8 @@ def read_file_contents():
     return list(all_folders)
 
 
-all_books = read_file_contents()
-
-
 # Get random book
-def book_picker():
+def book_picker(all_books):
     books = [
         {
             "role": "system",
@@ -111,7 +108,7 @@ def book_picker():
     return books
 
 
-def get_book(books):
+def get_book(books, all_books):
     st.sidebar.info("Selecting random book...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
@@ -486,9 +483,11 @@ def summarizer(book_input, width, height, engine, samples, steps):
         st.session_state.stable_cover = ""
 
     st.sidebar.info("Summarizanion progress started...")
+
+    all_books = read_file_contents()
     if book_input == "":
-        books = book_picker()
-        st.session_state.new_book = get_book(books)
+        books = book_picker(all_books)
+        st.session_state.new_book = get_book(books, all_books)
     else:
         st.session_state.new_book = book_input
         all_books.append(st.session_state.new_book)
