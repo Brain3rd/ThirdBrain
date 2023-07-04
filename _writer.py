@@ -131,6 +131,8 @@ def table_of_content(ebook, user_input, target_audience):
                             - Subsections
                     5. ...
                     15. Conclusion
+                    16. Q&A Section
+                    17. Additional Resources/Appendix (optional)
                     """,
                     },
                 ],
@@ -197,6 +199,8 @@ def manuscript(table_of_content, target_audience):
                         - Q&A section
                             - Answer frequently asked questions related to perseverance and resilience.
                             - Address common challenges and concerns that readers may have.
+                        - Additional Resources/Appendix (optional)
+                            -Include any relevant resources, links, or references that can further enhance the reader's understanding or provide additional value.
                     """,
                     },
                 ],
