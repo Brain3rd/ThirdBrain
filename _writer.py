@@ -106,7 +106,7 @@ def table_of_content(ebook, user_input, target_audience):
                     {
                         "role": "assistant",
                         "content": f"""
-                    Provide long ind-depth and detailed table of contests and script for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. 
+                    Provide long, ind-depth and detailed table of contests and script for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. 
                     
                     # {ebook} 
                     *Include your author name or pen name and any relevant subtitle or tagline.*
@@ -114,7 +114,7 @@ def table_of_content(ebook, user_input, target_audience):
                     Table of Contents:
                     ## Table of Contents
 
-                    List the main chapters, sections and subsections of the book. 
+                    *List the main chapters, sections and subsections of the book. Aim for 10-15 chapters with 3-5 sections each. Add subsections as needed.
                     1. Introduction
                     2. Chapter
                         - 2.1 Section
@@ -130,31 +130,7 @@ def table_of_content(ebook, user_input, target_audience):
                         - Sections
                             - Subsections
                     5. ...
-                    10. Conclusion
-                    
-                    ## Introduction
-                    *Begin with an engaging introduction that grabs the reader's attention and provides an overview of what your eBook will cover.*
-
-                    ## Chapter 1
-                    *Start with a clear heading that reflects the topic of the chapter.*
-                    - Present your main ideas, arguments, or information related to the chapter's subject matter.
-                    - Use bullet points, numbered lists or subsections to break down complex concepts or steps.
-
-                    ## Chapter 2
-                    *Repeat the structure used in the previous chapter for subsequent chapters or sections.*
-
-                    ## Chapter 3
-                    *Continue with the same structure if the Book has more chapters or sections.*
-
-                    ## Conclusion
-                    *Summarize the key points discussed in the Book.*
-                    - Provide any final thoughts, recommendations, or calls to action.
-
-                    ### Additional Resources/Appendix (optional)
-                    *Include any relevant resources, links, or references that can further enhance the reader's understanding or provide additional value.*
-                    
-                    Script:
-                    Add details for the writer to follow like a scripts. So remember to maintain a logical progression, allowing ideas to build upon one another and creating a sense of continuity. Futhermore, consider incorporating storytelling elements or personal anecdotes that relate to each chapter's theme. This will help in establishing an emotional connection with readers. For example, if one chapter has mentioned a character, in the next chapter it should be mentioned so there is a continuum. Aim to add important details so that if previous chapter is forgotten, the writer can continue the story with all it characters, and details:
+                    15. Conclusion
                     """,
                     },
                 ],
@@ -180,7 +156,7 @@ def table_of_content(ebook, user_input, target_audience):
     return content
 
 
-def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audience):
+def manuscript(table_of_content, target_audience):
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -188,49 +164,90 @@ def write_chapter(ebook, chapter_nro, template, chapter_to_write, target_audienc
                     {
                         "role": "system",
                         "content": """
-                    You are a highly acclaimed best-selling author, renowned for your exceptional storytelling abilities and captivating prose. You have been focusing on self help books, learned your from mistakes and enetually succeeded.
+                    You are an accomplished best-selling Book author renowned for your ability to create engaging and valuable content. Remember that maintaining a suitable balance between perplexity and burstiness is crucial in crafting effective text. Perplexity assesses the complexity of the writing, while burstiness evaluates the variation in sentence structures. By incorporating a mix of long and short sentences, you can ensure a captivating reading experience for your audience.
                     """,
                     },
                     {
                         "role": "user",
                         "content": f"""
-                    I present to you the meticulously crafted table of contents for the eBook you are writing now:
-                    {template}
+                        For this books table of content:
+                        {table_of_content}
 
-                    Now, I would greatly appreciate if you could write the following section of the book:
+                        And target audience:
+                        {target_audience}
+
+                        I kindly request your expertise in creating a captivating manuscript for this book. Consider how the content will best resonate with target audience and address their specific needs and interests. This process allows you to refine this book's angle, structure, and tone, ensuring that it captures the attention of target audience and provides them with the value they are seeking.
+
+                        """,
+                    },
+                    {
+                        "role": "assistant",
+                        "content": f"""
+                        Provide long in-depth and detailed manuscript for the book formatted in Markdown code. Consider the overall arc of non-fiction book. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice.
+
+                        Who ever will read this manuscript should have clear instructions what to write and how to write it. Remember to maintain logical progression, allowing ideas to build upon one another and creating a sense of continuity. Consider incorporating storytelling elements or personal anecdotes that relate to each chapter's theme. This will help in establishing an emotional connection with readers. Futhermore, for example, if one chapter has mentioned a character, in the next chapter it should be mentioned so there is a continuum. Aim to add all necessary details so that if previous chapter is forgotten, the writer can continue the story with all it characters, and details by following the manuscript.
+
+                        - Create a compelling story that is related to the book.
+                        - Analyze the key events and obstacles encountered in the story.
+                        - Highlight the strategies, mindset, and actions taken by the character to overcome adversity.
+                        - Extract the valuable lessons and insights gained from the story.
+                        - Discuss the broader implications and relevance of these lessons in everyday life.
+                        - Provide practical advice and strategies on how readers can cultivate perseverance in their own lives.
+                        - Offer actionable steps and exercises to develop a resilient mindset and overcome obstacles.
+                        - Q&A section
+                            - Answer frequently asked questions related to perseverance and resilience.
+                            - Address common challenges and concerns that readers may have.
+                    """,
+                    },
+                ],
+                model="gpt-3.5-turbo-16k",
+            )
+
+            # If the code execution is successful, break out of the loop
+            break
+        except Exception as e:
+            # Handle RateLimitError
+            st.sidebar.error(
+                f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
+            )
+        # Wait for the specified delay before the next attempt
+        time.sleep(DELAY_SECONDS)
+
+    content = response["choices"][0]["message"]["content"]
+
+    return content
+
+
+def write_chapter(ebook, chapter_nro, chapter_to_write, target_audience):
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            response = openai.ChatCompletion.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """
+                    You are a highly acclaimed best-selling author, renowned for your exceptional storytelling abilities and captivating prose. You have been focusing on self help books, learned your from mistakes and eventually succeeded.
+                    """,
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""
+                    I would greatly appreciate if you could write the following section of my book {ebook}:
                     {chapter_to_write} 
-
-                    Choose language that is clear, concise, and accessible to your target audience:
-                    {target_audience}
-
-                    Write LONG in-depth and detailed. Always write in markdown. Thank you.
                     """,
                     },
                     {
                         "role": "assistant",
                         "content": f"""                      
-When crafting chapter titles, use markdown formatting to enhance their visual appeal. Employ the following format: ## Title, ### Subtitle. Feel free to use **bold** and *italic* when it fits the theme. However, do not combine bullet points with Headings, for example "## -" or "- **".
 
-Implement these 14 rules in your writing style:
-1. Understand the concept of perplexity and burstiness in content writing.
-2. Perplexity measures the complexity of text and its coherence.
-3. Aim for a balance between simplicity and complexity to engage the audience effectively.
-4. Burstiness refers to variations in sentence length and adds rhythm to writing.
-5. Vary sentence length to maintain reader interest and prevent monotony.
-6. Use simple and straightforward language to communicate effectively.
-7. Avoid complex sentence structures that may confuse readers.
-8. Prefer active voice over passive voice for clarity and engagement.
-9. Keep sentences short and concise, focusing on the main points.
-10. Utilize subheadings to break up text and improve readability.
-11. Balancing perplexity and burstiness is crucial for effective content writing.
-12. Strive to create engaging and impactful content that captivates the audience.
-13. Use simple language, varied sentence length, and concise sentences for optimal results.
-14. Avoid starting paragraphs with phrases like "In conclusion", "Finally" and "Remember".
+                    Write 1500 words with markdown. Remember you are writing section of the book, so write LONG paragraphs, NO bullet points or numbered lists. You can use bold and italic formatting when it fits to the theme. Choose language that is clear, concise, and accessible to your target audience:
+                    {target_audience}
 
+                    At the end count the written [words]
                     """,
                     },
                 ],
-                model="gpt-3.5-turbo-16k",
+                model="gpt-3.5-turbo",
             )
 
             # If the code execution is successful, break out of the loop

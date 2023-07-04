@@ -307,6 +307,9 @@ if st.session_state.authentication_status:
             chapter_input = st.text_area("Copy and Paste a Chapter to Write")
             # Button to write the given chapter
             chapter_input_button = st.form_submit_button("Submit")
+            manuscript_button = st.form_submit_button(
+                f"Create Manuscript for {ebook_title}"
+            )
             if chapter_input_button:
                 st.sidebar.info(f"Writing the chapter...")
                 target_audience = db.get_target_audience(ebook_title)
@@ -315,13 +318,30 @@ if st.session_state.authentication_status:
                 used_chapters = [int(chapter.split(" ")[1]) for chapter in chapters]
                 while available_chapter in used_chapters:
                     available_chapter += 1
+
                 write_new_chapter = wr.write_chapter(
                     ebook_title,
                     available_chapter,
-                    current_table_of_content,
                     chapter_input,
                     target_audience,
                 )
+
                 st.sidebar.success(f"Chapter {len(chapters) + 1} written!")
+                st.cache_data.clear()
+                st.experimental_rerun()
+            if manuscript_button:
+                st.sidebar.info(f"Writing the Manuscript...")
+                target_audience = db.get_target_audience(ebook_title)
+                script = wr.manuscript(current_table_of_content, target_audience)
+
+                # Find the first available chapter number
+                available_chapter = 1
+                used_chapters = [int(chapter.split(" ")[1]) for chapter in chapters]
+                while available_chapter in used_chapters:
+                    available_chapter += 1
+
+                # Save chapter to database
+                db.insert_ebook_chapter(ebook_title, available_chapter, script)
+                st.sidebar.success(f"Manuscript created!")
                 st.cache_data.clear()
                 st.experimental_rerun()

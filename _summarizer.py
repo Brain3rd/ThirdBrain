@@ -124,7 +124,6 @@ def get_book(books, all_books):
                 .replace("'", "")
                 .replace(",", "")
                 .replace('"', "")
-                .strip()
             )
             # If the code execution is successful, break out of the loop
             break
@@ -194,7 +193,6 @@ def get_book(books, all_books):
                     .replace("'", "")
                     .replace(",", "")
                     .replace('"', "")
-                    .strip()
                 )
                 # If the code execution is successful, break out of the loop
                 if book not in all_books:
@@ -414,7 +412,7 @@ def create_stable_image(prompt, width, height, engine_id, samples, steps):
 
 
 def save_all(
-    new_book,
+    book_title,
     book_content,
     dalle_data,
     stability_data,
@@ -427,7 +425,9 @@ def save_all(
     stability_images = []
 
     try:
+        new_book = book_title.strip()
         # Create a new folder for the book in Dropbox
+
         folder_path = f"/books/{new_book}"
 
         # Check if the folder already exists
@@ -488,12 +488,12 @@ def summarizer(book_input, width, height, engine, samples, steps):
     st.sidebar.info("Summarizanion progress started...")
 
     all_books = fetch_all_book_titles()
+
     if book_input == "":
         books = book_picker(all_books)
         st.session_state.new_book = get_book(books, all_books)
     else:
         st.session_state.new_book = book_input
-        all_books.append(st.session_state.new_book)
 
     st.session_state.book_summary = summarize_book(st.session_state.new_book)
     book_content = f"{st.session_state.new_book}\n\n{st.session_state.book_summary}"
