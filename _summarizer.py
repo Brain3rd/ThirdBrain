@@ -77,7 +77,7 @@ def book_picker(all_books):
         {
             "role": "user",
             "content": f"""
-        Pleas, give me a 1 random book from all time best selling self help books. Thank you.
+        Pleas, give me a 1 random book from best selling self help books. Thank you.
         Different than these books:
         {all_books}
         """,
@@ -91,6 +91,8 @@ def book_picker(all_books):
         Undesired format:
         "Book Title" by Aurhor name
         Book Title: Author name
+
+        Also if it is same book and same author, but different order or synonyms or different subtitle, then it is the same book, don't be naive. Do not give me same book as listed before!
         """,
         },
         {
@@ -355,7 +357,7 @@ def create_dalle_image(prompt, samples):
             st.sidebar.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
-            return None
+            image_response = None
         # Wait for the specified delay before the next attempt
         time.sleep(DELAY_SECONDS)
 

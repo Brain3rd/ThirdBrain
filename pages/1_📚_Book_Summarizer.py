@@ -85,14 +85,15 @@ if st.session_state.authentication_status:
             add_vertical_space(1)
 
         if text_input_button:
-            summarizer(
-                text_input,
-                width,
-                height,
-                book_art_engine,
-                book_art_samples,
-                book_art_steps,
-            )
+            with st.spinner("Summarizing..."):
+                summarizer(
+                    text_input,
+                    width,
+                    height,
+                    book_art_engine,
+                    book_art_samples,
+                    book_art_steps,
+                )
             display_book_summaries_and_save_to_database(1)
 
     ### Option to use Local File Storage ###

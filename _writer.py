@@ -106,7 +106,7 @@ def table_of_content(ebook, user_input, target_audience):
                     {
                         "role": "assistant",
                         "content": f"""
-                    Provide long, ind-depth and detailed table of contests and script for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. 
+                    Provide long, ind-depth and detailed table of contests and script for the book formatted in Markdown code. Avoid any apologies or compliments. Consider the overall arc of non-fiction eBook. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, ALWAYS include NUMBERED subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice. 
                     
                     # {ebook} 
                     *Include your author name or pen name and any relevant subtitle or tagline.*
@@ -114,7 +114,7 @@ def table_of_content(ebook, user_input, target_audience):
                     Table of Contents:
                     ## Table of Contents
 
-                    *List the main chapters, sections and subsections of the book. Aim for 10-15 chapters with 3-5 sections each. Add subsections as needed.
+                    *List the main chapters, sections and subsections of the book. Add 15 chapters with 5 sections each, add subsections as needed.
                     1. Introduction
                     2. Chapter
                         - 2.1 Section
@@ -124,15 +124,16 @@ def table_of_content(ebook, user_input, target_audience):
                         - 3.1 Section
                             -3.1.1 Subsection
                             -3.1.2 Subsection
-                            -3.1.3 Subsection
                         - 3.2 Section
+                            -3.2.1 Subsection
+                        - 3.3 Section
                     4. Chapter
                         - Sections
                             - Subsections
-                    5. ...
-                    15. Conclusion
-                    16. Q&A Section
-                    17. Additional Resources/Appendix (optional)
+                    5. *Continue adding chapters with sections and subsections*
+                    16. Conclusion
+                    17. Q&A Section
+                    18. Additional Resources/Appendix (optional)
                     """,
                     },
                 ],
@@ -185,9 +186,9 @@ def manuscript(table_of_content, target_audience):
                     {
                         "role": "assistant",
                         "content": f"""
-                        Provide long in-depth and detailed manuscript for the book formatted in Markdown code. Consider the overall arc of non-fiction book. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, aim to include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice.
+                        Provide long in-depth and detailed manuscript for the book formatted in Markdown code. Consider the overall arc of non-fiction book. Begin with main themes or key ideas that will form the basis for each chapter or section of the book. Within each chapter, include subtopics that expand on the main theme which allow to dig deeper into each subject, providing valuable insights and practical advice.
 
-                        Who ever will read this manuscript should have clear instructions what to write and how to write it. Remember to maintain logical progression, allowing ideas to build upon one another and creating a sense of continuity. Consider incorporating storytelling elements or personal anecdotes that relate to each chapter's theme. This will help in establishing an emotional connection with readers. Futhermore, for example, if one chapter has mentioned a character, in the next chapter it should be mentioned so there is a continuum. Aim to add all necessary details so that if previous chapter is forgotten, the writer can continue the story with all it characters, and details by following the manuscript.
+                        Who ever will read this manuscript should have clear instructions what to write and how to write it. Remember to maintain logical progression, allowing ideas to build upon one another and creating a sense of continuity. Consider incorporating storytelling elements or personal anecdotes that relate to each chapter's theme. This will help in establishing an emotional connection with readers. Futhermore, for example, if one chapter has mentioned a character, in the next chapter it should be mentioned so there is a continuum. Aim to add all necessary details with EACH section inside of a chapter, so that if previous chapter is forgotten, the writer can continue the story with all it characters, and details by following the manuscript.
 
                         - Create a compelling story that is related to the book.
                         - Analyze the key events and obstacles encountered in the story.
@@ -230,7 +231,7 @@ def write_chapter(ebook, chapter_nro, chapter_to_write, target_audience):
                     {
                         "role": "system",
                         "content": """
-                    You are a highly acclaimed best-selling author, renowned for your exceptional storytelling abilities and captivating prose. You have been focusing on self help books, learned your from mistakes and eventually succeeded.
+                    You are a highly acclaimed best-selling author, renowned for your exceptional storytelling abilities and captivating prose. You have been focusing on self help books, learned your from mistakes and eventually succeeded. Remember that maintaining a suitable balance between perplexity and burstiness is crucial in crafting effective text. Perplexity assesses the complexity of the writing, while burstiness evaluates the variation in sentence structures. By incorporating a mix of long and short sentences, you can ensure a captivating reading experience for your audience.
                     """,
                     },
                     {
@@ -244,7 +245,7 @@ def write_chapter(ebook, chapter_nro, chapter_to_write, target_audience):
                         "role": "assistant",
                         "content": f"""                      
 
-                    Write 1500 words with markdown. Remember you are writing section of the book, so write LONG paragraphs, NO bullet points or numbered lists. You can use bold and italic formatting when it fits to the theme. Choose language that is clear, concise, and accessible to your target audience:
+                    Write long in-depth with markdown. Remember you are writing section of the book, so write LONG paragraphs, NO bullet points or numbered lists. You can use bold and italic formatting when it fits to the theme. Choose language that is clear, concise, and accessible to your target audience:
                     {target_audience}
 
                     At the end count the written [words]
