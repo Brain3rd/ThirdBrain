@@ -133,7 +133,7 @@ def get_user_playlists():
         auth_manager=spotipy.SpotifyOAuth(
             client_id=client_id,
             client_secret=client_secret,
-            redirect_uri="http://localhost:9999",
+            redirect_uri="http://localhost:8888",
             scope="playlist-read-private",
         )
     )
