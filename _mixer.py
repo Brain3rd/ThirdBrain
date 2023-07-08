@@ -135,6 +135,7 @@ def get_user_playlists():
             client_secret=client_secret,
             redirect_uri="http://127.0.0.1:9999",
             scope="playlist-read-private",
+            open_browser=False,
         )
     )
 
