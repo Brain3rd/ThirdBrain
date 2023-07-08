@@ -247,8 +247,6 @@ def write_chapter(ebook, chapter_nro, chapter_to_write, target_audience):
 
                     Write long in-depth with markdown. Remember you are writing section of the book, so write LONG paragraphs, NO bullet points or numbered lists. You can use bold and italic formatting when it fits to the theme. Choose language that is clear, concise, and accessible to your target audience:
                     {target_audience}
-
-                    At the end count the written [words]
                     """,
                     },
                 ],
