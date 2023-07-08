@@ -38,6 +38,7 @@ if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
+    popularity = st.sidebar.slider("Popularity", 1, 30, 10, 1)
     new_playlist = st.form("New Playlist")
     with new_playlist:
         playlist_description = st.text_area("Describe the playlist")
@@ -49,5 +50,5 @@ if st.session_state.authentication_status:
                 new_playlist = mix.generate_playlist(
                     playlist_description, playlist_songs
                 )
-                mix.spotify_playlist(new_playlist, playlist_name)
+                mix.spotify_playlist(new_playlist, playlist_name, popularity)
                 st.success("Playlist is ready!")

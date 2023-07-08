@@ -9,6 +9,12 @@ import streamlit as st
 client_id = env.get_api_key("SPOTIFY_ID")
 client_secret = env.get_api_key("SPOTIFY_SECRET")
 
+if client_id == None or client_secret == None:
+    raise ValueError(
+        "Error: missing environment variables. Please check your env file."
+    )
+
+
 # Openai Keys
 openai.api_key = env.get_api_key("OPENAI_API_KEY")
 
@@ -61,10 +67,11 @@ def generate_playlist(prompt, count):
 
     output = response["choices"][0]["message"]["content"]
     playlist = json.loads(output)
+    st.success("ChatGPT has selected the songs!")
     return playlist
 
 
-def spotify_playlist(playlist, playlist_name):
+def spotify_playlist(playlist: json, playlist_name: str, popularity: int):
     sp = spotipy.Spotify(
         auth_manager=spotipy.SpotifyOAuth(
             client_id=client_id,
@@ -87,14 +94,14 @@ def spotify_playlist(playlist, playlist_name):
         basic_query = f"{song} {artist}"
 
         for query in [advanced_query, basic_query]:
-            with st.spinner(f"Searching for query: {query}"):
-                search_results = sp.search(
-                    q=query, limit=10, type="track"
-                )  # , market=market)
+            st.info(f"Searching from Spotify: {query}")
+            search_results = sp.search(
+                q=query, limit=10, type="track"
+            )  # , market=market)
 
             if (
                 not search_results["tracks"]["items"]
-                or search_results["tracks"]["items"][0]["popularity"] < 20
+                or search_results["tracks"]["items"][0]["popularity"] < popularity
             ):
                 continue
             else:
