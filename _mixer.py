@@ -76,7 +76,7 @@ def spotify_playlist(playlist: json, playlist_name: str, popularity: int):
         auth_manager=spotipy.SpotifyOAuth(
             client_id=client_id,
             client_secret=client_secret,
-            redirect_uri="https://example.org/callback",
+            redirect_uri="https://thirdbrain.streamlit.app/callback",
             scope="playlist-modify-private",
         )
     )
