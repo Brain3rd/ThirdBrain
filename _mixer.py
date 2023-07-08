@@ -3,11 +3,16 @@ import openai
 import json
 import datetime
 import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 import streamlit as st
+import os
 
 
 client_id = env.get_api_key("SPOTIFY_ID")
 client_secret = env.get_api_key("SPOTIFY_SECRET")
+redirect_uri = env.get_api_key("SPOTIPY_REDIRECT_URI")
+access_token = env.get_api_key("SPOTIPY_ACCESS_TOKEN")
+
 
 if client_id == None or client_secret == None:
     raise ValueError(
@@ -76,13 +81,13 @@ def spotify_playlist(playlist: json, playlist_name: str, popularity: int):
         auth_manager=spotipy.SpotifyOAuth(
             client_id=client_id,
             client_secret=client_secret,
-            redirect_uri="https://share.streamlit.io/brain3rd/thirdbrain/callback",
+            redirect_uri=redirect_uri,
             scope="playlist-modify-private",
+            open_browser=False,
         )
     )
 
     current_user = sp.current_user()
-
     assert current_user is not None
 
     track_uris = []
@@ -133,9 +138,8 @@ def get_user_playlists():
         auth_manager=spotipy.SpotifyOAuth(
             client_id=client_id,
             client_secret=client_secret,
-            redirect_uri="http://127.0.0.1:9999",
+            redirect_uri="http://localhost:9999",
             scope="playlist-read-private",
-            open_browser=False,
         )
     )
 
