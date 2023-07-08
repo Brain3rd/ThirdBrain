@@ -76,7 +76,6 @@ def spotify_playlist(playlist: json, playlist_name: str, popularity: int):
         auth_manager=spotipy.SpotifyOAuth(
             client_id=client_id,
             client_secret=client_secret,
-            redirect_uri="http://localhost:9999",
             scope="playlist-modify-private",
         )
     )
