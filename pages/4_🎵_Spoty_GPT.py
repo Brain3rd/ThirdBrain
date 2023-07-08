@@ -51,13 +51,3 @@ if st.session_state.authentication_status:
                 )
                 mix.spotify_playlist(new_playlist, playlist_name)
                 st.success("Playlist is ready!")
-                # st.cache_data.clear()
-                # st.experimental_rerun()
-
-
-# # Example usage
-# user_playlists = get_user_playlists()
-# for playlist in user_playlists:
-#     playlist_img = playlist["images"][0]["url"]
-#     playlist_name = playlist["name"]
-#     playlist_url = playlist["external_urls"]["spotify"]
