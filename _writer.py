@@ -57,7 +57,64 @@ def new_ebook(user_input, target_audience):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
+                f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
+            )
+        # Wait for the specified delay before the next attempt
+        time.sleep(DELAY_SECONDS)
+
+    ebook_title = (
+        response["choices"][0]["message"]["content"]
+        .replace(":", "")
+        .replace('"', "")
+        .replace("?", "")
+        .replace(".", "")
+    )
+
+    # Save to database
+    insert_ebook_title(ebook_title)
+
+    return ebook_title
+
+
+def new_fiction_ebook(user_input, target_audience):
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            response = openai.ChatCompletion.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """
+            You are an esteemed best-selling book author known for your unique and engaging content that provides immense value to readers.
+            """,
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""
+                        Please, brainstorm FICTION book titles based on user input:
+                        {user_input}
+                        
+                        and target audience:
+                        {target_audience}
+
+                        Using the user input and target audience provided, I kindly request your expertise in creating something that is completely distinct from any existing book title in the market. Utilize keyword research tools to identify popular search terms related to topic. Please provide me with ONE compelling FICTION book title. Thank you.
+                        """,
+                    },
+                    {
+                        "role": "assistant",
+                        "content": f"""
+            Desired format:
+            Title of Your Unique Book
+                    """,
+                    },
+                ],
+                model="gpt-3.5-turbo",
+            )
+            # If the code execution is successful, break out of the loop
+            break
+        except Exception as e:
+            # Handle RateLimitError
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -144,7 +201,7 @@ def table_of_content(ebook, user_input, target_audience):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -212,13 +269,89 @@ def manuscript(table_of_content, target_audience):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
         time.sleep(DELAY_SECONDS)
 
     content = response["choices"][0]["message"]["content"]
+
+    return content
+
+
+def fiction_manuscript(ebook, target_audience):
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            response = openai.ChatCompletion.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """
+                    You are an accomplished best-selling Book author renowned for your ability to create engaging and valuable content. Remember that maintaining a suitable balance between perplexity and burstiness is crucial in crafting effective text. Perplexity assesses the complexity of the writing, while burstiness evaluates the variation in sentence structures. By incorporating a mix of long and short sentences, you can ensure a captivating reading experience for your audience.
+                    """,
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""
+                        For this fiction book:
+                        {ebook}
+
+                        And target audience:
+                        {target_audience}
+
+                        I kindly request your expertise in creating a captivating FICTION manuscript for book I am going to write. Consider how the content will best resonate with target audience and address their specific needs and interests. This process allows you to refine this book's angle, structure, and tone, ensuring that it captures the attention of target audience and provides them with the value they are seeking.
+
+                        """,
+                    },
+                    {
+                        "role": "assistant",
+                        "content": f"""
+                        Provide LONG, in-depth and detailed FICTION manuscript for the book formatted in Markdown code. Consider the overall arc of FICTION book. Split each chapter in to a smaller peaces, so it is easier to write small chunk at a time.
+
+                        Who ever will read this manuscript should have clear instructions what to write and how to write it. Remember to maintain logical progression, allowing ideas to build upon one another and creating a sense of continuity. Futhermore, for example, if one chapter has mentioned a character, in the next chapter it should be mentioned so there is a continuum. Aim to add all necessary details with EACH section inside of a chapter, so that if previous chapter is forgotten, the writer can continue the story with all it characters, and details by following the manuscript.
+
+                        - Craft a captivating story that hooks the readers from the beginning and keeps them engaged throughout.
+                        - Develop a series of pivotal events and challenges that the characters face as they progress through the story.
+                        - Explore the character's inner thoughts, emotions, and motivations as they navigate and overcome these obstacles.
+                        - Extract meaningful themes and messages from the story that resonate with readers.
+                        - Delve into the broader implications and relevance of these themes within the fictional world you've created.
+                        - Introduce creative methods and techniques within the narrative that characters employ to tackle adversity.
+                        - Provide readers with inspiring and relatable characters that embody perseverance and resilience.
+                        - Include moments of personal growth and self-discovery for the characters, showcasing the transformative power of resilience.
+                        - Incorporate moments of tension and suspense to heighten the readers' emotional investment in the story.
+                        - Provide readers with actionable steps or exercises woven into the story that can help them develop a resilient mindset and overcome challenges.
+
+                        Example format:
+                        ## Prologue
+                        *A brief introductory section that sets the stage or provides background information for the story. This section is typically shorter than a regular chapter and can vary in length depending on its purpose.*
+
+                        ### Chapters
+                        *Add at least 30 chapters.*
+
+                        ## Epilogue
+                        *A concluding section that offers closure or a glimpse into the characters' future after the main events of the story have concluded. Similar to the prologue, the length of the epilogue can vary.*
+                    """,
+                    },
+                ],
+                model="gpt-3.5-turbo-16k",
+            )
+
+            # If the code execution is successful, break out of the loop
+            break
+        except Exception as e:
+            # Handle RateLimitError
+            st.error(
+                f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
+            )
+        # Wait for the specified delay before the next attempt
+        time.sleep(DELAY_SECONDS)
+
+    content = response["choices"][0]["message"]["content"]
+
+    # Save to database
+    insert_ebook_table_of_content(ebook, content)
+    insert_target_audience(ebook, target_audience)
 
     return content
 
@@ -257,7 +390,7 @@ def write_chapter(ebook, chapter_nro, chapter_to_write, target_audience):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -272,7 +405,7 @@ def write_chapter(ebook, chapter_nro, chapter_to_write, target_audience):
 
 
 def get_ebook_prompt(user_input):
-    st.sidebar.info("Creating prompt for the images...")
+    st.info("Creating prompt for the images...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -325,7 +458,7 @@ def get_ebook_prompt(user_input):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -333,5 +466,5 @@ def get_ebook_prompt(user_input):
 
     image_prompt = response["choices"][0]["message"]["content"]
 
-    st.sidebar.success(image_prompt)
+    st.success(image_prompt)
     return image_prompt

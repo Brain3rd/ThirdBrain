@@ -105,8 +105,8 @@ if st.session_state.authentication_status:
             user_input_name_button = st.form_submit_button("Submit")
 
         if user_input_name_button:
-            st.sidebar.info(st.session_state.user_input)
-            st.sidebar.info(st.session_state.user_input_name)
+            st.info(st.session_state.user_input)
+            st.info(st.session_state.user_input_name)
             art_generator(
                 st.session_state.user_input,
                 st.session_state.user_input_name,

@@ -94,7 +94,10 @@ if st.session_state.authentication_status:
     )
 
     # Selectbox for book to read or write a new one
-    all_written_ebooks = ("Write a New eBook",) + db.fetch_all_ebook_titles()
+    all_written_ebooks = (
+        "Write a New eBook",
+        "Write a New Fiction Book",
+    ) + db.fetch_all_ebook_titles()
     ebook_to_write = st.selectbox("Choose an eBook to Write:", all_written_ebooks, 0)
     if ebook_to_write == "Write a New eBook":
         new_topic = st.form("New eBook")
@@ -102,18 +105,38 @@ if st.session_state.authentication_status:
             # Generate new Title and Outline for the book
             user_input_text = st.text_area("Topic for the eBook")
             target_audience = st.text_input("Target Audience")
-            user_input_button = st.form_submit_button("Submit")
+            user_input_button = st.form_submit_button("Submit Non-Fiction Book")
             if user_input_button:
-                st.sidebar.info("Brainstorming Title Options...")
+                st.info("Brainstorming Title Options...")
                 st.session_state.ebook_title = wr.new_ebook(
                     user_input_text, target_audience
                 )
-                st.sidebar.success(st.session_state.ebook_title)
-                st.sidebar.info("Writing Book Outline...")
+                st.success(st.session_state.ebook_title)
+                st.info("Writing Book Outline...")
                 ebook_table_of_contet = wr.table_of_content(
                     st.session_state.ebook_title, user_input_text, target_audience
                 )
-                st.sidebar.success("Table of Contents is ready!")
+                st.success("Table of Contents is ready!")
+                st.cache_data.clear()
+                st.experimental_rerun()
+    elif ebook_to_write == "Write a New Fiction Book":
+        new_fiction_topic = st.form("New Fiction Book")
+        with new_fiction_topic:
+            # Generate new Title and Outline for the book
+            user_input_text = st.text_area("Topic for the eBook")
+            target_audience = st.text_input("Target Audience")
+            user_input_button = st.form_submit_button("Submit Fiction Book")
+            if user_input_button:
+                st.info("Brainstorming Title Options...")
+                st.session_state.ebook_title = wr.new_fiction_ebook(
+                    user_input_text, target_audience
+                )
+                st.success(st.session_state.ebook_title)
+                st.info("Writing Book Outline...")
+                ebook_table_of_contet = wr.fiction_manuscript(
+                    st.session_state.ebook_title, target_audience
+                )
+                st.success("Fiction Manuscript is ready!")
                 st.cache_data.clear()
                 st.experimental_rerun()
 
@@ -151,7 +174,7 @@ if st.session_state.authentication_status:
                             if delete_cover_button:
                                 deleted_url.remove(cover_url)
                                 db.insert_ebook_art(ebook_title, "Cover", deleted_url)
-                                st.sidebar.error(f"Cover Art {j} deleted!")
+                                st.error(f"Cover Art {j} deleted!")
                                 st.cache_data.clear()
                                 st.experimental_rerun()
 
@@ -194,7 +217,7 @@ if st.session_state.authentication_status:
                 delete_ebook_button = st.button(f"Delete {delete_this_book}")
                 if delete_ebook_button:
                     db.delete_ebook(delete_this_book)
-                    st.sidebar.warning(f"{delete_this_book} deleted!")
+                    st.warning(f"{delete_this_book} deleted!")
                     st.cache_data.clear()
                     st.experimental_rerun()
 
@@ -235,9 +258,7 @@ if st.session_state.authentication_status:
                                                 chapter,
                                                 deleted_chapter_url,
                                             )
-                                            st.sidebar.warning(
-                                                f"Chapter Art {j} deleted!"
-                                            )
+                                            st.warning(f"Chapter Art {j} deleted!")
                                             st.cache_data.clear()
                                             st.experimental_rerun()
 
@@ -293,7 +314,7 @@ if st.session_state.authentication_status:
                                 db.insert_ebook_chapter(
                                     ebook_title, delete_this, "deleted"
                                 )
-                                st.sidebar.warning(f"{chapter} deleted!")
+                                st.warning(f"{chapter} deleted!")
                                 st.cache_data.clear()
                                 st.experimental_rerun()
 
@@ -311,7 +332,7 @@ if st.session_state.authentication_status:
                 f"Create Manuscript for {ebook_title}"
             )
             if chapter_input_button:
-                st.sidebar.info(f"Writing the chapter...")
+                st.info(f"Writing the chapter...")
                 target_audience = db.get_target_audience(ebook_title)
                 # Find the first available chapter number
                 available_chapter = 1
@@ -326,11 +347,11 @@ if st.session_state.authentication_status:
                     target_audience,
                 )
 
-                st.sidebar.success(f"Chapter {len(chapters) + 1} written!")
+                st.success(f"Chapter {len(chapters) + 1} written!")
                 st.cache_data.clear()
                 st.experimental_rerun()
             if manuscript_button:
-                st.sidebar.info(f"Writing the Manuscript...")
+                st.info(f"Writing the Manuscript...")
                 target_audience = db.get_target_audience(ebook_title)
                 script = wr.manuscript(current_table_of_content, target_audience)
 
@@ -342,6 +363,6 @@ if st.session_state.authentication_status:
 
                 # Save chapter to database
                 db.insert_ebook_chapter(ebook_title, available_chapter, script)
-                st.sidebar.success(f"Manuscript created!")
+                st.success(f"Manuscript Created!")
                 st.cache_data.clear()
                 st.experimental_rerun()

@@ -38,17 +38,30 @@ if "authentication_status" not in st.session_state:
     st.session_state.authentication_status = ""
 
 if st.session_state.authentication_status:
-    popularity = st.sidebar.slider("Popularity", 1, 30, 10, 1)
-    new_playlist = st.form("New Playlist")
-    with new_playlist:
-        playlist_description = st.text_area("Describe the playlist")
-        playlist_songs = st.text_input("How many songs")
-        playlist_name = st.text_input("Name your playlist")
-        playlist_button = st.form_submit_button("Submit")
-        if playlist_button:
-            with st.spinner("Creating your playlist..."):
-                new_playlist = mix.generate_playlist(
-                    playlist_description, playlist_songs
-                )
-                mix.spotify_playlist(new_playlist, playlist_name, popularity)
-                st.success("Playlist is ready!")
+    tab1, tab2 = st.tabs(["Recommendation", "Playlist"])
+
+    with tab1:
+        st.title("Music Recommendation System")
+        track_name = st.text_input("Enter a song name:")
+        if track_name:
+            recommendations = mix.get_recommendations(track_name)
+            st.write("Recommended songs:")
+            for track in recommendations:
+                st.write(track["name"])
+                st.image(track["album"]["images"][0]["url"])
+
+    with tab2:
+        popularity = st.sidebar.slider("Song Popularity", 1, 30, 10, 1)
+        new_playlist = st.form("New Playlist")
+        with new_playlist:
+            playlist_description = st.text_area("Describe the playlist")
+            playlist_songs = st.text_input("How many songs")
+            playlist_name = st.text_input("Name your playlist")
+            playlist_button = st.form_submit_button("Submit")
+            if playlist_button:
+                with st.spinner("Creating your playlist..."):
+                    new_playlist = mix.generate_playlist(
+                        playlist_description, playlist_songs
+                    )
+                    mix.spotify_playlist(new_playlist, playlist_name, popularity)
+                    st.success("Playlist is ready!")

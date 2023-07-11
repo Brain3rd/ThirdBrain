@@ -3,7 +3,7 @@ import openai
 import json
 import datetime
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import streamlit as st
 import os
 
@@ -83,7 +83,7 @@ def spotify_playlist(playlist: json, playlist_name: str, popularity: int):
             client_secret=client_secret,
             redirect_uri=redirect_uri,
             scope="playlist-modify-private",
-            open_browser=False,
+            open_browser=True,
         )
     )
 
@@ -155,3 +155,18 @@ def get_user_playlists():
             playlists = None
 
     return all_playlists
+
+
+def get_recommendations(track_name):
+    client_credentials_manager = SpotifyClientCredentials(
+        client_id=client_id, client_secret=client_secret
+    )
+    sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
+    # Get track URI
+    results = sp.search(q=track_name, type="track")
+    track_uri = results["tracks"]["items"][0]["uri"]
+
+    # Get recommended tracks
+    recommendations = sp.recommendations(seed_tracks=[track_uri])["tracks"]
+    return recommendations

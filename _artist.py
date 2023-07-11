@@ -68,7 +68,7 @@ all_images = read_file_contents()
 
 
 def get_image_prompt(user_input):
-    st.sidebar.info("Creating prompt for the images...")
+    st.info("Creating prompt for the images...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -121,7 +121,7 @@ def get_image_prompt(user_input):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -129,13 +129,13 @@ def get_image_prompt(user_input):
 
     image_prompt = response["choices"][0]["message"]["content"]
 
-    st.sidebar.success(image_prompt)
+    st.success(image_prompt)
     return image_prompt
 
 
 def create_dalle_image(prompt, samples, dalle_num=True):
     if dalle_num and samples != 0:
-        st.sidebar.info("Drawing DALL-E image...")
+        st.info("Drawing DALL-E image...")
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
                 dalle_data = openai.Image.create(
@@ -148,7 +148,7 @@ def create_dalle_image(prompt, samples, dalle_num=True):
                 break
             except Exception as e:
                 # Handle RateLimitError
-                st.sidebar.error(
+                st.error(
                     f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
                 )
             # Wait for the specified delay before the next attempt
@@ -157,7 +157,7 @@ def create_dalle_image(prompt, samples, dalle_num=True):
         # Return url instead of b64_json
         # image_url = image_response["data"][0]["url"]
 
-        st.sidebar.success("DALL-E image created!")
+        st.success("DALL-E image created!")
         return dalle_data
     else:
         return None
@@ -165,7 +165,7 @@ def create_dalle_image(prompt, samples, dalle_num=True):
 
 def create_stable_image(prompt, width, height, engine_id, samples, steps):
     if samples != 0:
-        st.sidebar.info("Drawing Stable image...")
+        st.info("Drawing Stable image...")
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
                 response = requests.post(
@@ -188,7 +188,7 @@ def create_stable_image(prompt, width, height, engine_id, samples, steps):
 
                 if response.status_code != 200:
                     stable_data = "No stability book"
-                    st.sidebar.error("Stable not in a drawing mood today")
+                    st.error("Stable not in a drawing mood today")
                     raise Exception("Non-200 response: " + str(response.text))
                 else:
                     stable_data = response.json()
@@ -197,14 +197,14 @@ def create_stable_image(prompt, width, height, engine_id, samples, steps):
                 break
             except Exception as e:
                 # Handle the specific exception (if known) or catch all exceptions
-                st.sidebar.error(
+                st.error(
                     f"Attempt {attempt} failed. {e} Waiting a bit and trying again..."
                 )
 
             # Wait for the specified delay before the next attempt
             time.sleep(DELAY_SECONDS)
 
-        st.sidebar.success("Stable image created!")
+        st.success("Stable image created!")
 
         return stable_data
 
@@ -280,7 +280,7 @@ def save_all(
 
     except Exception as e:
         # Handle the specific exception (if known) or catch all exceptions
-        st.sidebar.error(f"An error occurred while saving to Dropbox: {str(e)}")
+        st.error(f"An error occurred while saving to Dropbox: {str(e)}")
 
     return dalle_arts, stable_arts
 
@@ -323,7 +323,7 @@ def art_generator(art_input, art_name, width, height, engine, samples, steps):
         st.write(art_input)
         st.write(art_prompt)
 
-    st.sidebar.success("Art Generated!")
+    st.success("Art Generated!")
 
 
 def save_chapter_img(
@@ -377,13 +377,13 @@ def save_chapter_img(
 
     except Exception as e:
         # Handle the specific exception (if known) or catch all exceptions
-        st.sidebar.error(f"An error occurred while saving to Dropbox: {str(e)}")
+        st.error(f"An error occurred while saving to Dropbox: {str(e)}")
 
     return dalle_arts, stable_arts
 
 
 def get_negative_prompt(pos_prompt):
-    st.sidebar.info("Creating negative prompt for the images...")
+    st.info("Creating negative prompt for the images...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -415,7 +415,7 @@ def get_negative_prompt(pos_prompt):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -423,5 +423,5 @@ def get_negative_prompt(pos_prompt):
 
     image_prompt = response["choices"][0]["message"]["content"]
 
-    st.sidebar.success(image_prompt)
+    st.success(image_prompt)
     return image_prompt

@@ -112,7 +112,7 @@ def book_picker(all_books):
 
 
 def get_book(books, all_books):
-    st.sidebar.info("Selecting random book...")
+    st.info("Selecting random book...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -131,7 +131,7 @@ def get_book(books, all_books):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -139,9 +139,7 @@ def get_book(books, all_books):
 
     while book in all_books:
         # Book has already been  selected, choose a different one
-        st.sidebar.warning(
-            "Oh, you've read this book already. Choosing a different book..."
-        )
+        st.warning("Oh, you've read this book already. Choosing a different book...")
 
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
@@ -201,19 +199,19 @@ def get_book(books, all_books):
                     break
             except Exception as e:
                 # Handle RateLimitError
-                st.sidebar.error(
+                st.error(
                     f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
                 )
             # Wait for the specified delay before the next attempt
             time.sleep(DELAY_SECONDS)
 
-    st.sidebar.success(f"{book}")
+    st.success(f"{book}")
 
     return book
 
 
 def summarize_book(book: str) -> str:
-    st.sidebar.info("Summarizing...")
+    st.info("Summarizing...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -261,7 +259,7 @@ def summarize_book(book: str) -> str:
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -269,13 +267,13 @@ def summarize_book(book: str) -> str:
 
     summary = response["choices"][0]["message"]["content"]
 
-    st.sidebar.success("Book summarized!")
+    st.success("Book summarized!")
 
     return summary
 
 
 def get_cover_prompt(book):
-    st.sidebar.info("Creating prompt for the images...")
+    st.info("Creating prompt for the images...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = openai.ChatCompletion.create(
@@ -328,7 +326,7 @@ def get_cover_prompt(book):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
         # Wait for the specified delay before the next attempt
@@ -336,12 +334,12 @@ def get_cover_prompt(book):
 
     image_prompt = response["choices"][0]["message"]["content"]
 
-    st.sidebar.success(image_prompt)
+    st.success(image_prompt)
     return image_prompt
 
 
 def create_dalle_image(prompt, samples):
-    st.sidebar.info("Drawing DALL-E image...")
+    st.info("Drawing DALL-E image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             image_response = openai.Image.create(
@@ -354,7 +352,7 @@ def create_dalle_image(prompt, samples):
             break
         except Exception as e:
             # Handle RateLimitError
-            st.sidebar.error(
+            st.error(
                 f"Attempt{attempt} failed. Rate limit exceeded. Error message: {e}\nWaiting a bit and trying again..."
             )
             image_response = None
@@ -364,12 +362,12 @@ def create_dalle_image(prompt, samples):
     # Return url instead of b64_json
     # image_url = image_response["data"][0]["url"]
 
-    st.sidebar.success("DALL-E image created!")
+    st.success("DALL-E image created!")
     return image_response
 
 
 def create_stable_image(prompt, width, height, engine_id, samples, steps):
-    st.sidebar.info("Drawing Stable image...")
+    st.info("Drawing Stable image...")
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             response = requests.post(
@@ -392,7 +390,7 @@ def create_stable_image(prompt, width, height, engine_id, samples, steps):
 
             if response.status_code != 200:
                 data = "No stability book"
-                st.sidebar.error("Stable not in a drawing mood today")
+                st.error("Stable not in a drawing mood today")
                 raise Exception("Non-200 response: " + str(response.text))
             else:
                 data = response.json()
@@ -401,14 +399,12 @@ def create_stable_image(prompt, width, height, engine_id, samples, steps):
             break
         except Exception as e:
             # Handle the specific exception (if known) or catch all exceptions
-            st.sidebar.error(
-                f"Attempt {attempt} failed. Waiting a bit and trying again..."
-            )
+            st.error(f"Attempt {attempt} failed. Waiting a bit and trying again...")
 
         # Wait for the specified delay before the next attempt
         time.sleep(DELAY_SECONDS)
 
-    st.sidebar.success("Stable image created!")
+    st.success("Stable image created!")
 
     return data
 
@@ -470,7 +466,7 @@ def save_all(
 
     except Exception as e:
         # Handle the specific exception (if known) or catch all exceptions
-        st.sidebar.error(f"An error occurred while saving to Dropbox: {str(e)}")
+        st.error(f"An error occurred while saving to Dropbox: {str(e)}")
 
     return dalle_images, stability_images
 
@@ -487,7 +483,7 @@ def summarizer(book_input, width, height, engine, samples, steps):
     if "stable_cover" not in st.session_state:
         st.session_state.stable_cover = ""
 
-    st.sidebar.info("Summarizanion progress started...")
+    st.info("Summarizanion progress started...")
 
     all_books = fetch_all_book_titles()
 
@@ -532,4 +528,4 @@ def summarizer(book_input, width, height, engine, samples, steps):
         st.title(st.session_state.new_book)
         st.write(st.session_state.book_summary)
 
-    st.sidebar.success("Book summarized!")
+    st.success("Book summarized!")
